@@ -6,19 +6,25 @@ CC = clang++
 
 DEPFLAGS = -MP -MD
 
-CFLAGS = $(foreach D, $(INCDIRS),-I$(D)) $(DEPFLAGS) -o3
+CXXFLAGS = -Wall -Wextra -Wpedantic -Wformat 
+CFLAGS =  $(CXXFLAGS) $(foreach D, $(INCDIRS),-I$(D)) $(DEPFLAGS) -O3
 
 CFILES = $(foreach D,$(CODEDIRS),$(wildcard $(D)/*.cpp))
 
-OBJECTS = $(patsubst %.cpp,%.o,$(CFILES))
-DEPFILES = $(patsubst %.cpp,%.d,$(CFILES))
+OBJECTS = $(patsubst ./lib/%.cpp,./obj/%.o,$(CFILES))
+
+DEPFILES = $(patsubst ./lib/%.cpp,./obj/%.d,$(CFILES))
+
 
 all: $(BINARY)
 
 $(BINARY): $(OBJECTS)
-	$(CC) -o $@ $^
+	$(CC) $(CFLAGS) -fuse-ld=mold -o $@ $^
 
-%.o: %.cpp
+obj:
+	@mkdir -p obj
+
+obj/%.o: lib/%.cpp | obj
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 .PHONY: clean

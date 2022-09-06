@@ -1,4 +1,2 @@
-lib/*.d
-lib/*.o
 bin/
-deps/
+obj/
