@@ -1,0 +1,17 @@
+author: Johan Rodriguez
+title: Primer Proyecto
+lang: es
+
+documentclass: apa7tec
+classoption:
+  - stu
+  - helv
+  - longtable
+
+header-includes: |
+  \affiliation{Instituto Tecnologico de Costa Rica}
+  \course{Estructura de Datos}
+  \professor{Lorena Valerio Solis}
+  \duedate{2022}
+  \venue{San Carlos}
+  \mes{Octubre}
