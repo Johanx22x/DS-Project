@@ -1,4 +1,4 @@
-./lib/*.d
-./lib/*.o
+lib/*.d
+lib/*.o
 bin/
 deps/
