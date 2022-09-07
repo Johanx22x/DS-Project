@@ -21,10 +21,10 @@ all: $(BINARY)
 $(BINARY): $(OBJECTS)
 	$(CC) $(CFLAGS) -fuse-ld=mold -o $@ $^
 
-obj:
-	@mkdir -p obj
+folders:
+	@mkdir -p obj bin include lib
 
-obj/%.o: lib/%.cpp | obj
+obj/%.o: lib/%.cpp | folders
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 .PHONY: clean
