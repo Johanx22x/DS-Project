@@ -1,3 +1,83 @@
-@startuml
+@startuml Prueba
+class Person {
+    + name: string
+    + id: string
+    + age: short int
+    + joinDate: time_t
+    + *location: Place
+    + *climates: Proxy<Climate>
+
+    + *prev: Person
+    + *next: Person
+
+    + append(*node: Person): void
+}
+
+class Proxy<T> {
+    + *link: T
+    + *next: Proxy<T>
+
+    + append(*node: T): void
+}
+
+class Climate {
+    + precipitation: double
+    + maxTemp: double
+    + minTemp: double
+    + windSpeed: double
+    + windDirection: char
+    + humidity: double
+    + itRained: bool
+    + *rain: Rain
+
+    + *next: Climate
+}
+
+class Rain {
+    + name: string
+    + id: string
+    + rainfall: double
+
+    + *next: Rain
+
+    + averageRainfall(): string
+}
+
+class Region {
+    + name: string
+    + id: string
+    + location: string
+    + *places: Proxy<Place>
+
+    + *next: Region
+}
+
+class Place {
+    + name: string
+    + population: short int
+    + area: double
+    + *climate: Proxy<Climate>
+
+    + *next: Place
+}
+
+class Instant {
+    + name: string
+    + date: time_t
+    + startTime: time_t
+    + endTime: time_t
+
+    + *prev: Instant
+    + *next: Instant
+
+    + append(*node: Instant): void
+}
+
+Person o- Proxy
+Proxy -> Climate
+Climate *- Rain
+Region o- Proxy
+Proxy -> Place
+Place -> Proxy
 
 @enduml
