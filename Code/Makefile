@@ -18,6 +18,9 @@ DEPFILES = $(patsubst ./lib/%.cpp,./obj/%.d,$(CFILES))
 
 all: $(BINARY)
 
+run: $(BINARY)
+	$(BINARY)
+
 $(BINARY): $(OBJECTS)
 	$(CC) $(CFLAGS) -fuse-ld=mold -o $@ $^
 
