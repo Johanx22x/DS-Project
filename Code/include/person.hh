@@ -6,7 +6,7 @@
 #include <place.hh>
 
 /**
- * TODO: add class doc
+ * Defines a structure that represents a person
  */
 class Person {
 public:
@@ -22,9 +22,9 @@ public:
     Person(std::string name, std::string id, short int age, time_t joinDate);
 
     /** 
-     * Appends an element to list
+     * Appends an element to the end of the list
      * 
-     * @param *node element to append
+     * @param *node The element to be appended
      */
     void append(Person *node);
 };

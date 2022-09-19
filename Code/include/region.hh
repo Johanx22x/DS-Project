@@ -2,6 +2,9 @@
 #include <string>
 #include <place.hh>
 
+/**
+ * Defines a structure that represents a region
+ */
 class Region {
 public:
     std::string name;

@@ -1,6 +1,9 @@
 #pragma once
 #include <rain.hh>
 
+/**
+ * Defines a structure that represents the Climate
+ */
 class Climate {
 public:
     double precipitation;
