@@ -9,4 +9,5 @@ Rain::Rain(std::string name, std::string id, double rainfall) {
 
 std::string Rain::averageRainfall() {
     // TODO: implement this functionality
+    return "";
 }
