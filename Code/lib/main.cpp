@@ -1,6 +1,5 @@
-#include <funcion.h>
+#include <iostream>
 
 int main() {
-    sumar(2, 3);
     return 0;
 }

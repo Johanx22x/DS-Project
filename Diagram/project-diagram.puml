@@ -1,4 +1,5 @@
 @startuml Prueba
+
 class Person {
     + name: string
     + id: string
@@ -6,7 +7,6 @@ class Person {
     + joinDate: time_t
     + *location: Place
     + *climates: Proxy<Climate>
-
     + *prev: Person
     + *next: Person
 
@@ -29,7 +29,6 @@ class Climate {
     + humidity: double
     + itRained: bool
     + *rain: Rain
-
     + *next: Climate
 }
 
@@ -37,7 +36,6 @@ class Rain {
     + name: string
     + id: string
     + rainfall: double
-
     + *next: Rain
 
     + averageRainfall(): string
@@ -48,7 +46,6 @@ class Region {
     + id: string
     + location: string
     + *places: Proxy<Place>
-
     + *next: Region
 }
 
@@ -57,7 +54,6 @@ class Place {
     + population: short int
     + area: double
     + *climate: Proxy<Climate>
-
     + *next: Place
 }
 
@@ -66,18 +62,24 @@ class Instant {
     + date: time_t
     + startTime: time_t
     + endTime: time_t
-
     + *prev: Instant
     + *next: Instant
 
     + append(*node: Instant): void
 }
 
-Person o- Proxy
-Proxy -> Climate
-Climate *- Rain
-Region o- Proxy
-Proxy -> Place
-Place -> Proxy
+Person o-down- Proxy
+Proxy .right. Climate
+Climate *-down- Rain
+Region o-right- Proxy
+Proxy .down. Place
+Place o-up- Proxy
+
+note left of Person
+    Integrantes:
+    Johan Rodriguez
+    Gabriel Alfaro
+    Aaron Gonzalez
+endnote
 
 @enduml
