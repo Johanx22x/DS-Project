@@ -28,6 +28,9 @@ class Climate {
     + windDirection: char
     + humidity: double
     + itRained: bool
+    + date: time_t
+    + startTime: time_t
+    + endTime: time_t
     + *rain: Rain
     + *next: Climate
 }
