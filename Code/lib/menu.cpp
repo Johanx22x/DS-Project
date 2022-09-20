@@ -13,6 +13,7 @@ static int getInt() {
     return ret - 0x30;
 }
 
+/// Display options of principal menu
 static void displayOptions() {
     std::cout << "0 - Exit Program\n";
     std::cout << "2 - Data Maintenance\n";
@@ -20,18 +21,22 @@ static void displayOptions() {
     std::cout << "4 - Reports\n\n";
 }
 
+/// Display options of data maintenance menu
 static void dataMaintenanceOptions() {
     std::cout << "0 - Return to principal menu\n\n";
 }
 
+/// Display options of consults menu
 static void consultsOptions() {
     std::cout << "0 - Return to principal menu\n\n";
 }
 
+/// Display options of reports menu
 static void reportsOptions() {
     std::cout << "0 - Return to principal menu\n\n";
 }
 
+/// Display a welcome message for the data maintenance menu
 static void dataMaintenanceWelcome() {
     std::system("clear");
     std::cout << "\
@@ -43,6 +48,7 @@ static void dataMaintenanceWelcome() {
 ╚═══╝╚═══╝ ╚═╝╚═══╝    ╚╝╚╝╚╝╚═══╝╚╝╚╝╚╝ ╚═╝╚══╝╚╝╚╝╚═══╝╚╝╚╝╚══╝╚══╝\n\n";
 }
 
+/// Display a welcome message for the consults menu
 static void consultsWelcome() {
     std::system("clear");
     std::cout << "\
@@ -54,6 +60,7 @@ static void consultsWelcome() {
 ╚═══╝╚══╝╚╝╚╝╚══╝╚══╝╚═╝ ╚═╝╚══╝\n\n";
 }
 
+/// Display a welcome message for the reports menu
 static void reportsWelcome() {
     std::system("clear");
     std::cout << "\
@@ -67,6 +74,7 @@ static void reportsWelcome() {
          ╚╝                 \n\n";
 }
 
+/// Display a welcome message for the principal menu
 static void welcomeMessage() {
     std::system("clear");
     std::cout <<"\
@@ -80,6 +88,7 @@ static void welcomeMessage() {
                            ╚══╝                 \n\n";
 }
 
+/// Data maintenance menu using a while true
 static void dataMaintenanceMenu() {
     dataMaintenanceWelcome();
     while (true) {
@@ -100,6 +109,7 @@ static void dataMaintenanceMenu() {
     }
 }
 
+/// Consults menu using a while true
 static void consultsMenu() {
     consultsWelcome();
     while (true) {
@@ -120,6 +130,7 @@ static void consultsMenu() {
     }
 }
 
+/// Reports menu using a while true
 static void reportsMenu() {
     reportsWelcome();
     while (true) {
@@ -140,6 +151,7 @@ static void reportsMenu() {
     }
 }
 
+/// Principal menu implementation using a while true
 void menu() {
     std::system("clear");
     welcomeMessage();
