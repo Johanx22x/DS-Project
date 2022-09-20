@@ -3,6 +3,16 @@ CODEDIRS = ./lib
 INCDIRS = ./include/
 
 CC = clang++
+OS = $(shell uname)
+
+FOLDERS_COMMAND = mkdir -p obj bin include lib
+
+ifeq ($(OS),Linux)
+	rm_C = rm -rf
+else
+	rm_C = del
+	FOLDERS_COMMAND = "echo"
+endif
 
 DEPFLAGS = -MP -MD
 
@@ -15,7 +25,6 @@ OBJECTS = $(patsubst ./lib/%.cpp,./obj/%.o,$(CFILES))
 
 DEPFILES = $(patsubst ./lib/%.cpp,./obj/%.d,$(CFILES))
 
-
 all: $(BINARY)
 
 run: $(BINARY)
@@ -25,13 +34,13 @@ $(BINARY): $(OBJECTS)
 	$(CC) $(CFLAGS) -fuse-ld=mold -o $@ $^
 
 folders:
-	@mkdir -p obj bin include lib
+	@$(FOLDERS_COMMAND)
 
 obj/%.o: lib/%.cpp | folders
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 .PHONY: clean
 clean:
-	rm -rf $(BINARY) $(OBJECTS) $(DEPFILES)
+	$(rm_C) $(BINARY) $(OBJECTS) $(DEPFILES)
 
 -include $(DEPFILES)
