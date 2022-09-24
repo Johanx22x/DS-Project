@@ -30,7 +30,7 @@ MenuItem *MenuItem::withMenu(Menu* menu) {
     return this;
 }
 
-Menu::Menu(std::string name, std::unordered_map<int8_t, MenuItem*> *initializer) {
+Menu::Menu(std::string name, std::unordered_map<int8_t, MenuItem*> initializer) {
     this->name = name;
     this->options = initializer;
 }
@@ -40,7 +40,7 @@ Menu::Menu(std::string name) {
 }
 
 void Menu::display() {
-    for (const auto& [id, value] : *this->options) {
+    for (const auto& [id, value] : options) {
         printf("(%d) -> %s\n", id, value->name.c_str());
     }
 }
@@ -49,11 +49,11 @@ int Menu::prompt() {
     printf("Select an option: ");
     int option = getInt();
 
-    MenuItem *curr = this->options->at(option);
+    MenuItem *curr = options.at(option);
 
     return curr->action(this, curr->menu);
 }
 
 void Menu::addItem(MenuItem *item) {
-    this->options->insert_or_assign(item->id, *item);
+    options.insert_or_assign(item->id, item);
 }
