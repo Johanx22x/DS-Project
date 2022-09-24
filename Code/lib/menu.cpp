@@ -4,7 +4,7 @@
 #include <cstdio>
 #include <util.hh>
 
-MenuItem::MenuItem(int8_t id, std::string name, int(*action)()) {
+MenuItem::MenuItem(int8_t id, std::string name, ::action *action) {
     this->id = id;
     this->name = name;
     this->action = action;
@@ -25,15 +25,19 @@ MenuItem *MenuItem::withAction(int(*action)()) {
     return this;
 }
 
-Menu::Menu(std::unordered_map<int8_t, MenuItem> initializer) {
-  this->options = initializer;
+Menu::Menu(std::string name, std::unordered_map<int8_t, MenuItem> initializer) {
+    this->name = name;
+    this->options = initializer;
+}
+
+Menu::Menu(std::string name) {
+    this->name = name;
 }
 
 void Menu::display() {
     for (const auto& [id, value] : this->options) {
         printf("(%d) -> %s\n", id, value.name.c_str());
     }
-    printf("\n");
 }
 
 int Menu::prompt() {

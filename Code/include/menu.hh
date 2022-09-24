@@ -3,27 +3,32 @@
 #include <string>
 #include <unordered_map>
 
+typedef int(action)();
+
 struct MenuItem {
     int8_t id;
+    action *action;
     std::string name;
-    int(*action)();
 
     MenuItem() = default;
-    MenuItem(int8_t id, std::string name, int(*action)());
+    MenuItem(int8_t id, std::string name, ::action *action);
 
     MenuItem *withId(uint8_t id);
     MenuItem *withName(std::string name);
-    MenuItem *withAction(int(*action)());
+    MenuItem *withAction(::action action);
 };
 
 class Menu {
+    std::string name;
     std::unordered_map<int8_t, MenuItem> options = std::unordered_map<int8_t, MenuItem>();
 
 public:
 
     Menu() = default;
 
-    Menu(std::unordered_map<int8_t, MenuItem> initializer);
+    Menu(std::string name);
+
+    Menu(std::string name, std::unordered_map<int8_t, MenuItem> initializer);
 
     /**
      * Move constructor
