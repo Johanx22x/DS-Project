@@ -4,8 +4,8 @@
 #include <unordered_map>
 
 struct MenuItem {
-    std::string name;
     int8_t id;
+    std::string name;
     int(*action)();
 
     MenuItem() = default;

@@ -31,7 +31,7 @@ Menu::Menu(std::unordered_map<int8_t, MenuItem> initializer) {
 
 void Menu::display() {
     for (const auto& [id, value] : this->options) {
-        printf("(%d) -> %s", id, value.name.c_str());
+        printf("(%d) -> %s\n", id, value.name.c_str());
     }
     printf("\n");
 }
