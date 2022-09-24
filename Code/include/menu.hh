@@ -1,21 +1,30 @@
 #pragma once
+#include <cstdint>
 #include <string>
 #include <unordered_map>
+#include <functional>
 
 struct MenuItem {
     std::string name;
     int8_t id;
-    int (*action)();
+    int(*action)();
+
+    MenuItem(int8_t id, std::string name, int(*action)());
 };
 
 class Menu {
-    std::unordered_map<int8_t, MenuItem> options;
+    std::unordered_map<int8_t, MenuItem> options = std::unordered_map<int8_t, MenuItem>();
 
 public:
 
-    Menu();
+    Menu() = default;
 
     Menu(std::unordered_map<int8_t, MenuItem> initializer);
+
+    /**
+     * Move constructor
+     */
+    Menu(Menu&&) = default;
 
     /**
      * Displays the current menu items
@@ -34,5 +43,5 @@ public:
      *
      * It uses the item's internal id property as the key
      */
-    void setItem(MenuItem item);
+    void addItem(MenuItem *item);
 };

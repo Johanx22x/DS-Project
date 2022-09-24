@@ -16,7 +16,7 @@ endif
 
 DEPFLAGS = -MP -MD
 
-CXXFLAGS = -Wall -Wextra -Wpedantic -Wformat 
+CXXFLAGS = -Wall -Wextra -Wpedantic -Wformat -std=c++17
 CFLAGS =  $(CXXFLAGS) $(foreach D, $(INCDIRS),-I$(D)) $(DEPFLAGS) -O3
 
 CFILES = $(foreach D,$(CODEDIRS),$(wildcard $(D)/*.cpp))
