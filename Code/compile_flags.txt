@@ -3,3 +3,4 @@
 -Wall
 -Wextra
 -Wformat
+-std=c++17

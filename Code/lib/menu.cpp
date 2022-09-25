@@ -1,189 +1,48 @@
-#include <cstdio>
 #include <menu.hh>
-#include <iostream>
-#include <string>
+#include <cstdint>
+#include <unordered_map>
+#include <cstdio>
+#include <util.hh>
 
-using std::string;
-
-/// Return a int value
-static int getInt() {
-    // TODO: Find a better way to implement this function
-    int ret = getchar();
-    while (getchar() != '\n');
-    return ret - 0x30;
+MenuItem::MenuItem(int8_t id, std::string name, int(*action)()) {
+    this->id = id;
+    this->name = name;
+    this->action = action;
 }
 
-/// Display options of principal menu
-static void displayOptions() {
-    std::cout << "0 - Exit Program\n";
-    std::cout << "2 - Data Maintenance\n";
-    std::cout << "3 - Consults\n";
-    std::cout << "4 - Reports\n\n";
+MenuItem *MenuItem::withId(uint8_t id) {
+    this->id = id;
+    return this;
 }
 
-/// Display options of data maintenance menu
-static void dataMaintenanceOptions() {
-    std::cout << "0 - Return to principal menu\n\n";
+MenuItem *MenuItem::withName(std::string name) {
+    this->name = name;
+    return this;
 }
 
-/// Display options of consults menu
-static void consultsOptions() {
-    std::cout << "0 - Return to principal menu\n\n";
+MenuItem *MenuItem::withAction(int(*action)()) {
+    this->action = action;
+    return this;
 }
 
-/// Display options of reports menu
-static void reportsOptions() {
-    std::cout << "0 - Return to principal menu\n\n";
+Menu::Menu(std::unordered_map<int8_t, MenuItem> initializer) {
+  this->options = initializer;
 }
 
-/// Display a welcome message for the data maintenance menu
-static void dataMaintenanceWelcome() {
-    std::system("clear");
-    std::cout << "\
-╔═══╗      ╔╗          ╔═╗╔═╗            ╔╗                          \n\
-╚╗╔╗║     ╔╝╚╗         ║║╚╝║║           ╔╝╚╗                         \n\
- ║║║║╔══╗ ╚╗╔╝╔══╗     ║╔╗╔╗║╔══╗ ╔╗╔═╗ ╚╗╔╝╔══╗╔═╗ ╔══╗ ╔═╗ ╔══╗╔══╗\n\
- ║║║║╚ ╗║  ║║ ╚ ╗║     ║║║║║║╚ ╗║ ╠╣║╔╗╗ ║║ ║╔╗║║╔╗╗╚ ╗║ ║╔╗╗║╔═╝║╔╗║\n\
-╔╝╚╝║║╚╝╚╗ ║╚╗║╚╝╚╗    ║║║║║║║╚╝╚╗║║║║║║ ║╚╗║║═╣║║║║║╚╝╚╗║║║║║╚═╗║║═╣\n\
-╚═══╝╚═══╝ ╚═╝╚═══╝    ╚╝╚╝╚╝╚═══╝╚╝╚╝╚╝ ╚═╝╚══╝╚╝╚╝╚═══╝╚╝╚╝╚══╝╚══╝\n\n";
-}
-
-/// Display a welcome message for the consults menu
-static void consultsWelcome() {
-    std::system("clear");
-    std::cout << "\
-╔═══╗                ╔╗  ╔╗     \n\
-║╔═╗║                ║║ ╔╝╚╗    \n\
-║║ ╚╝╔══╗╔═╗ ╔══╗╔╗╔╗║║ ╚╗╔╝╔══╗\n\
-║║ ╔╗║╔╗║║╔╗╗║══╣║║║║║║  ║║ ║══╣\n\
-║╚═╝║║╚╝║║║║║╠══║║╚╝║║╚╗ ║╚╗╠══║\n\
-╚═══╝╚══╝╚╝╚╝╚══╝╚══╝╚═╝ ╚═╝╚══╝\n\n";
-}
-
-/// Display a welcome message for the reports menu
-static void reportsWelcome() {
-    std::system("clear");
-    std::cout << "\
-╔═══╗                ╔╗     \n\
-║╔═╗║               ╔╝╚╗    \n\
-║╚═╝║╔══╗╔══╗╔══╗╔═╗╚╗╔╝╔══╗\n\
-║╔╗╔╝║╔╗║║╔╗║║╔╗║║╔╝ ║║ ║══╣\n\
-║║║╚╗║║═╣║╚╝║║╚╝║║║  ║╚╗╠══║\n\
-╚╝╚═╝╚══╝║╔═╝╚══╝╚╝  ╚═╝╚══╝\n\
-         ║║                 \n\
-         ╚╝                 \n\n";
-}
-
-/// Display a welcome message for the principal menu
-static void welcomeMessage() {
-    std::system("clear");
-    std::cout <<"\
-╔════╗                                ╔╗        \n\
-║╔╗╔╗║                               ╔╝╚╗       \n\
-╚╝║║╚╝╔╗╔╗╔╗╔══╗    ╔═╗╔══╗╔══╗╔╗╔══╗╚╗╔╝╔══╗╔═╗\n\
-  ║║  ╠╣║╚╝║║╔╗║    ║╔╝║╔╗║║╔╗║╠╣║══╣ ║║ ║╔╗║║╔╝\n\
- ╔╝╚╗ ║║║║║║║║═╣    ║║ ║║═╣║╚╝║║║╠══║ ║╚╗║║═╣║║ \n\
- ╚══╝ ╚╝╚╩╩╝╚══╝    ╚╝ ╚══╝╚═╗║╚╝╚══╝ ╚═╝╚══╝╚╝ \n\
-                           ╔═╝║                 \n\
-                           ╚══╝                 \n\n";
-}
-
-/// Data maintenance menu using a while true
-static void dataMaintenanceMenu() {
-    dataMaintenanceWelcome();
-    while (true) {
-        std::cout << "Enter an option (1 display options / 0 return to principal menu): ";
-        int option = getInt();
-        switch (option) {
-            case 0:
-                return;
-            case 1:
-                dataMaintenanceWelcome();
-                dataMaintenanceOptions();
-                break;
-            default:
-                dataMaintenanceWelcome();
-                std::cout << "Invalid option!!!\n\n";
-                break;
-        }
+void Menu::display() {
+    for (const auto& [id, value] : this->options) {
+        printf("(%d) -> %s", id, value.name.c_str());
     }
+    printf("\n");
 }
 
-/// Consults menu using a while true
-static void consultsMenu() {
-    consultsWelcome();
-    while (true) {
-        std::cout << "Enter an option (1 display options / 0 return to principal menu): ";
-        int option = getInt();
-        switch (option) {
-            case 0:
-                return;
-            case 1:
-                consultsWelcome();
-                consultsOptions();
-                break;
-            default:
-                consultsWelcome();
-                std::cout << "Invalid option!!!\n\n";
-                break;
-        }
-    }
+int Menu::prompt() {
+    printf("Select an option: ");
+    int option = getInt();
+    return this->options.at(option).action();
+    this->options[0];
 }
 
-/// Reports menu using a while true
-static void reportsMenu() {
-    reportsWelcome();
-    while (true) {
-        std::cout << "Enter an option (1 display options / 0 return to principal menu): ";
-        int option = getInt();
-        switch (option) {
-            case 0:
-                return;
-            case 1:
-                reportsWelcome();
-                reportsOptions();
-                break;
-            default:
-                reportsWelcome();
-                std::cout << "Invalid option!!!\n\n";
-                break;
-        }
-    }
-}
-
-/// Principal menu implementation using a while true
-void menu() {
-    std::system("clear");
-    welcomeMessage();
-
-    while (true) {
-        std::cout << "Enter an option (1 display options / 0 exit): ";
-        int option = getInt();
-        switch (option) {
-            case 0:
-                welcomeMessage();
-                std::cout << "Thank you for use the program, have a nice day!\n";
-                return;
-            case 1:
-                welcomeMessage();
-                displayOptions();
-                break;
-            case 2:
-                dataMaintenanceMenu();
-                welcomeMessage();
-                break;
-            case 3:
-                consultsMenu();
-                welcomeMessage();
-                break;
-            case 4:
-                reportsMenu();
-                welcomeMessage();
-                break;
-            default:
-                welcomeMessage();
-                std::cout << "Invalid option!!!\n\n";
-                break;
-        }
-    }
+void Menu::addItem(MenuItem *item) {
+    this->options.insert_or_assign(item->id, *item);
 }

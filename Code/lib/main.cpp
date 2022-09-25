@@ -1,7 +1,7 @@
-#include <iostream>
 #include <menu.hh>
+#include <cstdio>
+#include <iostream>
 
 int main() {
-    menu();
     return 0;
 }
