@@ -3,12 +3,13 @@
 #include <string>
 #include <unordered_map>
 
-typedef int(action)();
+typedef int(action)(class Menu*);
 
 struct MenuItem {
     int8_t id;
     action *action;
     std::string name;
+    class Menu* menu;
 
     MenuItem() = default;
     MenuItem(int8_t id, std::string name, ::action *action);
@@ -16,6 +17,7 @@ struct MenuItem {
     MenuItem *withId(uint8_t id);
     MenuItem *withName(std::string name);
     MenuItem *withAction(::action action);
+    MenuItem *withMenu(class Menu* menu);
 };
 
 class Menu {
