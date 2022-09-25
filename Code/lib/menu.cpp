@@ -3,12 +3,26 @@
 #include <unordered_map>
 #include <cstdio>
 #include <util.hh>
-#include <functional>
 
-MenuItem::MenuItem(int8_t id, std::string name, int(*action)() ) {
+MenuItem::MenuItem(int8_t id, std::string name, int(*action)()) {
     this->id = id;
     this->name = name;
     this->action = action;
+}
+
+MenuItem *MenuItem::withId(uint8_t id) {
+    this->id = id;
+    return this;
+}
+
+MenuItem *MenuItem::withName(std::string name) {
+    this->name = name;
+    return this;
+}
+
+MenuItem *MenuItem::withAction(int(*action)()) {
+    this->action = action;
+    return this;
 }
 
 Menu::Menu(std::unordered_map<int8_t, MenuItem> initializer) {
@@ -23,12 +37,10 @@ void Menu::display() {
 }
 
 int Menu::prompt() {
-    // TODO: implement user prompting
-
     printf("Select an option: ");
     int option = getInt();
-
     return this->options.at(option).action();
+    this->options[0];
 }
 
 void Menu::addItem(MenuItem *item) {

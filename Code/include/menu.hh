@@ -2,14 +2,18 @@
 #include <cstdint>
 #include <string>
 #include <unordered_map>
-#include <functional>
 
 struct MenuItem {
     std::string name;
     int8_t id;
     int(*action)();
 
+    MenuItem() = default;
     MenuItem(int8_t id, std::string name, int(*action)());
+
+    MenuItem *withId(uint8_t id);
+    MenuItem *withName(std::string name);
+    MenuItem *withAction(int(*action)());
 };
 
 class Menu {
