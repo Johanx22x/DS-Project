@@ -40,7 +40,6 @@ int Menu::prompt() {
     printf("Select an option: ");
     int option = getInt();
     return this->options.at(option).action();
-    this->options[0];
 }
 
 void Menu::addItem(MenuItem *item) {
