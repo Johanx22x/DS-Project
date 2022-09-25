@@ -5,13 +5,22 @@
 
 typedef int(action)(class Menu*, class Menu*);
 
-struct MenuItem {
+class MenuItem {
+public:
     int8_t id;
     action *action;
     std::string name;
     class Menu *menu;
 
     MenuItem() = default;
+
+    /**
+     * Basic constructor with all three basic parameters
+     *
+     * @param id Item's id
+     * @param name Item's name
+     * @param *action The action to be run
+     */
     MenuItem(int8_t id, std::string name, ::action *action);
 
     MenuItem *withId(uint8_t id);
@@ -26,10 +35,19 @@ class Menu {
 
 public:
 
-    Menu() = default;
-
+    /**
+     * Basic constructor with a name
+     *
+     * @param name The name for the current menu
+     */
     Menu(std::string name);
 
+    /**
+     * Basic constructor with a name and an initializer unordered_map
+     *
+     * @param name The name for the current menu
+     * @param initializer An initializer to prefill the current menu
+     */
     Menu(std::string name, std::unordered_map<int8_t, MenuItem*> initializer);
 
     /**

@@ -40,7 +40,8 @@ Menu::Menu(std::string name) {
 }
 
 void Menu::display() {
-    for (const auto& [id, value] : options) {
+    printf("%s\n", this->name.c_str());
+    for (const auto& [id, value] : this->options) {
         printf("(%d) -> %s\n", id, value->name.c_str());
     }
 }
