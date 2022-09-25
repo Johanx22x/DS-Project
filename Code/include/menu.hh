@@ -6,10 +6,9 @@
 typedef int(action)();
 
 struct MenuItem {
-    std::string name;
     int8_t id;
-    /* int(*action)(); */
     action *action;
+    std::string name;
 
     MenuItem() = default;
     MenuItem(int8_t id, std::string name, ::action *action);
