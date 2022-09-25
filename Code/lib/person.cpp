@@ -1,3 +1,4 @@
+#include <cstdio>
 #include <person.hh>
 #include <bits/types/time_t.h>
 #include <string>
@@ -15,4 +16,13 @@ void Person::append(Person *node) {
     while (curr->next !=  nullptr) curr = curr->next;
 
     curr->next = node;
+}
+
+void Person::show() {
+    Person *curr = this;
+
+    while (curr != nullptr) {
+        printf("%s %s\n", curr->name.c_str(), curr->id.c_str());
+        curr = curr->next;
+    }
 }

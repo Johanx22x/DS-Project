@@ -19,6 +19,14 @@ public:
     Place *location = nullptr;
     Proxy<Climate> *climates = nullptr;
 
+    /**
+     * Person constructor
+     *
+     * @param name      The name of the person
+     * @param id        The id of the person
+     * @param age       The age of the person
+     * @param joinDate  Date in which the person was registered
+     */
     Person(std::string name, std::string id, short int age, time_t joinDate);
 
     /** 
@@ -27,4 +35,11 @@ public:
      * @param *node The element to be appended
      */
     void append(Person *node);
+
+    /**
+     * Show all the nodes of the struct
+     *
+     * @return nothing
+     */
+    void show();
 };
