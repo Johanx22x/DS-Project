@@ -22,7 +22,7 @@ struct MenuItem {
 
 class Menu {
     std::string name;
-    std::unordered_map<int8_t, MenuItem*> *options = new std::unordered_map<int8_t, MenuItem*>();
+    std::unordered_map<int8_t, MenuItem*> options = std::unordered_map<int8_t, MenuItem*>();
 
 public:
 
@@ -30,7 +30,7 @@ public:
 
     Menu(std::string name);
 
-    Menu(std::string name, std::unordered_map<int8_t, MenuItem*> *initializer);
+    Menu(std::string name, std::unordered_map<int8_t, MenuItem*> initializer);
 
     /**
      * Move constructor
