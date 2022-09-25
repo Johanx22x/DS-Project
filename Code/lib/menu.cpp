@@ -48,7 +48,10 @@ void Menu::display() {
 int Menu::prompt() {
     printf("Select an option: ");
     int option = getInt();
-    return this->options.at(option).action(this);
+
+    MenuItem curr = this->options.at(option);
+
+    return curr.action(this, curr.menu);
 }
 
 void Menu::addItem(MenuItem *item) {
