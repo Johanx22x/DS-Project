@@ -20,8 +20,13 @@ MenuItem *MenuItem::withName(std::string name) {
     return this;
 }
 
-MenuItem *MenuItem::withAction(int(*action)()) {
+MenuItem *MenuItem::withAction(::action *action) {
     this->action = action;
+    return this;
+}
+
+MenuItem *MenuItem::withMenu(Menu* menu) {
+    this->menu = menu;
     return this;
 }
 
@@ -43,7 +48,7 @@ void Menu::display() {
 int Menu::prompt() {
     printf("Select an option: ");
     int option = getInt();
-    return this->options.at(option).action();
+    return this->options.at(option).action(this);
 }
 
 void Menu::addItem(MenuItem *item) {
