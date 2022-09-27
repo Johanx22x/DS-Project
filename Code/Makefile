@@ -3,21 +3,20 @@ CODEDIRS = ./lib
 INCDIRS = ./include/
 
 CC = clang++
-OS = $(shell uname)
-
 FOLDERS_COMMAND = mkdir -p obj bin include lib
 
-ifeq ($(OS),Linux)
-	rm_C = rm -rf
+ifeq ($(OS),Windows_NT)
+	rm_C = del bin\* obj\*
+	FOLDERS_COMMAND=
 else
-	rm_C = del
-	FOLDERS_COMMAND = "echo"
+	CFLAGS = -fuse-ld=mold
+	rm_C = rm -rf $(BINARY) $(OBJECTS) $(DEPFILES)
 endif
 
 DEPFLAGS = -MP -MD
 
 CXXFLAGS = -Wall -Wextra -Wpedantic -Wformat -std=c++17
-CFLAGS =  $(CXXFLAGS) $(foreach D, $(INCDIRS),-I$(D)) $(DEPFLAGS) -O3
+CFLAGS +=  $(CXXFLAGS) $(foreach D, $(INCDIRS),-I$(D)) $(DEPFLAGS) -O3
 
 CFILES = $(foreach D,$(CODEDIRS),$(wildcard $(D)/*.cpp))
 
@@ -31,7 +30,7 @@ run: $(BINARY)
 	$(BINARY)
 
 $(BINARY): $(OBJECTS)
-	$(CC) $(CFLAGS) -fuse-ld=mold -o $@ $^
+	$(CC) $(CFLAGS) -o $@ $^
 
 folders:
 	@$(FOLDERS_COMMAND)
@@ -41,6 +40,6 @@ obj/%.o: lib/%.cpp | folders
 
 .PHONY: clean
 clean:
-	$(rm_C) $(BINARY) $(OBJECTS) $(DEPFILES)
+	$(rm_C)
 
 -include $(DEPFILES)
