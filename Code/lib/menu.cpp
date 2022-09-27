@@ -31,7 +31,7 @@ MenuItem *MenuItem::withMenu(Menu* menu) {
     return this;
 }
 
-Menu::Menu(std::string name, std::unordered_map<int8_t, MenuItem*> initializer) {
+Menu::Menu(std::string name, std::map<int8_t, MenuItem*> initializer) {
     this->name = name;
     this->options = initializer;
 }

@@ -2,7 +2,7 @@
 #include "command_codes.hh"
 #include <cstdint>
 #include <string>
-#include <unordered_map>
+#include <map>
 
 typedef CommandCodes(action)(class Menu*, class Menu*);
 
@@ -32,7 +32,7 @@ public:
 
 class Menu {
     std::string name;
-    std::unordered_map<int8_t, MenuItem*> options = std::unordered_map<int8_t, MenuItem*>();
+    std::map<int8_t, MenuItem*> options = std::map<int8_t, MenuItem*>();
 
 public:
 
@@ -49,7 +49,7 @@ public:
      * @param name The name for the current menu
      * @param initializer An initializer to prefill the current menu
      */
-    Menu(std::string name, std::unordered_map<int8_t, MenuItem*> initializer);
+    Menu(std::string name, std::map<int8_t, MenuItem*> initializer);
 
     /**
      * Move constructor
