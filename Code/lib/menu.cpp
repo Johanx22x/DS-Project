@@ -1,3 +1,4 @@
+#include "command_codes.hh"
 #include <menu.hh>
 #include <cstdint>
 #include <unordered_map>
@@ -46,7 +47,7 @@ void Menu::display() {
     }
 }
 
-int Menu::prompt() {
+CommandCodes Menu::prompt() {
     printf("Select an option: ");
     int option = getInt();
 
