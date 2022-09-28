@@ -3,20 +3,19 @@ CODEDIRS = ./lib
 INCDIRS = ./include/
 
 CC = clang++
-FOLDERS_COMMAND = mkdir -p obj bin include lib
 
 ifeq ($(OS),Windows_NT)
 	rm_C = del bin\* obj\*
-	FOLDERS_COMMAND=
 else
-	CFLAGS = -fuse-ld=mold
+	FOLDERS_COMMAND = mkdir -p obj bin include lib
+	LINKFLAGS = -fuse-ld=mold
 	rm_C = rm -rf $(BINARY) $(OBJECTS) $(DEPFILES)
 endif
 
 DEPFLAGS = -MP -MD
 
 CXXFLAGS = -Wall -Wextra -Wpedantic -Wformat -std=c++17
-CFLAGS +=  $(CXXFLAGS) $(foreach D, $(INCDIRS),-I$(D)) $(DEPFLAGS) -O3
+CFLAGS =  $(CXXFLAGS) $(foreach D, $(INCDIRS),-I$(D)) $(DEPFLAGS) -O3
 
 CFILES = $(foreach D,$(CODEDIRS),$(wildcard $(D)/*.cpp))
 
@@ -30,7 +29,7 @@ run: $(BINARY)
 	$(BINARY)
 
 $(BINARY): $(OBJECTS)
-	$(CC) $(CFLAGS) -o $@ $^
+	$(CC) $(LINKFLAGS) $(CFLAGS) -o $@ $^
 
 folders:
 	@$(FOLDERS_COMMAND)

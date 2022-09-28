@@ -9,22 +9,9 @@
 #include <util.hh>
 #include <instant.hh>
 
-/**
- * Inserts an element at the beginning of a list
- *
- * @tparam T The type of the list
- * @param list The list
- * @param node The element to be inserted
- */
-template<typename T>
-T *insert(T *list, T* node) {
-    if (list == nullptr) return node;
-    node->next = list;
-    return node;
-}
 
 // TEST: Check if this function works
-Instant *sortedInsertInstant(Instant *list, Instant* node) {
+Instant *sortedInsert(Instant *list, Instant* node) {
     if (list == nullptr) return node;
 
     Instant *curr = list;
@@ -39,7 +26,7 @@ Instant *sortedInsertInstant(Instant *list, Instant* node) {
 }
 
 // TEST: Check if this function works
-Climate *sortedInsertClimate(Climate *list, Climate *node) {
+Climate *sortedInsert(Climate *list, Climate *node) {
     if (list == nullptr) return node;
 
     Climate *curr = list;
@@ -89,7 +76,7 @@ int main() {
     dataManagement->addItem(new MenuItem(13, "Add a new instant", 
                 [](Menu *dataManagement, Menu *) -> CommandCodes {
                     // TODO: Fix time_t params
-                    instantList = sortedInsertInstant(instantList, new Instant("Sol", 1, 1, 1));
+                    instantList = sortedInsert(instantList, new Instant("Sol", 1, 1, 1));
                     dataManagement->display();
                     return CommandCodes::CONTINUE;
                 }));
