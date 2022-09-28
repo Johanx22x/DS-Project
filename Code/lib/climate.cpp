@@ -1,4 +1,4 @@
-#include <bits/types/time_t.h>
+//#include <bits/types/time_t.h>
 #include <climate.hh>
 
 Climate::Climate(double precipitation, double maxTemp, double minTemp, double windSpeed, double humidity, char windDirection, bool itRained, time_t date, time_t startTime, time_t endTime) {
