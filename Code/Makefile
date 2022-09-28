@@ -25,7 +25,6 @@ OBJECTS = $(patsubst ./lib/%.cpp,./obj/%.o,$(CFILES))
 DEPFILES = $(patsubst ./lib/%.cpp,./obj/%.d,$(CFILES))
 
 all: $(BINARY)
-	echo $(OS)
 
 run: $(BINARY)
 	$(BINARY)
