@@ -10,37 +10,6 @@
 #include <instant.hh>
 
 
-// TEST: Check if this function works
-Instant *sortedInsert(Instant *list, Instant* node) {
-    if (list == nullptr) return node;
-
-    Instant *curr = list;
-    while (curr->date <= node->date || curr != nullptr) curr = curr->next;
-
-    node->prev = curr->prev;
-    curr->prev->next = node;
-    node->next = curr;
-    curr->prev = node;
-
-    return list;
-}
-
-// TEST: Check if this function works
-Climate *sortedInsert(Climate *list, Climate *node) {
-    if (list == nullptr) return node;
-
-    Climate *curr = list;
-    Climate *prev = nullptr;
-    while (curr->date <= node->date || curr != nullptr) {
-        prev = curr;
-        curr = curr->next;
-    }
-
-    prev->next = node;
-    node-> next = curr;
-
-    return list;
-}
 
 // TODO: Create structures
 // FIXME: time_t params for new Person
@@ -103,7 +72,7 @@ int main() {
                 }));
     dataManagement->addItem(new MenuItem(7, "Add a new region", 
                 [](Menu *dataManagement, Menu*) -> CommandCodes {
-                    regionList = insert<Region>(regionList, new Region("San Ramon", "4", "Alajuela, Costa Rica"));
+                    regionList = insert(regionList, new Region("San Ramon", "4", "Alajuela, Costa Rica"));
                     dataManagement->display();
                     return CommandCodes::CONTINUE;
                 }));
