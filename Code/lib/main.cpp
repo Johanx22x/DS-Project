@@ -1,3 +1,4 @@
+#include "climate.hh"
 #include <cstdio>
 #include <iostream>
 #include <command_codes.hh>
@@ -22,14 +23,12 @@ T *insert(T *list, T* node) {
     return node;
 }
 
-// TODO: check implementation for climate
-// actually works only for instant
-template<typename T>
-T *sortedInsert(T *list, T* node) {
+// TEST: Check if this function works
+Instant *sortedInsertInstant(Instant *list, Instant* node) {
     if (list == nullptr) return node;
 
-    T *curr = list;
-    while (curr->date <= node->date);
+    Instant *curr = list;
+    while (curr->date <= node->date || curr != nullptr) curr = curr->next;
 
     node->prev = curr->prev;
     curr->prev->next = node;
@@ -39,14 +38,32 @@ T *sortedInsert(T *list, T* node) {
     return list;
 }
 
+// TEST: Check if this function works
+Climate *sortedInsertClimate(Climate *list, Climate *node) {
+    if (list == nullptr) return node;
+
+    Climate *curr = list;
+    Climate *prev = nullptr;
+    while (curr->date <= node->date || curr != nullptr) {
+        prev = curr;
+        curr = curr->next;
+    }
+
+    prev->next = node;
+    node-> next = curr;
+
+    return list;
+}
+
 // TODO: Create structures
-// TODO: Fix time_t params for new Person
+// FIXME: time_t params for new Person
 Person *personList = new Person("Johan", "2210", 18, 0);
 Rain *rainList = new Rain("Storm", "1", 0.2);
 Region *regionList = new Region("San Carlos", "5", "Alajuela, Costa Rica");
 // TODO: Fix time_t params for new Instant
 Instant *instantList = new Instant("A beautiful day", 0, 0, 0);
 
+// TODO: Change 
 int main() {
     // Principal menu definition
     Menu *menu = new Menu("Main Menu");
@@ -72,7 +89,7 @@ int main() {
     dataManagement->addItem(new MenuItem(13, "Add a new instant", 
                 [](Menu *dataManagement, Menu *) -> CommandCodes {
                     // TODO: Fix time_t params
-                    instantList = sortedInsert<Instant>(instantList, new Instant("Sol", 1, 1, 1));
+                    instantList = sortedInsertInstant(instantList, new Instant("Sol", 1, 1, 1));
                     dataManagement->display();
                     return CommandCodes::CONTINUE;
                 }));
@@ -80,7 +97,7 @@ int main() {
     // TODO: Implement MenuItems for Places
     dataManagement->addItem(new MenuItem(10, "Add a new place",
                 [](Menu *dataManagement, Menu *) -> CommandCodes {
-                    // TODO: add lambda implementation
+                    // TODO: add function body
                     dataManagement->display();
                     return CommandCodes::CONTINUE;
                 }));
