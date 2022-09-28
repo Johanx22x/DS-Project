@@ -1,10 +1,24 @@
 #pragma once
 
+#include "climate.hh"
+#include "instant.hh"
+
 /**
- * Deprecated user input
+ * Returns the first character of stdin as an int
  *
  */
+[[deprecated("Use std::cin instead")]]
 int getInt();
+
+/**
+ * Sorts and inserts a Climate node into a Climate list
+ */
+Climate *sortedInsert(Climate *, Climate *);
+
+/**
+ * Sorts and inserts an Instant node into an Instant list
+ */
+Instant *sortedInsert(Instant *, Instant *);
 
 /**
  * Inserts an element at the beginning of a list
@@ -13,10 +27,10 @@ int getInt();
  * @param list The list
  * @param node The element to be inserted
  */
-template<typename T>
-T *insert(const T *list, const T* node) {
-    if (list == nullptr) return nullptr;
+template <typename T> 
+T *insert(T *list, T *node) {
+    if (list == nullptr)
+        return nullptr;
     node->next = list;
     return node;
 }
-

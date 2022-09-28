@@ -9,51 +9,7 @@
 #include <util.hh>
 #include <instant.hh>
 
-/**
- * Inserts an element at the beginning of a list
- *
- * @tparam T The type of the list
- * @param list The list
- * @param node The element to be inserted
- */
-template<typename T>
-T *insert(T *list, T* node) {
-    if (list == nullptr) return node;
-    node->next = list;
-    return node;
-}
 
-// TEST: Check if this function works
-Instant *sortedInsertInstant(Instant *list, Instant* node) {
-    if (list == nullptr) return node;
-
-    Instant *curr = list;
-    while (curr->date <= node->date || curr != nullptr) curr = curr->next;
-
-    node->prev = curr->prev;
-    curr->prev->next = node;
-    node->next = curr;
-    curr->prev = node;
-
-    return list;
-}
-
-// TEST: Check if this function works
-Climate *sortedInsertClimate(Climate *list, Climate *node) {
-    if (list == nullptr) return node;
-
-    Climate *curr = list;
-    Climate *prev = nullptr;
-    while (curr->date <= node->date || curr != nullptr) {
-        prev = curr;
-        curr = curr->next;
-    }
-
-    prev->next = node;
-    node-> next = curr;
-
-    return list;
-}
 
 // TODO: Create structures
 // FIXME: time_t params for new Person
@@ -89,7 +45,7 @@ int main() {
     dataManagement->addItem(new MenuItem(13, "Add a new instant", 
                 [](Menu *dataManagement, Menu *) -> CommandCodes {
                     // TODO: Fix time_t params
-                    instantList = sortedInsertInstant(instantList, new Instant("Sol", 1, 1, 1));
+                    instantList = sortedInsert(instantList, new Instant("Sol", 1, 1, 1));
                     dataManagement->display();
                     return CommandCodes::CONTINUE;
                 }));
@@ -116,7 +72,7 @@ int main() {
                 }));
     dataManagement->addItem(new MenuItem(7, "Add a new region", 
                 [](Menu *dataManagement, Menu*) -> CommandCodes {
-                    regionList = insert<Region>(regionList, new Region("San Ramon", "4", "Alajuela, Costa Rica"));
+                    regionList = insert(regionList, new Region("San Ramon", "4", "Alajuela, Costa Rica"));
                     dataManagement->display();
                     return CommandCodes::CONTINUE;
                 }));
