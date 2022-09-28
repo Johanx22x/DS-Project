@@ -1,3 +1,4 @@
+#include <cstdio>
 #include <instant.hh>
 #include <string>
 
@@ -14,4 +15,13 @@ void Instant::append(Instant *node) {
     while (curr != nullptr) curr = curr->next;
 
     curr->next = node;
+}
+
+void Instant::show() {
+    Instant *curr = this;
+
+    while (curr != nullptr) {
+        printf("%s %ld\n", curr->name.c_str(), curr->date);
+        curr = curr->next;
+    }
 }

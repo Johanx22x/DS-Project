@@ -15,5 +15,12 @@ public:
     Proxy<Place> *places = nullptr;
 
     Region(std::string name, std::string id, std::string location);
+
+    /**
+     * Display all the nodes of the list
+     *
+     * @return nothing
+     */
+    void show();
 };
     

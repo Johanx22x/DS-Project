@@ -1,3 +1,4 @@
+#include "command_codes.hh"
 #include <menu.hh>
 #include <cstdint>
 #include <unordered_map>
@@ -40,13 +41,13 @@ Menu::Menu(std::string name) {
 }
 
 void Menu::display() {
-    printf("%s\n", this->name.c_str());
+    printf("\n\u001b[31m%s:\u001b[0m\n", this->name.c_str());
     for (const auto& [id, value] : this->options) {
         printf("(%d) -> %s\n", id, value->name.c_str());
     }
 }
 
-int Menu::prompt() {
+CommandCodes Menu::prompt() {
     printf("Select an option: ");
     int option = getInt();
 

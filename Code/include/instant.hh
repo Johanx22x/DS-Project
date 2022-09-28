@@ -22,4 +22,11 @@ public:
      * @param node The node to be appended
      */
     void append(Instant *node);
+
+    /**
+     * Show all the nodes of a list
+     *
+     * @return nothing
+     */
+    void show();
 };

@@ -1,15 +1,16 @@
 #pragma once
+#include "command_codes.hh"
 #include <cstdint>
 #include <string>
 #include <unordered_map>
 
-typedef int(action)(class Menu*, class Menu*);
+typedef CommandCodes(action)(class Menu*, class Menu*);
 
 class MenuItem {
 public:
     int8_t id;
-    action *action;
     std::string name;
+    ::action *action;
     class Menu *menu;
 
     MenuItem() = default;
@@ -65,7 +66,7 @@ public:
      *
      * @returns int A return code that dictates whether or not the call was successful
      */
-    int prompt();
+    CommandCodes prompt();
 
     /**
      * Appends an item to the items vector
