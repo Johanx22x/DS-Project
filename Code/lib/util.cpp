@@ -3,6 +3,7 @@
 #include <iostream>
 #include <instant.hh>
 #include <climate.hh>
+#include <place.hh>
 
 /**
  * Reads the first char in stdin
@@ -14,6 +15,22 @@ int getInt() {
     int data = 0;
     std::cin >> data;
     return data;
+}
+
+Place *insert(Place *list, Place *node) {
+    if (list == nullptr) return node;
+
+    node->next = list;
+    
+    Place *curr = list;
+
+    do {
+        curr = curr->next;
+    } while (curr != list);
+
+    curr->next = node;
+
+    return list;
 }
 
 Instant *sortedInsert(Instant *list, Instant* node) {
