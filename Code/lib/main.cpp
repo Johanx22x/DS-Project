@@ -1,3 +1,4 @@
+#include <bits/types/time_t.h>
 #include <climate.hh>
 #include <place.hh>
 #include <cstdio>
@@ -8,11 +9,14 @@
 #include <person.hh>
 #include <rain.hh>
 #include <region.hh>
+#include <string>
 #include <util.hh>
 #include <instant.hh>
+#include <string>
 
-// FIXME: time_t params for new Person
-Person *people = new Person("Johan", "2210", 18, 0);
+using std::string;
+
+Person *people = new Person("Johan Rodriguez", "2022141892", 18, 1531721412);
 Rain *rains = new Rain("Storm", "1", 0.2);
 Region *regions = new Region("San Carlos", "5", "Alajuela, Costa Rica");
 Place *places = new Place("Santa Clara", 500, 1250.3);
@@ -178,8 +182,15 @@ int main() {
     dataManagement->addItem(new MenuItem(14, "Add a new instant", 
                 [](Menu *dataManagement, Menu *) -> CommandCodes {
                     // TODO: implement function body (user input)
+                    printf("\nEnter a descriptive name for the instant register: ");
+                    string name;
+                    // Flush buffer
+                    std::cin.clear();
+                    std::cin.ignore(INT32_MAX, '\n');
+                    getline(std::cin, name);
+
                     // FIXME: time_t params
-                    instants = sortedInsert(instants, new Instant("Sol", 1, 1, 1));
+                    instants = sortedInsert(instants, new Instant(name, 1, 1, 1));
                     dataManagement->display();
                     return CommandCodes::CONTINUE;
                 }));
@@ -203,12 +214,27 @@ int main() {
                 }));
     dataManagement->addItem(new MenuItem(10, "Add a new place",
                 [](Menu *dataManagement, Menu *) -> CommandCodes {
-                    // TODO: implement function body (user input)
-                    places = insert(places, new Place("Ciudad Quesada", 3000, 2342.2));
+                    printf("\nEnter the name of the place: ");
+                    string name;
+                    // Flush buffer
+                    std::cin.clear();
+                    std::cin.ignore(INT32_MAX, '\n');
+                    getline(std::cin, name);
+
+                    // TODO: Do a validation to population
+                    int population;
+                    printf("Enter the population of the place: ");
+                    std::cin >> population;
+
+                    // TODO: Do a validation to area
+                    double area;
+                    printf("Enter the area of the place: ");
+                    std::cin >> area;
+
+                    places = insert(places, new Place(name, population, area));
                     dataManagement->display();
                     return CommandCodes::CONTINUE;
                 }));
-
     dataManagement->addItem(new MenuItem(9, "Show registered regions",
                 [](Menu *dataManagement, Menu *) -> CommandCodes {
                     regions->show();
@@ -223,8 +249,24 @@ int main() {
                 }));
     dataManagement->addItem(new MenuItem(7, "Add a new region", 
                 [](Menu *dataManagement, Menu*) -> CommandCodes {
-                    // TODO: implement function body (user input)
-                    regions = insert(regions, new Region("San Ramon", "4", "Alajuela, Costa Rica"));
+                    printf("\nEnter the name of the region: ");
+                    string name;
+                    // Flush buffer
+                    std::cin.clear();
+                    std::cin.ignore(INT32_MAX, '\n');
+                    getline(std::cin, name);
+
+                    string id;
+                    printf("Enter the ID of the region: ");
+                    getline(std::cin, id);
+
+                    string location;
+                    printf("Enter the location of the region: ");
+                    getline(std::cin, location);
+
+                    regions = insert(regions, new Region(name, id , location));
+                    printf("\n\u001b[34m%s was inserted!\u001b[0m\n", name.c_str());
+
                     dataManagement->display();
                     return CommandCodes::CONTINUE;
                 }));
@@ -242,8 +284,25 @@ int main() {
                 }));
     dataManagement->addItem(new MenuItem(4, "Add a new rain",
                 [](Menu *dataManagement, Menu *) -> CommandCodes {
-                    // TODO: implement function body (user input)
-                    rains = insert(rains, new Rain("Lluvia fuerte", "2", 0.3));
+                    printf("\nEnter a descriptive name for the rain: ");
+                    string name;
+                    // Flush buffer
+                    std::cin.clear();
+                    std::cin.ignore(INT32_MAX, '\n');
+                    getline(std::cin, name);
+
+                    printf("Enter the id of the rain: ");
+                    string id;
+                    getline(std::cin, id);
+
+                    printf("Enter the average mm rainfall value of the rain: ");
+                    double rainfall = 0.0;
+                    // TODO: Do a validation to rainfall
+                    std::cin >> rainfall;
+
+                    rains = insert(rains, new Rain(name, id, rainfall));
+                    printf("\n\u001b[34mAdded a new rain register called: %s\u001b[0m\n", name.c_str());
+
                     dataManagement->display();
                     return CommandCodes::CONTINUE;
                 })); 
@@ -261,9 +320,31 @@ int main() {
                 }));
     dataManagement->addItem(new MenuItem(1, "Add a new person",
                 [](Menu *dataManagement, Menu *) -> CommandCodes {
-                    // TODO: implement function body (user input)
-                    // FIXME: time_t params for new Person
-                    people->append(new Person("Aaron", "1507", 19, 0));
+                    printf("\n");
+
+                    printf("Enter the name of the person: ");
+                    string name;
+                    // Flush buffer
+                    std::cin.clear();
+                    std::cin.ignore(INT32_MAX, '\n');
+                    getline(std::cin, name);
+
+                    printf("Enter the id of the person: ");
+                    string id;
+                    getline(std::cin, id);
+
+                    printf("Enter the age of the person: ");
+                    int age = 0;
+                    // TODO: Do a validation to age
+                    std::cin >> age;
+
+                    // TODO: Implement join date based on user input
+                    time_t joinDate;
+                    time(&joinDate);
+
+                    people->append(new Person(name, id, age, joinDate));
+                    printf("\n\u001b[34m%s joined at %s\u001b[0m\n", name.c_str(), asctime(gmtime(&joinDate)));
+
                     dataManagement->display();
                     return CommandCodes::CONTINUE;
                 })); 

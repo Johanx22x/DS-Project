@@ -12,7 +12,7 @@ void Region::show() {
     Region *curr = this;
 
     while (curr != nullptr) {
-        printf("%s, %s\n", curr->name.c_str(), curr->location.c_str());
+        printf("\nRegion name: %s\nRegion ID: %s\nRegion location: %s\n", curr->name.c_str(), curr->id.c_str(), curr->location.c_str());
         curr = curr->next;
     }
 }

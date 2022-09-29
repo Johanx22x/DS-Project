@@ -68,7 +68,7 @@ void Rain::show() {
     Rain *curr = this;
 
     while (curr != nullptr) {
-        printf("%s %f\n", curr->name.c_str(), curr->rainfall);
+        printf("\nRain ID: %s\nRain name: %s\nRain average rainfall: %f\n", curr->id.c_str(), curr->name.c_str(), curr->rainfall);
         curr = curr->next;
     }
 }

@@ -1,4 +1,5 @@
 #include <cstdio>
+#include <ctime>
 #include <instant.hh>
 #include <string>
 
@@ -21,7 +22,8 @@ void Instant::show() {
     Instant *curr = this;
 
     while (curr != nullptr) {
-        printf("%s %ld\n", curr->name.c_str(), curr->date);
+        // TODO: Implement start and end time
+        printf("Instant name: %s\nInstant date: %s\n", curr->name.c_str(), asctime(gmtime(&curr->date)));
         curr = curr->next;
     }
 }
