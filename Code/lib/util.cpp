@@ -16,34 +16,57 @@ int getInt() {
     return data;
 }
 
-// TEST: Check if this function works
 Instant *sortedInsert(Instant *list, Instant* node) {
     if (list == nullptr) return node;
 
-    Instant *curr = list;
-    while (curr->date <= node->date || curr != nullptr) curr = curr->next;
+    if (list->date < node->date) {
+        node->next = list;
+        list->prev = node;
+        return node;
+    }
 
-    node->prev = curr->prev;
-    curr->prev->next = node;
-    node->next = curr;
-    curr->prev = node;
+    Instant *tmp = list;
+
+    while (node->date > tmp->date) {
+        if (tmp->next == nullptr) break;
+        tmp = tmp->next;
+    }
+
+    // case for when the new node ends up between 2 nodes
+    if (tmp->next != nullptr) {
+        node->next = tmp->next;
+        tmp->next = node;
+        node->prev = tmp;
+    } else { // this one executes if the new node ends up at the end
+        tmp->next = node;
+        node->prev = tmp;
+    }
 
     return list;
 }
 
-// TEST: Check if this function works
 Climate *sortedInsert(Climate *list, Climate *node) {
     if (list == nullptr) return node;
 
-    Climate *curr = list;
-    Climate *prev = nullptr;
-    while (curr->date <= node->date || curr != nullptr) {
-        prev = curr;
-        curr = curr->next;
+    if (list->date < node->date) {
+        node->next = list;
+        return node;
     }
 
-    prev->next = node;
-    node-> next = curr;
+    Climate *tmp = list;
+
+    while (node->date > tmp->date) {
+        if (tmp->next == nullptr) break;
+        tmp = tmp->next;
+    }
+
+    if (tmp->next == nullptr) { // this executes when the new node ends up at the end
+        tmp->next = node;
+    } else {
+        node->next = tmp->next;
+        tmp->next = node;
+
+    }
 
     return list;
 }

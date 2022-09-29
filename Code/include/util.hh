@@ -1,7 +1,7 @@
 #pragma once
 
-#include "climate.hh"
-#include "instant.hh"
+#include <climate.hh>
+#include <instant.hh>
 
 /**
  * Returns the first character of stdin as an int
