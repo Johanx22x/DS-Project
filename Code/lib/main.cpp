@@ -396,7 +396,6 @@ int main() {
                             }
                         }
                     }
-
                     dataManagement->display();
                     return CommandCodes::CONTINUE;
                 }));
