@@ -21,4 +21,8 @@ public:
     Climate *next = nullptr;
 
     Climate(double precipitation, double maxTemp, double minTemp, double windSpeed, double humidity, char windDirection, bool itRained, time_t date, time_t startTime, time_t endTime);
+
+    void append(Climate *node);
+
+    void show();
 };

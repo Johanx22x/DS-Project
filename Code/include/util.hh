@@ -1,5 +1,6 @@
 #pragma once
 
+#include "place.hh"
 #include <climate.hh>
 #include <instant.hh>
 
@@ -18,6 +19,14 @@ Climate *sortedInsert(Climate *, Climate *);
  * Sorts and inserts an Instant node into an Instant list
  */
 Instant *sortedInsert(Instant *, Instant *);
+
+/**
+ * Insert a new element in the places circular list
+ *
+ * @param list The list
+ * @param node The element to be inserted
+ */
+Place *insert(Place *list, Place *node);
 
 /**
  * Inserts an element at the beginning of a list

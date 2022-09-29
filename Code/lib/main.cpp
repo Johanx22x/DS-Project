@@ -18,6 +18,8 @@ Region *regions = new Region("San Carlos", "5", "Alajuela, Costa Rica");
 Place *places = new Place("Santa Clara", 500, 1250.3);
 // FIXME: time_t params for new Instant
 Instant *instants = new Instant("A beautiful day", 0, 0, 0);
+// FIXME: time_t params for new climate
+Climate *climates = new Climate(2.3, 4.1, 8.2, 0.4, 31.8, 'N', true, 0, 1, 2);
 
 int main() {
     // NOTE: Main menu definition
@@ -30,10 +32,60 @@ int main() {
 
     // NOTE: reports menu items definition
     // TODO: Implement all the 9 items of reports
+    reports->addItem( new MenuItem(9, "Not yet implemented!",
+                [](Menu *reports, Menu *) -> CommandCodes {
+                    // TODO: implement function body
+                    reports->display();
+                    return CommandCodes::CONTINUE;
+                }));
+    reports->addItem( new MenuItem(8, "Not yet implemented!",
+                [](Menu *reports, Menu *) -> CommandCodes {
+                    // TODO: implement function body
+                    reports->display();
+                    return CommandCodes::CONTINUE;
+                }));
+    reports->addItem( new MenuItem(7, "Not yet implemented!",
+                [](Menu *reports, Menu *) -> CommandCodes {
+                    // TODO: implement function body
+                    reports->display();
+                    return CommandCodes::CONTINUE;
+                }));
+    reports->addItem( new MenuItem(6, "Not yet implemented!",
+                [](Menu *reports, Menu *) -> CommandCodes {
+                    // TODO: implement function body
+                    reports->display();
+                    return CommandCodes::CONTINUE;
+                }));
+    reports->addItem( new MenuItem(5, "Not yet implemented!",
+                [](Menu *reports, Menu *) -> CommandCodes {
+                    // TODO: implement function body
+                    reports->display();
+                    return CommandCodes::CONTINUE;
+                }));
+    reports->addItem( new MenuItem(4, "Not yet implemented!",
+                [](Menu *reports, Menu *) -> CommandCodes {
+                    // TODO: implement function body
+                    reports->display();
+                    return CommandCodes::CONTINUE;
+                }));
+    reports->addItem( new MenuItem(3, "Not yet implemented!",
+                [](Menu *reports, Menu *) -> CommandCodes {
+                    // TODO: implement function body
+                    reports->display();
+                    return CommandCodes::CONTINUE;
+                }));
+    reports->addItem( new MenuItem(2, "Not yet implemented!",
+                [](Menu *reports, Menu *) -> CommandCodes {
+                    // TODO: implement function body
+                    reports->display();
+                    return CommandCodes::CONTINUE;
+                }));
     reports->addItem( new MenuItem(1, "Display the information of all the lists", 
                 [](Menu *reports, Menu *) -> CommandCodes {
+                    // TODO: Print detailed information for every node, including sub-lists
                     people->show();
                     rains->show();
+                    places->show();
                     regions->show();
                     instants->show();
                     reports->display();
@@ -79,16 +131,35 @@ int main() {
                 }));
     
     // NOTE: dataManagement menu items definition
-    dataManagement->addItem(new MenuItem(18, "Relate a climate register to a person",
+    dataManagement->addItem(new MenuItem(21, "Relate a climate register to a person",
                 [](Menu *dataManagement, Menu *) -> CommandCodes {
                     // TODO: Relate a climate register to a person
                     dataManagement->display();
                     return CommandCodes::CONTINUE;
                 }));
-    dataManagement->addItem(new MenuItem(17, "Relate a place with a climate register",
+    dataManagement->addItem(new MenuItem(20, "Relate a place with a climate register",
                 [](Menu *dataManagement, Menu *) -> CommandCodes {
                     // TODO: implement function body (Relate a place with a region)
                     // TODO: Relate to the correspondient rain node
+                    dataManagement->display();
+                    return CommandCodes::CONTINUE;
+                }));
+    dataManagement->addItem(new MenuItem(19, "Show registered climates",
+                [](Menu *dataManagement, Menu *) -> CommandCodes {
+                    climates->show();
+                    dataManagement->display();
+                    return CommandCodes::CONTINUE;
+                }));
+    dataManagement->addItem(new MenuItem(18, "Modify a registered climate",
+                [](Menu *dataManagement, Menu *) -> CommandCodes {
+                    // TODO: implement function body (user input)
+                    dataManagement->display();
+                    return CommandCodes::CONTINUE;
+                }));
+    dataManagement->addItem(new MenuItem(17, "Add a new climate to the register", 
+                [](Menu *dataManagement, Menu *) -> CommandCodes {
+                    // TODO: implement function body (user input)
+                    climates->append(new Climate(3.2, 1.0, 2.1, 4.9, 1.8, 'N', false, 8, 9, 10));
                     dataManagement->display();
                     return CommandCodes::CONTINUE;
                 }));
@@ -133,6 +204,7 @@ int main() {
     dataManagement->addItem(new MenuItem(10, "Add a new place",
                 [](Menu *dataManagement, Menu *) -> CommandCodes {
                     // TODO: implement function body (user input)
+                    places = insert(places, new Place("Ciudad Quesada", 3000, 2342.2));
                     dataManagement->display();
                     return CommandCodes::CONTINUE;
                 }));

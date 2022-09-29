@@ -11,7 +11,7 @@ void Place::show() {
     Place *curr = this;
     
     do {
-        printf("%s", curr->name.c_str());
+        printf("%s\n", curr->name.c_str());
         curr = curr->next;
     } while (curr != this);
 }
