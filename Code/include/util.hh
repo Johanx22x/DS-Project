@@ -5,7 +5,6 @@
 
 /**
  * Returns the first character of stdin as an int
- *
  */
 [[deprecated("Use std::cin instead")]]
 int getInt();
