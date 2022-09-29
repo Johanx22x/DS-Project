@@ -1,6 +1,7 @@
 #include <climate.hh>
 #include <place.hh>
 #include <cstdio>
+#include <ctime>
 #include <iostream>
 #include <command_codes.hh>
 #include <menu.hh>
