@@ -1,5 +1,6 @@
 #include "climate.hh"
 #include <cstdio>
+#include <ctime>
 #include <iostream>
 #include <command_codes.hh>
 #include <menu.hh>
@@ -16,10 +17,12 @@
 Person *personList = new Person("Johan", "2210", 18, 0);
 Rain *rainList = new Rain("Storm", "1", 0.2);
 Region *regionList = new Region("San Carlos", "5", "Alajuela, Costa Rica");
+
 // TODO: Fix time_t params for new Instant
 Instant *instantList = new Instant("A beautiful day", 0, 0, 0);
 
-// TODO: Change 
+// TODO: Change
+// TODO: Ma johan, a que diablos se refiere con change?????
 int main() {
     // Principal menu definition
     Menu *menu = new Menu("Main Menu");
@@ -44,7 +47,7 @@ int main() {
                 }));
     dataManagement->addItem(new MenuItem(13, "Add a new instant", 
                 [](Menu *dataManagement, Menu *) -> CommandCodes {
-                    // TODO: Fix time_t params
+                    // TODO: Change last argument in Instant constructor instantiation to be of an actual time_t type, and not just a 1
                     instantList = sortedInsert(instantList, new Instant("Sol", 1, 1, 1));
                     dataManagement->display();
                     return CommandCodes::CONTINUE;
