@@ -12,7 +12,7 @@ public:
     std::string location;
     Region *next = nullptr;
 
-    Proxy<Place> *places = nullptr;
+    Proxy<class Place> *places = nullptr;
 
     Region(std::string name, std::string id, std::string location);
 
