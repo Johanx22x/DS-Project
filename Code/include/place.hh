@@ -1,6 +1,7 @@
 #pragma once
-#include <string>
 #include <proxy.hh>
+#include <region.hh>
+#include <string>
 #include <climate.hh>
 
 /**
@@ -11,8 +12,11 @@ public:
     std::string name;
     short int population;
     double area;
-    Place *next = nullptr;
+    Place *next = this;
+    class Region *region = nullptr;
     Proxy<Climate> *climate = nullptr;
 
     Place(std::string name, short int population, double area);
+
+    void show();
 };
