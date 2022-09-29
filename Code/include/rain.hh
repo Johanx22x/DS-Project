@@ -24,4 +24,8 @@ public:
      * @returns std::string A neatly formatted string that denotes the average rainfall
      */
     std::string averageRainfall();
+
+private:
+    double min();
+    double max();
 };
