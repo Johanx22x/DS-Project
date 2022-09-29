@@ -35,7 +35,7 @@ Instant *sortedInsert(Instant *list, Instant* node) {
     // case for when the new node ends up between 2 nodes
     if (tmp->next != nullptr) {
         node->next = tmp->next;
-        tmp->next = node;
+        tmp->prev->next = tmp->next = node;
         node->prev = tmp;
     } else { // this one executes if the new node ends up at the end
         tmp->next = node;
@@ -60,12 +60,12 @@ Climate *sortedInsert(Climate *list, Climate *node) {
         tmp = tmp->next;
     }
 
-    if (tmp->next == nullptr) { // this executes when the new node ends up at the end
-        tmp->next = node;
-    } else {
+    if (tmp->next != nullptr) { // this executes when the new node ends up at the end
         node->next = tmp->next;
         tmp->next = node;
+    } else {
 
+        tmp->next = node;
     }
 
     return list;
