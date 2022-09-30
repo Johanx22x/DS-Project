@@ -19,4 +19,6 @@ public:
      * @param node The element to be appended
      */
     void append(Proxy<T> *node);
+
+    void show();
 };

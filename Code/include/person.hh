@@ -37,6 +37,13 @@ public:
     void show();
 
     /**
+     * Show all the nodes of the struct (only printing the name and the id)
+     *
+     * @return nothing
+     */
+    void showByNameId();
+
+    /**
      * Search a person in the list
      *
      * @param id The element id to search

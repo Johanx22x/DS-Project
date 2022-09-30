@@ -40,7 +40,15 @@ Place *insert(Place *list, Place *node);
  * @param list The list
  * @param node The element to be deleted
  */
-Person *deleteNode(Person *list, Person *node);
+Person *deleteNodePerson(Person *list, Person *node);
+
+/**
+ * Delete a given node from the list
+ *
+ * @param list The list
+ * @param node The element to be deleted
+ */
+Rain *deleteNodeRain(Rain *list, Rain *node);
 
 /**
  * Inserts an element at the beginning of a list

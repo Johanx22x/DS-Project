@@ -20,6 +20,15 @@ void Person::show() {
     }
 }
 
+void Person::showByNameId() {
+    Person *curr = this;
+
+    while (curr != nullptr) {
+        printf("\nName: %s\nID: %s\n", curr->name.c_str(), curr->id.c_str());
+        curr = curr->next;
+    }
+}
+
 Person *Person::search(std::string id) {
     Person *curr = this;
     

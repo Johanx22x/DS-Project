@@ -1,4 +1,4 @@
-#include "person.hh"
+#include <person.hh>
 #include <util.hh>
 #include <cstdio>
 #include <iostream>
@@ -120,7 +120,7 @@ Climate *sortedInsert(Climate *list, Climate *node) {
     return list;
 }
 
-Person *deleteNode(Person *list, Person *node) {
+Person *deleteNodePerson(Person *list, Person *node) {
     if (list == nullptr) return nullptr; 
     else if (node == nullptr) return list;
 
@@ -137,6 +137,28 @@ Person *deleteNode(Person *list, Person *node) {
         if (curr->id == node->id) {
             prev->next = curr->next;
             curr->next->prev = prev;
+        }
+        prev = curr;
+        curr = curr->next;
+    }
+
+    return list;
+}
+
+Rain *deleteNodeRain(Rain *list, Rain *node) {
+    if (list == nullptr) return nullptr; 
+    else if (node == nullptr) return list;
+
+    // Check for the first node
+    if (list->id == node->id) {
+        return list->next;
+    }
+
+    Rain *curr = list;
+    Rain *prev;
+    while (curr != nullptr) {
+        if (curr->id == node->id) {
+            prev->next = curr->next;
         }
         prev = curr;
         curr = curr->next;
