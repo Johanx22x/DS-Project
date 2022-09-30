@@ -29,17 +29,17 @@ public:
      */
     Person(std::string name, std::string id, short int age, time_t joinDate);
 
-    /** 
-     * Appends an element to the end of the list
-     * 
-     * @param *node The element to be appended
-     */
-    void append(Person *node);
-
     /**
      * Show all the nodes of the struct
      *
      * @return nothing
      */
     void show();
+
+    /**
+     * Search a person in the list
+     *
+     * @param id The element id to search
+     */
+    Person *search(std::string id);
 };

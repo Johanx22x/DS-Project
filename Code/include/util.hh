@@ -1,5 +1,6 @@
 #pragma once
 
+#include "person.hh"
 #include "place.hh"
 #include <climate.hh>
 #include <instant.hh>
@@ -9,6 +10,11 @@
  */
 [[deprecated("Use std::cin instead")]]
 int getInt();
+
+/**
+ * Sorts and insert a Person node into a Person list
+ */
+Person *sortedInsert(Person *list, Person *node);
 
 /**
  * Sorts and inserts a Climate node into a Climate list
@@ -27,6 +33,14 @@ Instant *sortedInsert(Instant *, Instant *);
  * @param node The element to be inserted
  */
 Place *insert(Place *list, Place *node);
+
+/**
+ * Delete a given node from the list
+ *
+ * @param list The list
+ * @param node The element to be deleted
+ */
+Person *deleteNode(Person *list, Person *node);
 
 /**
  * Inserts an element at the beginning of a list

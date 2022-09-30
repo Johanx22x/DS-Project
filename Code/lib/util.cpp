@@ -1,3 +1,4 @@
+#include "person.hh"
 #include <util.hh>
 #include <cstdio>
 #include <iostream>
@@ -14,6 +15,38 @@ int getInt() {
     int data = 0;
     std::cin >> data;
     return data;
+}
+
+// FIXME: This function produce an error with lower and upper
+// TODO: Implement toLower() function to fix this error
+Person *sortedInsert(Person *list, Person *node) {
+    if (list == nullptr) return node;
+
+    if (list->name >= node->name) {
+        node->next = list;
+        list->prev = node;
+        return node;
+    }
+
+    Person *tmp = list;
+
+    while (node->name < tmp->name) {
+        if (tmp->next == nullptr) break;
+        tmp = tmp->next;
+    }
+
+    // case for when the new node ends up between 2 nodes
+    if (tmp->next != nullptr) {
+        node->next = tmp->next;
+        tmp->next->prev = node;
+        node->prev = tmp;
+        tmp->next = node;
+    } else { // this one executes if the new node ends up at the end
+        tmp->next = node;
+        node->prev = tmp;
+    }
+
+    return list;
 }
 
 Place *insert(Place *list, Place *node) {
@@ -82,6 +115,31 @@ Climate *sortedInsert(Climate *list, Climate *node) {
     } else {
 
         tmp->next = node;
+    }
+
+    return list;
+}
+
+Person *deleteNode(Person *list, Person *node) {
+    if (list == nullptr) return nullptr; 
+    else if (node == nullptr) return list;
+
+    // Check for the first node
+    if (list->id == node->id) {
+        if (list->next == nullptr) return nullptr;
+        list->next->prev = nullptr;
+        return list->next;
+    }
+
+    Person *curr = list;
+    Person *prev;
+    while (curr != nullptr) {
+        if (curr->id == node->id) {
+            prev->next = curr->next;
+            curr->next->prev = prev;
+        }
+        prev = curr;
+        curr = curr->next;
     }
 
     return list;

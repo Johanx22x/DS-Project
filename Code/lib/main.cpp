@@ -308,13 +308,95 @@ int main() {
                 })); 
     dataManagement->addItem(new MenuItem(3, "Show registered persons", 
                 [](Menu *dataManagement, Menu*) -> CommandCodes {
-                    people->show();
+                    if (people == nullptr) {
+                        printf("\nNo elements in the list!\n");
+                    } else {
+                        people->show();
+                    }
                     dataManagement->display();
                     return CommandCodes::CONTINUE;
                 }));
     dataManagement->addItem(new MenuItem(2, "Modify a registered person", 
                 [](Menu *dataManagement, Menu *) -> CommandCodes {
-                    // TODO: implement function body (user input)
+                    if (people == nullptr) {
+                        printf("\nNo elements to modify in the list!\n");
+                        dataManagement->display();
+                        return CommandCodes::CONTINUE;
+                    } 
+                    printf("\nEnter the ID of the person: ");
+                    string id;
+                    // Flush buffer
+                    std::cin.clear();
+                    std::cin.ignore(INT32_MAX, '\n');
+                    getline(std::cin, id);
+
+                    printf("%s", id.c_str());
+                    Person *toModify = people->search(id);
+                    if (toModify == nullptr) {
+                        printf("\n\u001b[31mThe person does't exist in the register!\n\u001b[0m");
+                        dataManagement->display();
+                        return CommandCodes::CONTINUE;
+                    }
+
+                    // TODO: Validate user input (1 or 2)
+                    int option;
+                    printf("\n\u001b[34m%s - %s\u001b[0m\n(1) - Modify this person\n(2) - Delete this person\nSelect an option: ", toModify->name.c_str(), toModify->id.c_str());
+                    std::cin >> option; 
+
+                    if (option == 2) {
+                        people = deleteNode(people, toModify);  
+                    } else if (option == 1) {
+                        bool modifyFlag = true;
+                        while (modifyFlag) {
+                            printf("\n(1) - Modify id\n");
+                            printf("(2) - Modify name\n");
+                            printf("(3) - Modify age\n");
+                            printf("Select an option: ");
+
+                            // TODO: Validate user input 
+                            int modifyOption;
+                            std::cin >> modifyOption;
+
+                            switch (modifyOption) {
+                                case 1: {
+                                    printf("Enter the new id for the person: ");
+                                    string newId;
+                                    // Flush buffer
+                                    std::cin.clear();
+                                    std::cin.ignore(INT32_MAX, '\n');
+                                    getline(std::cin, newId);
+                                    toModify->id = newId;
+                                    break;
+                                }
+                                case 2: {
+                                    printf("Enter the new name for the person: ");
+                                    string newName;
+                                    // Flush buffer
+                                    std::cin.clear();
+                                    std::cin.ignore(INT32_MAX, '\n');
+                                    getline(std::cin, newName);
+                                    toModify->name = newName;
+                                    break;
+                                }
+                                case 3: {
+                                    printf("Enter the new age for the person: ");
+                                    // TODO: validate user input
+                                    short newAge;
+                                    std::cin >> newAge;
+                                    toModify->age = newAge;
+                                    break;
+                                }
+                            }
+
+                            string attributeModify;
+                            printf("Do you want to modify another information of this person? [y/n]: ");
+                            getline(std::cin, attributeModify);
+                            if (!(attributeModify == "y" or attributeModify == "Y")) {
+                                break;
+                            }
+                        }
+                    }
+
                     dataManagement->display();
                     return CommandCodes::CONTINUE;
                 }));
@@ -342,7 +424,11 @@ int main() {
                     time_t joinDate;
                     time(&joinDate);
 
-                    people->append(new Person(name, id, age, joinDate));
+                    if (people == nullptr) {
+                        people = new Person(name, id, age, joinDate);
+                    } else {
+                        people = sortedInsert(people, new Person(name, id, age, joinDate));
+                    }
                     printf("\n\u001b[34m%s joined at %s\u001b[0m\n", name.c_str(), asctime(gmtime(&joinDate)));
 
                     dataManagement->display();
