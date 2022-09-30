@@ -22,5 +22,14 @@ public:
      * @return nothing
      */
     void show();
+
+    /**
+     * Display all the nodes of the list (with only the name and the ID)
+     *
+     * @return nothing
+     */
+    void showByNameID();
+
+    Region *search(std::string id);
 };
     

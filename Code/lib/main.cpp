@@ -1,3 +1,4 @@
+#include <proxy.hh>
 #include <bits/types/time_t.h>
 #include <climate.hh>
 #include <place.hh>
@@ -13,6 +14,20 @@
 #include <util.hh>
 #include <instant.hh>
 #include <string>
+
+template<typename T>
+Proxy<T>::Proxy(T *value) {
+    this->link = value;
+}
+
+template<typename T>
+void Proxy<T>::append(Proxy<T> *node) {
+    Proxy<T> *curr = this;
+
+    while (curr->next != nullptr) curr = curr->next;
+
+    curr->next = node;
+}
 
 using std::string;
 
@@ -196,13 +211,52 @@ int main() {
                 }));
     dataManagement->addItem(new MenuItem(13, "Relate a place to a region", 
                 [](Menu *dataManagement, Menu *) -> CommandCodes {
-                    // TODO: implement function body (Relate a place with a region)
+                    places->showByName();
+                    printf("\nEnter the name of the place: ");
+                    string placeName;
+                    // Flush buffer
+                    std::cin.clear();
+                    std::cin.ignore(INT32_MAX, '\n');
+                    getline(std::cin, placeName);
+
+                    Place *foundPlace = places->search(placeName);
+                    if (foundPlace == nullptr) {
+                        printf("\n\u001b[31mPlace %s not found!\u001b[0m\n", placeName.c_str());
+                        dataManagement->display();
+                        return CommandCodes::CONTINUE;
+                    }
+
+                    regions->showByNameID();
+                    printf("\nEnter the id of the region: ");
+                    string regionId;
+                    getline(std::cin, regionId);
+
+                    Region *foundRegion = regions->search(regionId);
+                    if (foundRegion == nullptr) {
+                        printf("\n\u001b[31mRegion with the id %s not found!\u001b[0m\n", regionId.c_str());
+                        dataManagement->display();
+                        return CommandCodes::CONTINUE;
+                    }
+                    
+                    if (foundRegion->places == nullptr) {
+                        foundRegion->places = new Proxy(foundPlace);
+                    } else {
+                        foundRegion->places->append(new Proxy<Place>(foundPlace));
+                    }
+
+                    printf("\n\u001b[34mPlace %s successfully related to region %s!\u001b[0m\n", foundPlace->name.c_str(), foundRegion->name.c_str());
+
                     dataManagement->display();
                     return CommandCodes::CONTINUE;
                 }));
     dataManagement->addItem(new MenuItem(12, "Show registered places",
                 [](Menu *dataManagement, Menu *) -> CommandCodes {
-                    places->show();
+                    if (places == nullptr) {
+                        printf("\n\u001b[31mNo elements in the region list!\u001b[0m\n");
+                    } else {
+                        places->show();
+                    }
+
                     dataManagement->display();
                     return CommandCodes::CONTINUE;
                 }));
@@ -237,7 +291,12 @@ int main() {
                 }));
     dataManagement->addItem(new MenuItem(9, "Show registered regions",
                 [](Menu *dataManagement, Menu *) -> CommandCodes {
-                    regions->show();
+                    if (regions == nullptr) {
+                        printf("\n\u001b[31mNo elements in the region list!\u001b[0m\n");
+                    } else {
+                        regions->show();
+                    }
+
                     dataManagement->display();
                     return CommandCodes::CONTINUE;
                 }));
@@ -272,7 +331,12 @@ int main() {
                 }));
     dataManagement->addItem(new MenuItem(6, "Show registered rains", 
                 [](Menu *dataManagement, Menu*) -> CommandCodes {
-                    rains->show();
+                    if (rains == nullptr) {
+                        printf("\n\u001b[31mNo elements in the rain list!\u001b[0m\n");
+                    } else {
+                        rains->show();
+                    }
+
                     dataManagement->display();
                     return CommandCodes::CONTINUE;
                 }));
@@ -295,9 +359,9 @@ int main() {
                     string id;
                     getline(std::cin, id);
 
+                    // TODO: Do a validation to rainfall
                     printf("Enter the average mm rainfall value of the rain: ");
                     double rainfall = 0.0;
-                    // TODO: Do a validation to rainfall
                     std::cin >> rainfall;
 
                     rains = insert(rains, new Rain(name, id, rainfall));
@@ -309,7 +373,7 @@ int main() {
     dataManagement->addItem(new MenuItem(3, "Show registered persons", 
                 [](Menu *dataManagement, Menu*) -> CommandCodes {
                     if (people == nullptr) {
-                        printf("\nNo elements in the list!\n");
+                        printf("\n\u001b[31mNo elements in the person list!\u001b[0m\n");
                     } else {
                         people->show();
                     }

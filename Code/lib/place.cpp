@@ -15,3 +15,23 @@ void Place::show() {
         curr = curr->next;
     } while (curr != this);
 }
+
+void Place::showByName() {
+    Place *curr = this;
+    
+    do {
+        printf("\nPlace name: %s\n", curr->name.c_str());
+        curr = curr->next;
+    } while (curr != this);
+}
+
+Place* Place::search(std::string name) {
+    Place *curr = this;
+
+    do {
+        if (curr->name == name) return curr;
+        curr = curr->next;
+    } while (curr != this);
+
+    return nullptr;
+}
