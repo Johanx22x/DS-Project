@@ -10,13 +10,13 @@
 class Place {
 public:
     std::string name;
-    short int population;
+    int population;
     double area;
     Place *next = this;
     class Region *region = nullptr;
     Proxy<Climate> *climate = nullptr;
 
-    Place(std::string name, short int population, double area);
+    Place(std::string name, int population, double area);
 
     void show();
 };
