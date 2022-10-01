@@ -1,5 +1,6 @@
 #include <cstdio>
 #include <place.hh>
+#include <sstream>
 
 Place::Place(std::string name, int population, double area) {
     this->name = name;
@@ -34,4 +35,12 @@ Place* Place::search(std::string name) {
     } while (curr != this);
 
     return nullptr;
+}
+
+std::string Place::str() {
+    std::string myStr;
+    std::ostringstream os;
+    os << "\tPlace name: " << name << "\n\tPlace population: " << population << "\n\tPlace area: " << area << "\n";
+    myStr = os.str(); //now convert stream to my_str string
+    return myStr;
 }

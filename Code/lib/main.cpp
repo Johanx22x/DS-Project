@@ -15,20 +15,6 @@
 #include <instant.hh>
 #include <string>
 
-template<typename T>
-Proxy<T>::Proxy(T *value) {
-    this->link = value;
-}
-
-template<typename T>
-void Proxy<T>::append(Proxy<T> *node) {
-    Proxy<T> *curr = this;
-
-    while (curr->next != nullptr) curr = curr->next;
-
-    curr->next = node;
-}
-
 using std::string;
 
 Person *people = new Person("Johan Rodriguez", "2022141892", 18, 1531721412);
