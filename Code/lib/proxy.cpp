@@ -1,3 +1,5 @@
+#include "place.hh"
+#include <cstdio>
 #include <proxy.hh>
 
 template<typename T>
@@ -12,4 +14,14 @@ void Proxy<T>::append(Proxy<T> *node) {
     while (curr->next != nullptr) curr = curr->next;
 
     curr->next = node;
+}
+
+template<typename T>
+void Proxy<T>::show() {
+    Proxy<T> *curr = this;
+
+    while (curr->next != nullptr) {
+        printf("\tName: %s", curr->link->name.c_str());
+        curr = curr->next;
+    }
 }

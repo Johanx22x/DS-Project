@@ -19,4 +19,8 @@ public:
     Place(std::string name, int population, double area);
 
     void show();
+
+    void showByName();
+
+    Place* search(std::string name);
 };

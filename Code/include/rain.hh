@@ -19,11 +19,18 @@ public:
     void show();
 
     /**
+     * Show all the rain nodes of a list (only prints the name and the id)
+     */
+    void showByNameId();
+
+    /**
      * Returns the average rainfall for the current period
      *
      * @returns std::string A neatly formatted string that denotes the average rainfall
      */
     std::string averageRainfall();
+
+    Rain *search(std::string id);
 
 private:
     double min();

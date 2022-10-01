@@ -68,7 +68,28 @@ void Rain::show() {
     Rain *curr = this;
 
     while (curr != nullptr) {
+        // TODO: Pass the rainfall value trought the averageRainfall method
         printf("\nRain ID: %s\nRain name: %s\nRain average rainfall: %f\n", curr->id.c_str(), curr->name.c_str(), curr->rainfall);
         curr = curr->next;
     }
+}
+
+void Rain::showByNameId() {
+    Rain *curr = this;
+
+    while (curr != nullptr) {
+        printf("\nRain ID: %s\nRain name: %s\n", curr->id.c_str(), curr->name.c_str());
+        curr = curr->next;
+    }
+}
+
+Rain *Rain::search(std::string id) {
+    Rain *curr = this;
+
+    while (curr != nullptr) {
+        if (curr->id == id) return curr;
+        curr = curr->next;
+    }
+
+    return nullptr;
 }
