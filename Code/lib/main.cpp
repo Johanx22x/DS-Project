@@ -1,5 +1,5 @@
 #include <proxy.hh>
-#include <bits/types/time_t.h>
+/* #include <bits/types/time_t.h> */
 #include <climate.hh>
 #include <place.hh>
 #include <cstdio>
