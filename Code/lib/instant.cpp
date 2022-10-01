@@ -23,7 +23,7 @@ void Instant::show() {
 
     while (curr != nullptr) {
         // TODO: Implement start and end time
-        printf("Instant name: %s\nInstant date: %s\n", curr->name.c_str(), asctime(gmtime(&curr->date)));
+        printf("\nInstant name: %s\nInstant date: %s\n", curr->name.c_str(), asctime(gmtime(&curr->date)));
         curr = curr->next;
     }
 }

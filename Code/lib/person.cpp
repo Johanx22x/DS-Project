@@ -15,7 +15,7 @@ void Person::show() {
     Person *curr = this;
 
     while (curr != nullptr) {
-        printf("\nName: %s\nID: %s\nAge: %d\nJoin Date: %s", curr->name.c_str(), curr->id.c_str(), curr->age, asctime(gmtime(&curr->joinDate)));
+        printf("\nPerson name: %s\nPerson ID: %s\nPerson age: %d\nPerson Join Date: %s", curr->name.c_str(), curr->id.c_str(), curr->age, asctime(gmtime(&curr->joinDate)));
         curr = curr->next;
     }
 }
@@ -24,7 +24,7 @@ void Person::showByNameId() {
     Person *curr = this;
 
     while (curr != nullptr) {
-        printf("\nName: %s\nID: %s\n", curr->name.c_str(), curr->id.c_str());
+        printf("\nPerson name: %s\nPerson ID: %s\n", curr->name.c_str(), curr->id.c_str());
         curr = curr->next;
     }
 }

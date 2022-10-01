@@ -103,9 +103,10 @@ int main() {
                 [](Menu *reports, Menu *) -> CommandCodes {
                     // TODO: Print detailed information for every node, including sub-lists
                     people->show();
-                    rains->show();
-                    places->show();
                     regions->show();
+                    places->show();
+                    climates->show();
+                    rains->show();
                     instants->show();
                     reports->display();
                     return CommandCodes::CONTINUE;

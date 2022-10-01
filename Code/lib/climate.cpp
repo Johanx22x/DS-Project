@@ -26,8 +26,8 @@ void Climate::append(Climate *node) {
 void Climate::show() {
     Climate *curr = this;
 
-    while (curr->next != nullptr) {
-        printf("Climate: %f\n", curr->precipitation);
+    while (curr != nullptr) {
+        printf("\nClimate: %f\n", curr->precipitation);
         curr = curr->next;
     }
 }
