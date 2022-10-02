@@ -1,4 +1,5 @@
 #pragma once
+#include <cstdio>
 #include <proxy.hh>
 #include <region.hh>
 #include <string>
@@ -23,4 +24,6 @@ public:
     void showByName();
 
     Place* search(std::string name);
+
+    std::string str(); 
 };

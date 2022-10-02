@@ -3,16 +3,6 @@
 #include <region.hh>
 #include <string>
 
-template<typename T>
-void Proxy<T>::show() {
-    Proxy<T> *curr = this;
-
-    while (curr != nullptr) {
-        printf("\n\tPlace name: %s\n\tPlace population: %d\n\tPlace area: %f\n", curr->link->name.c_str(), curr->link->population, curr->link->area);
-        curr = curr->next;
-    }
-}
-
 Region::Region(std::string name, std::string id, std::string location) {
     this->name = name;
     this->id = id;
