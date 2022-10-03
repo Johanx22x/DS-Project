@@ -28,7 +28,7 @@ public:
      *
      * @return nothing
      */
-    void showByNameID();
+    void showByNameId();
 
     Region *search(std::string id);
 };

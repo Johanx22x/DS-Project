@@ -5,6 +5,7 @@
 #include <instant.hh>
 #include <climate.hh>
 #include <place.hh>
+#include <region.hh>
 
 /**
  * Reads the first char in stdin
@@ -156,6 +157,28 @@ Rain *deleteNodeRain(Rain *list, Rain *node) {
 
     Rain *curr = list;
     Rain *prev;
+    while (curr != nullptr) {
+        if (curr->id == node->id) {
+            prev->next = curr->next;
+        }
+        prev = curr;
+        curr = curr->next;
+    }
+
+    return list;
+}
+
+Region *deleteNodeRegion(Region *list, Region *node) {
+    if (list == nullptr) return nullptr; 
+    else if (node == nullptr) return list;
+
+    // Check for the first node
+    if (list->id == node->id) {
+        return list->next;
+    }
+
+    Region *curr = list;
+    Region *prev;
     while (curr != nullptr) {
         if (curr->id == node->id) {
             prev->next = curr->next;

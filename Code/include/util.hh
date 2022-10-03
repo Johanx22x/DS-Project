@@ -51,6 +51,14 @@ Person *deleteNodePerson(Person *list, Person *node);
 Rain *deleteNodeRain(Rain *list, Rain *node);
 
 /**
+ * Delete a given node from the list
+ *
+ * @param list The list
+ * @param node The element to be deleted
+ */
+Region *deleteNodeRegion(Region *list, Region *node);
+
+/**
  * Inserts an element at the beginning of a list
  *
  * @tparam T The type of the list

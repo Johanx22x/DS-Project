@@ -213,7 +213,7 @@ int main() {
                         return CommandCodes::CONTINUE;
                     }
 
-                    regions->showByNameID();
+                    regions->showByNameId();
                     printf("\nEnter the id of the region: ");
                     string regionId;
                     getline(std::cin, regionId);
@@ -290,12 +290,104 @@ int main() {
     dataManagement->addItem(new MenuItem(8, "Modify a registered region", 
                 [](Menu *dataManagement, Menu *) -> CommandCodes {
                     // TODO: implement function body (user input)
+                    if (regions == nullptr) {
+                        printf("\n\u001b[31mNo elements to modify in the region list!\u001b[0m\n");
+                        dataManagement->display();
+                        return CommandCodes::CONTINUE;
+                    } 
+
+                    regions->showByNameId();
+
+                    printf("\nEnter the ID of the region: ");
+                    string id;
+                    // Flush buffer
+                    std::cin.clear();
+                    std::cin.ignore(INT32_MAX, '\n');
+                    getline(std::cin, id);
+
+                    Region *toModify = regions->search(id);
+                    if (toModify == nullptr) {
+                        printf("\n\u001b[31mThe region with id %s doesn't exist in the register!\n\u001b[0m", id.c_str());
+                        dataManagement->display();
+                        return CommandCodes::CONTINUE;
+                    }
+
+                    // TODO: Validate user input (1 or 2)
+                    int option;
+                    printf("\n\u001b[34m%s - %s\u001b[0m\n(1) - Modify this region register\n(2) - Delete this region register\nSelect an option: ", toModify->name.c_str(), toModify->id.c_str());
+                    std::cin >> option; 
+
+                    if (option == 2) {
+                        regions = deleteNodeRegion(regions, toModify);  
+                    } else if (option == 1) {
+                        bool modifyFlag = true;
+                        while (modifyFlag) {
+                            printf("\n(1) - Modify id\n");
+                            printf("(2) - Modify name\n");
+                            printf("(3) - Modify location\n");
+                            printf("Select an option: ");
+
+                            // TODO: Validate user input 
+                            int modifyOption;
+                            std::cin >> modifyOption;
+
+                            switch (modifyOption) {
+                                case 1: {
+                                    string newId;
+                                    // Flush buffer
+                                    std::cin.clear();
+                                    std::cin.ignore(INT32_MAX, '\n');
+                                    while (true) {
+                                        printf("Enter the new id for the region register: ");
+                                        getline(std::cin, newId);
+                                        if (id == newId) {
+                                            printf("\u001b[31mThe ID is the same as the current!\u001b[0m\n");
+                                            continue;
+                                        } else if (regions->search(newId) != nullptr) {
+                                            printf("\u001b[31mThe ID already exist! Choose another ID...\u001b[0m\n");
+                                            continue;
+                                        }
+                                        toModify->id = newId;
+                                        break;
+                                    }
+                                    break;
+                                }
+                                case 2: {
+                                    printf("Enter the new name for the region register: ");
+                                    string newName;
+                                    // Flush buffer
+                                    std::cin.clear();
+                                    std::cin.ignore(INT32_MAX, '\n');
+                                    getline(std::cin, newName);
+                                    toModify->name = newName;
+                                    break;
+                                }
+                                case 3: {
+                                    printf("Enter the new location for the region register: ");
+                                    // TODO: validate user input
+                                    string newLocation;
+                                    // Flush buffer
+                                    std::cin.clear();
+                                    std::cin.ignore(INT32_MAX, '\n');
+                                    getline(std::cin, newLocation);
+                                    toModify->location = newLocation;
+                                    break;
+                                }
+                            }
+
+                            string attributeModify;
+                            printf("Do you want to modify another information of this region? [y/n]: ");
+                            getline(std::cin, attributeModify);
+                            if (!(attributeModify == "y" or attributeModify == "Y")) {
+                                break;
+                            }
+                        }
+                    }
                     dataManagement->display();
                     return CommandCodes::CONTINUE;
                 }));
     dataManagement->addItem(new MenuItem(7, "Add a new region", 
                 [](Menu *dataManagement, Menu*) -> CommandCodes {
-                    // FIXME: Don't insert repeated data
                     printf("\nEnter the name of the region: ");
                     string name;
                     // Flush buffer
@@ -304,8 +396,13 @@ int main() {
                     getline(std::cin, name);
 
                     string id;
-                    printf("Enter the ID of the region: ");
-                    getline(std::cin, id);
+                    while (true) {
+                        printf("Enter the ID of the region: ");
+                        getline(std::cin, id);
+                        if (regions == nullptr) { break; } 
+                        if (regions->search(id) == nullptr) { break; }
+                        printf("\u001b[31mThis ID already exist! Choose another id...\u001b[0m\n");
+                    }
 
                     string location;
                     printf("Enter the location of the region: ");
@@ -330,8 +427,6 @@ int main() {
                 }));
     dataManagement->addItem(new MenuItem(5, "Modify a registered rain", 
                 [](Menu *dataManagement, Menu *) -> CommandCodes {
-                    // FIXME: Don't insert repeated data
-                    // FIXME: Validate when modify a register that the new id is available
                     if (rains == nullptr) {
                         printf("\n\u001b[31mNo elements to modify in the rain list!\u001b[0m\n");
                         dataManagement->display();
@@ -375,13 +470,23 @@ int main() {
 
                             switch (modifyOption) {
                                 case 1: {
-                                    printf("Enter the new id for the rain register: ");
                                     string newId;
                                     // Flush buffer
                                     std::cin.clear();
                                     std::cin.ignore(INT32_MAX, '\n');
-                                    getline(std::cin, newId);
-                                    toModify->id = newId;
+                                    while (true) {
+                                        printf("Enter the new id for the rain register: ");
+                                        getline(std::cin, newId);
+                                        if (id == newId) {
+                                            printf("\u001b[31mThe ID is the same as the current!\u001b[0m\n");
+                                            continue;
+                                        } else if (rains->search(newId) != nullptr) {
+                                            printf("\u001b[31mThe ID already exist! Choose another ID...\u001b[0m\n");
+                                            continue;
+                                        }
+                                        toModify->id = newId;
+                                        break;
+                                    }
                                     break;
                                 }
                                 case 2: {
@@ -417,7 +522,6 @@ int main() {
                 }));
     dataManagement->addItem(new MenuItem(4, "Add a new rain",
                 [](Menu *dataManagement, Menu *) -> CommandCodes {
-                    // FIXME: Don't insert repeated data
                     printf("\nEnter a descriptive name for the rain: ");
                     string name;
                     // Flush buffer
@@ -425,9 +529,14 @@ int main() {
                     std::cin.ignore(INT32_MAX, '\n');
                     getline(std::cin, name);
 
-                    printf("Enter the id of the rain: ");
                     string id;
-                    getline(std::cin, id);
+                    while (true) {
+                        printf("Enter the id of the rain: ");
+                        getline(std::cin, id);
+                        if (rains == nullptr) { break; } 
+                        if (rains->search(id) == nullptr) { break; }
+                        printf("\u001b[31mThis ID already exist! Choose another id...\u001b[0m\n");
+                    }
 
                     // TODO: Do a validation to rainfall
                     printf("Enter the average mm rainfall value of the rain: ");
@@ -455,8 +564,6 @@ int main() {
                     return CommandCodes::CONTINUE;
                 }));
     dataManagement->addItem(new MenuItem(2, "Modify a registered person", 
-                // FIXME: Don't insert repeated data
-                // FIXME: Validate when modify a register that the new id is available
                 [](Menu *dataManagement, Menu *) -> CommandCodes {
                     if (people == nullptr) {
                         printf("\n\u001b[31mNo elements to modify in the person list!\u001b[0m\n");
@@ -501,13 +608,23 @@ int main() {
 
                             switch (modifyOption) {
                                 case 1: {
-                                    printf("Enter the new id for the person: ");
                                     string newId;
                                     // Flush buffer
                                     std::cin.clear();
                                     std::cin.ignore(INT32_MAX, '\n');
-                                    getline(std::cin, newId);
-                                    toModify->id = newId;
+                                    while (true) {
+                                        printf("Enter the new id for the person: ");
+                                        getline(std::cin, newId);
+                                        if (id == newId) {
+                                            printf("\u001b[31mThe ID is the same as the current!\u001b[0m\n");
+                                            continue;
+                                        } else if (people->search(newId) != nullptr) {
+                                            printf("\u001b[31mThe ID already exist! Choose another ID...\u001b[0m\n");
+                                            continue;
+                                        }
+                                        toModify->id = newId;
+                                        break;
+                                    }
                                     break;
                                 }
                                 case 2: {
@@ -543,7 +660,6 @@ int main() {
                 }));
     dataManagement->addItem(new MenuItem(1, "Add a new person",
                 [](Menu *dataManagement, Menu *) -> CommandCodes {
-                    // FIXME: Don't insert repeated data
                     printf("\n");
 
                     printf("Enter the name of the person: ");
@@ -553,17 +669,13 @@ int main() {
                     std::cin.ignore(INT32_MAX, '\n');
                     getline(std::cin, name);
 
-                    printf("Enter the id of the person: ");
                     string id;
-                    getline(std::cin, id);
-
-                    if (people != nullptr) {
-                        Person *foundRepeat = people->search(id);
-                        if (foundRepeat != nullptr) {
-                            printf("\n\u001b[31mA person with the id %s already exist!\u001b[0m\n", id.c_str());
-                            dataManagement->display();
-                            return CommandCodes::CONTINUE;
-                        }
+                    while (true) {
+                        printf("Enter the id of the person: ");
+                        getline(std::cin, id);
+                        if (people == nullptr) { break; } 
+                        if (people->search(id) == nullptr) { break; }
+                        printf("\u001b[31mThis ID already exist! Choose another id...\u001b[0m\n");
                     }
 
                     printf("Enter the age of the person: ");
