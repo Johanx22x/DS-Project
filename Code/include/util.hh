@@ -67,6 +67,14 @@ Region *deleteNodeRegion(Region *list, Region *node);
 Place *deleteNodePlace(Place *list, Place *node);
 
 /**
+ * Delete a given node from the list
+ *
+ * @param list The list
+ * @param node The element to be deleted
+ */
+Instant *deleteNodeInstant(Instant *list, Instant *node);
+
+/**
  * Inserts an element at the beginning of a list
  *
  * @tparam T The type of the list

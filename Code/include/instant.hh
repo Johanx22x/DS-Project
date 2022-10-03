@@ -1,5 +1,4 @@
 #pragma once
-//#include <bits/types/time_t.h>
 #include <string>
 
 /**
@@ -29,4 +28,18 @@ public:
      * @return nothing
      */
     void show();
+    
+    /**
+     * Show all the nodes of a list
+     *
+     * @return nothing
+     */
+    void showByName();
+    
+    /**
+     * Search an instant in the list
+     *
+     * @param id The element name to search
+     */
+    Instant *search(std::string name);
 };

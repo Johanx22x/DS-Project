@@ -165,7 +165,15 @@ int main() {
     dataManagement->addItem(new MenuItem(17, "Add a new climate to the register", 
                 [](Menu *dataManagement, Menu *) -> CommandCodes {
                     // TODO: implement function body (user input)
-                    climates->append(new Climate(3.2, 1.0, 2.1, 4.9, 1.8, 'N', false, 8, 9, 10));
+                    
+                    // TODO: Implement time_t input
+                    // FIXME: time_t params
+                    if (climates == nullptr) {
+                        climates = new Climate(3.2, 1.0, 2.1, 4.9, 1.8, 'N', false, 8, 9, 10);
+                    } else {
+                        climates->append(new Climate(3.2, 1.0, 2.1, 4.9, 1.8, 'N', false, 8, 9, 10));
+                    }
+                    printf("\n\u001b[34mThe data was added to climate register!\u001b[0m\n");
                     dataManagement->display();
                     return CommandCodes::CONTINUE;
                 }));
@@ -177,22 +185,129 @@ int main() {
                 }));
     dataManagement->addItem(new MenuItem(15, "Modify a registered instant",
                 [](Menu *dataManagement, Menu *) -> CommandCodes {
-                    // TODO: implement function body (user input)
-                    dataManagement->display();
-                    return CommandCodes::CONTINUE;
-                }));
-    dataManagement->addItem(new MenuItem(14, "Add a new instant", 
-                [](Menu *dataManagement, Menu *) -> CommandCodes {
-                    // TODO: implement function body (user input)
-                    printf("\nEnter a descriptive name for the instant register: ");
+                    if (instants == nullptr) {
+                        printf("\n\u001b[31mNo elements to modify in the instants list!\u001b[0m\n");
+                        dataManagement->display();
+                        return CommandCodes::CONTINUE;
+                    } 
+
+                    instants->showByName();
+
+                    printf("\nEnter the name of the instant: ");
                     string name;
                     // Flush buffer
                     std::cin.clear();
                     std::cin.ignore(INT32_MAX, '\n');
                     getline(std::cin, name);
 
+                    Instant *toModify = instants->search(name);
+                    if (toModify == nullptr) {
+                        printf("\n\u001b[31mThe instant with name %s doesn't exist in the register!\n\u001b[0m", name.c_str());
+                        dataManagement->display();
+                        return CommandCodes::CONTINUE;
+                    }
+
+                    // TODO: Validate user input (1 or 2)
+                    int option;
+                    printf("\n\u001b[34m%s\u001b[0m\n(1) - Modify this place register\n(2) - Delete this place register\nSelect an option: ", toModify->name.c_str());
+                    std::cin >> option; 
+
+                    if (option == 2) {
+                        instants = deleteNodeInstant(instants, toModify);  
+                    } else if (option == 1) {
+                        bool modifyFlag = true;
+                        while (modifyFlag) {
+                            printf("\n(1) - Modify name\n");
+                            printf("(2) - Modify date\n");
+                            printf("(3) - Modify start time\n");
+                            printf("(4) - Modify end time\n");
+                            printf("Select an option: ");
+
+                            // TODO: Validate user input 
+                            int modifyOption;
+                            std::cin >> modifyOption;
+
+                            // FIXME: Provide a time_t management
+                            switch (modifyOption) {
+                                case 1: {
+                                    string newName;
+                                    // Flush buffer
+                                    std::cin.clear();
+                                    std::cin.ignore(INT32_MAX, '\n');
+                                    while (true) {
+                                        printf("Enter the new name for the instant: ");
+                                        getline(std::cin, newName);
+                                        if (name == newName) {
+                                            printf("\u001b[31mThe name is the same as the current!\u001b[0m\n");
+                                            continue;
+                                        } else if (places->search(newName) != nullptr) {
+                                            printf("\u001b[31mThe name already exist! Choose another name...\u001b[0m\n");
+                                            continue;
+                                        }
+                                        toModify->name = newName;
+                                        break;
+                                    }
+                                    break;
+                                }
+                                case 2: {
+                                    // TODO: Do a validation to date 
+                                    int date;
+                                    printf("Enter the new date for the instant: ");
+                                    std::cin >> date;
+                                    toModify->date = date;
+                                    break;
+                                }
+                                case 3: {
+                                    // TODO: Do a validation to start time
+                                    int startTime;
+                                    printf("Enter the new start time for the instant: ");
+                                    std::cin >> startTime;
+                                    toModify->startTime = startTime;
+                                    break;
+                                }
+                                case 4: {
+                                    // TODO: Do a validation to end time
+                                    int endTime;
+                                    printf("Enter the new end time for the instant: ");
+                                    std::cin >> endTime;
+                                    toModify->endTime = endTime;
+                                    break;
+                                }
+                            }
+
+                            string attributeModify;
+                            printf("Do you want to modify another information of this instant register? [y/n]: ");
+                            getline(std::cin, attributeModify);
+                            if (!(attributeModify == "y" or attributeModify == "Y")) {
+                                break;
+                            }
+                        }
+                    }
+                    dataManagement->display();
+                    return CommandCodes::CONTINUE;
+                }));
+    dataManagement->addItem(new MenuItem(14, "Add a new instant", 
+                [](Menu *dataManagement, Menu *) -> CommandCodes {
+                    string name;
+                    // Flush buffer
+                    std::cin.clear();
+                    std::cin.ignore(INT32_MAX, '\n');
+                    while (true) {
+                        printf("\nEnter a descriptive name for the instant register: ");
+                        getline(std::cin, name);
+                        if (instants == nullptr) { break; } 
+                        if (instants->search(name) == nullptr) { break; }
+                        printf("\u001b[31mThis instant already exist! Choose another name...\u001b[0m\n");
+                    }
+
+                    // TODO: Implement time_t input
                     // FIXME: time_t params
-                    instants = sortedInsert(instants, new Instant(name, 1, 1, 1));
+                    if (instants == nullptr) {
+                        instants = new Instant(name, 1, 1, 1);
+                    } else {
+                        instants = sortedInsert(instants, new Instant(name, 1, 1, 1));
+                    }
+                    printf("\n\u001b[34m%s was added to instant register!\u001b[0m\n", name.c_str());
                     dataManagement->display();
                     return CommandCodes::CONTINUE;
                 }));

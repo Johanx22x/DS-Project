@@ -215,3 +215,28 @@ Place *deleteNodePlace(Place *list, Place *node) {
 
     return list;
 }
+
+Instant *deleteNodeInstant(Instant *list, Instant *node) {
+    if (list == nullptr) return nullptr; 
+    else if (node == nullptr) return list;
+
+    // Check for the first node
+    if (list->name == node->name) {
+        if (list->next == nullptr) return nullptr;
+        list->next->prev = nullptr;
+        return list->next;
+    }
+
+    Instant *curr = list;
+    Instant *prev;
+    while (curr != nullptr) {
+        if (curr->name == node->name) {
+            prev->next = curr->next;
+            curr->next->prev = prev;
+        }
+        prev = curr;
+        curr = curr->next;
+    }
+
+    return list;
+}
