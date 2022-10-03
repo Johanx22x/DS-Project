@@ -239,7 +239,7 @@ int main() {
     dataManagement->addItem(new MenuItem(12, "Show registered places",
                 [](Menu *dataManagement, Menu *) -> CommandCodes {
                     if (places == nullptr) {
-                        printf("\n\u001b[31mNo elements in the region list!\u001b[0m\n");
+                        printf("\n\u001b[31mNo elements in the places list!\u001b[0m\n");
                     } else {
                         places->show();
                     }
@@ -249,18 +249,110 @@ int main() {
                 }));
     dataManagement->addItem(new MenuItem(11, "Modify a registered place",
                 [](Menu *dataManagement, Menu *) -> CommandCodes {
-                    // TODO: implement function body (user input)
-                    dataManagement->display();
-                    return CommandCodes::CONTINUE;
-                }));
-    dataManagement->addItem(new MenuItem(10, "Add a new place",
-                [](Menu *dataManagement, Menu *) -> CommandCodes {
+                    if (places == nullptr) {
+                        printf("\n\u001b[31mNo elements to modify in the places list!\u001b[0m\n");
+                        dataManagement->display();
+                        return CommandCodes::CONTINUE;
+                    } 
+
+                    places->showByName();
+
                     printf("\nEnter the name of the place: ");
                     string name;
                     // Flush buffer
                     std::cin.clear();
                     std::cin.ignore(INT32_MAX, '\n');
                     getline(std::cin, name);
+
+                    Place *toModify = places->search(name);
+                    if (toModify == nullptr) {
+                        printf("\n\u001b[31mThe place with name %s doesn't exist in the register!\n\u001b[0m", name.c_str());
+                        dataManagement->display();
+                        return CommandCodes::CONTINUE;
+                    }
+
+                    // TODO: Validate user input (1 or 2)
+                    int option;
+                    printf("\n\u001b[34m%s\u001b[0m\n(1) - Modify this place register\n(2) - Delete this place register\nSelect an option: ", toModify->name.c_str());
+                    std::cin >> option; 
+
+                    if (option == 2) {
+                        places = deleteNodePlace(places, toModify);  
+                    } else if (option == 1) {
+                        bool modifyFlag = true;
+                        while (modifyFlag) {
+                            printf("\n(1) - Modify name\n");
+                            printf("(2) - Modify population\n");
+                            printf("(3) - Modify area\n");
+                            printf("Select an option: ");
+
+                            // TODO: Validate user input 
+                            int modifyOption;
+                            std::cin >> modifyOption;
+
+                            switch (modifyOption) {
+                                case 1: {
+                                    string newName;
+                                    // Flush buffer
+                                    std::cin.clear();
+                                    std::cin.ignore(INT32_MAX, '\n');
+                                    while (true) {
+                                        printf("Enter the new name for the place: ");
+                                        getline(std::cin, newName);
+                                        if (name == newName) {
+                                            printf("\u001b[31mThe name is the same as the current!\u001b[0m\n");
+                                            continue;
+                                        } else if (places->search(newName) != nullptr) {
+                                            printf("\u001b[31mThe name already exist! Choose another name...\u001b[0m\n");
+                                            continue;
+                                        }
+                                        toModify->name = newName;
+                                        break;
+                                    }
+                                    break;
+                                }
+                                case 2: {
+                                    // TODO: Do a validation to population
+                                    int population;
+                                    printf("Enter the new population value for the place: ");
+                                    std::cin >> population;
+                                    toModify->population = population;
+                                    break;
+                                }
+                                case 3: {
+                                    // TODO: Do a validation to area
+                                    double area;
+                                    printf("Enter the new area for the region register: ");
+                                    std::cin >> area;
+                                    toModify->area = area;
+                                    break;
+                                }
+                            }
+
+                            string attributeModify;
+                            printf("Do you want to modify another information of this place? [y/n]: ");
+                            getline(std::cin, attributeModify);
+                            if (!(attributeModify == "y" or attributeModify == "Y")) {
+                                break;
+                            }
+                        }
+                    }
+                    dataManagement->display();
+                    return CommandCodes::CONTINUE;
+                }));
+    dataManagement->addItem(new MenuItem(10, "Add a new place",
+                [](Menu *dataManagement, Menu *) -> CommandCodes {
+                    string name;
+                    // Flush buffer
+                    std::cin.clear();
+                    std::cin.ignore(INT32_MAX, '\n');
+                    while (true) {
+                        printf("\nEnter the name of the place: ");
+                        getline(std::cin, name);
+                        if (places == nullptr) { break; } 
+                        if (places->search(name) == nullptr) { break; }
+                        printf("\u001b[31mThis place already exist! Choose another place or try to add the distric in the name...\u001b[0m\n");
+                    }
 
                     // TODO: Do a validation to population
                     int population;
@@ -272,7 +364,12 @@ int main() {
                     printf("Enter the area of the place: ");
                     std::cin >> area;
 
-                    places = insert(places, new Place(name, population, area));
+                    if (places == nullptr) {
+                        places = new Place(name, population, area);
+                    } else {
+                        places = insert(places, new Place(name, population, area));
+                    }
+                    printf("\n\u001b[34m%s was added to places!\u001b[0m\n", name.c_str());
                     dataManagement->display();
                     return CommandCodes::CONTINUE;
                 }));
@@ -289,7 +386,6 @@ int main() {
                 }));
     dataManagement->addItem(new MenuItem(8, "Modify a registered region", 
                 [](Menu *dataManagement, Menu *) -> CommandCodes {
-                    // TODO: implement function body (user input)
                     if (regions == nullptr) {
                         printf("\n\u001b[31mNo elements to modify in the region list!\u001b[0m\n");
                         dataManagement->display();
@@ -408,8 +504,12 @@ int main() {
                     printf("Enter the location of the region: ");
                     getline(std::cin, location);
 
-                    regions = insert(regions, new Region(name, id , location));
-                    printf("\n\u001b[34m%s was inserted!\u001b[0m\n", name.c_str());
+                    if (regions == nullptr) {
+                        regions = new Region(name, id , location);
+                    } else {
+                        regions = insert(regions, new Region(name, id , location));
+                    }
+                    printf("\n\u001b[34m%s was added to regions!\u001b[0m\n", name.c_str());
 
                     dataManagement->display();
                     return CommandCodes::CONTINUE;

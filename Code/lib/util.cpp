@@ -189,3 +189,29 @@ Region *deleteNodeRegion(Region *list, Region *node) {
 
     return list;
 }
+
+Place *deleteNodePlace(Place *list, Place *node) {
+    if (list == nullptr) return nullptr; 
+    else if (node == nullptr) return list;
+
+    // Check for the first node
+    if (list->name == node->name) {
+        if (list->next == list) {
+            return nullptr;
+        } else {
+            return list->next;
+        }
+    }
+
+    Place *curr = list;
+    Place *prev;
+    do {
+        if (curr->name == node->name) {
+            prev->next = curr->next;
+        }
+        prev = curr;
+        curr = curr->next;
+    } while (curr != list);
+
+    return list;
+}
