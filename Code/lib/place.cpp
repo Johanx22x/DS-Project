@@ -2,17 +2,18 @@
 #include <place.hh>
 #include <sstream>
 
-Place::Place(std::string name, int population, double area) {
+Place::Place(std::string name, int population, double area, Region *region) {
     this->name = name;
     this->population = population;
     this->area = area;
+    this->region = region;
 }
 
 void Place::show() {
     Place *curr = this;
     
     do {
-        printf("\nPlace name: %s\nPlace population: %d\nPlace area: %f\n", curr->name.c_str(), curr->population, curr->area);
+        printf("\nPlace name: %s\nPlace population: %d\nPlace area: %f\nPlace region: %s\n", curr->name.c_str(), curr->population, curr->area, curr->region->name.c_str());
         curr = curr->next;
     } while (curr != this);
 }

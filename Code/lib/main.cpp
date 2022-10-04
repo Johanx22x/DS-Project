@@ -18,15 +18,18 @@
 using std::string;
 
 Person *people = new Person("Johan Rodriguez", "2022141892", 18, 1531721412);
-Rain *rains = new Rain("Storm", "1", 0.2);
 Region *regions = new Region("San Carlos", "5", "Alajuela, Costa Rica");
-Place *places = new Place("Santa Clara", 500, 1250.3);
+Place *places = new Place("Santa Clara", 500, 1250.3, regions);
 // FIXME: time_t params for new Instant
 Instant *instants = new Instant("A beautiful day", 0, 0, 0);
 // FIXME: time_t params for new climate
+Rain *rains = new Rain("Storm", "1", 0.2);
 Climate *climates = new Climate(2.3, 4.1, 8.2, 0.4, 31.8, 'N', true, 0, 1, 2);
 
 int main() {
+    // NOTE: Load data
+    regions->places = new Proxy(places);
+
     // NOTE: Main menu definition
     Menu *menu = new Menu("Main Menu");
 
@@ -137,32 +140,32 @@ int main() {
                 }));
     
     // NOTE: dataManagement menu items definition
-    dataManagement->addItem(new MenuItem(21, "Relate a climate register to a person",
+    dataManagement->addItem(new MenuItem(20, "Relate a climate register to a person",
                 [](Menu *dataManagement, Menu *) -> CommandCodes {
                     // TODO: Relate a climate register to a person
                     dataManagement->display();
                     return CommandCodes::CONTINUE;
                 }));
-    dataManagement->addItem(new MenuItem(20, "Relate a place with a climate register",
+    dataManagement->addItem(new MenuItem(19, "Relate a place with a climate register",
                 [](Menu *dataManagement, Menu *) -> CommandCodes {
                     // TODO: implement function body (Relate a place with a region)
                     // TODO: Relate to the correspondient rain node
                     dataManagement->display();
                     return CommandCodes::CONTINUE;
                 }));
-    dataManagement->addItem(new MenuItem(19, "Show registered climates",
+    dataManagement->addItem(new MenuItem(18, "Show registered climates",
                 [](Menu *dataManagement, Menu *) -> CommandCodes {
                     climates->show();
                     dataManagement->display();
                     return CommandCodes::CONTINUE;
                 }));
-    dataManagement->addItem(new MenuItem(18, "Modify a registered climate",
+    dataManagement->addItem(new MenuItem(17, "Modify a registered climate",
                 [](Menu *dataManagement, Menu *) -> CommandCodes {
                     // TODO: implement function body (user input)
                     dataManagement->display();
                     return CommandCodes::CONTINUE;
                 }));
-    dataManagement->addItem(new MenuItem(17, "Add a new climate to the register", 
+    dataManagement->addItem(new MenuItem(16, "Add a new climate to the register", 
                 [](Menu *dataManagement, Menu *) -> CommandCodes {
                     // TODO: implement function body (user input)
                     
@@ -177,13 +180,13 @@ int main() {
                     dataManagement->display();
                     return CommandCodes::CONTINUE;
                 }));
-    dataManagement->addItem(new MenuItem(16, "Show registered instants",
+    dataManagement->addItem(new MenuItem(15, "Show registered instants",
                 [](Menu *dataManagement, Menu *) -> CommandCodes {
                     instants->show();
                     dataManagement->display();
                     return CommandCodes::CONTINUE;
                 }));
-    dataManagement->addItem(new MenuItem(15, "Modify a registered instant",
+    dataManagement->addItem(new MenuItem(14, "Modify a registered instant",
                 [](Menu *dataManagement, Menu *) -> CommandCodes {
                     if (instants == nullptr) {
                         printf("\n\u001b[31mNo elements to modify in the instants list!\u001b[0m\n");
@@ -286,7 +289,7 @@ int main() {
                     dataManagement->display();
                     return CommandCodes::CONTINUE;
                 }));
-    dataManagement->addItem(new MenuItem(14, "Add a new instant", 
+    dataManagement->addItem(new MenuItem(13, "Add a new instant", 
                 [](Menu *dataManagement, Menu *) -> CommandCodes {
                     string name;
                     // Flush buffer
@@ -308,46 +311,6 @@ int main() {
                         instants = sortedInsert(instants, new Instant(name, 1, 1, 1));
                     }
                     printf("\n\u001b[34m%s was added to instant register!\u001b[0m\n", name.c_str());
-                    dataManagement->display();
-                    return CommandCodes::CONTINUE;
-                }));
-    dataManagement->addItem(new MenuItem(13, "Relate a place to a region", 
-                [](Menu *dataManagement, Menu *) -> CommandCodes {
-                    places->showByName();
-                    printf("\nEnter the name of the place: ");
-                    string placeName;
-                    // Flush buffer
-                    std::cin.clear();
-                    std::cin.ignore(INT32_MAX, '\n');
-                    getline(std::cin, placeName);
-
-                    Place *foundPlace = places->search(placeName);
-                    if (foundPlace == nullptr) {
-                        printf("\n\u001b[31mPlace %s not found!\u001b[0m\n", placeName.c_str());
-                        dataManagement->display();
-                        return CommandCodes::CONTINUE;
-                    }
-
-                    regions->showByNameId();
-                    printf("\nEnter the id of the region: ");
-                    string regionId;
-                    getline(std::cin, regionId);
-
-                    Region *foundRegion = regions->search(regionId);
-                    if (foundRegion == nullptr) {
-                        printf("\n\u001b[31mRegion with the id %s not found!\u001b[0m\n", regionId.c_str());
-                        dataManagement->display();
-                        return CommandCodes::CONTINUE;
-                    }
-                    
-                    if (foundRegion->places == nullptr) {
-                        foundRegion->places = new Proxy(foundPlace);
-                    } else {
-                        foundRegion->places->append(new Proxy<Place>(foundPlace));
-                    }
-
-                    printf("\n\u001b[34mPlace %s successfully related to region %s!\u001b[0m\n", foundPlace->name.c_str(), foundRegion->name.c_str());
-
                     dataManagement->display();
                     return CommandCodes::CONTINUE;
                 }));
@@ -457,10 +420,27 @@ int main() {
                 }));
     dataManagement->addItem(new MenuItem(10, "Add a new place",
                 [](Menu *dataManagement, Menu *) -> CommandCodes {
+                    if (regions == nullptr) {
+                        printf("\n\u001b[31mThere is no region to which to relate this new place!\u001b[0m\n\n");
+                        return CommandCodes::CONTINUE;
+                    }
+
+                    regions->showByNameId();
+
                     string name;
                     // Flush buffer
                     std::cin.clear();
                     std::cin.ignore(INT32_MAX, '\n');
+                    printf("\nEnter the id of the region to which whis new place belongs: ");
+                    string regionId;
+                    getline(std::cin, regionId);
+                    Region *foundRegion = regions->search(regionId);
+                    if (foundRegion == nullptr) {
+                        printf("\n\u001b[31mRegion with the id %s not found!\u001b[0m\n", regionId.c_str());
+                        dataManagement->display();
+                        return CommandCodes::CONTINUE;
+                    }
+
                     while (true) {
                         printf("\nEnter the name of the place: ");
                         getline(std::cin, name);
@@ -479,12 +459,21 @@ int main() {
                     printf("Enter the area of the place: ");
                     std::cin >> area;
 
+                    Place *newPlace = new Place(name, population, area, foundRegion);
                     if (places == nullptr) {
-                        places = new Place(name, population, area);
+                        places = newPlace;
                     } else {
-                        places = insert(places, new Place(name, population, area));
+                        places = insert(places, newPlace);
                     }
+                    
+                    if (foundRegion->places == nullptr) {
+                        foundRegion->places = new Proxy(newPlace);
+                    } else {
+                        foundRegion->places->append(new Proxy<Place>(newPlace));
+                    }
+
                     printf("\n\u001b[34m%s was added to places!\u001b[0m\n", name.c_str());
+                    printf("\n\u001b[34mPlace %s successfully related to region %s!\u001b[0m\n", newPlace->name.c_str(), foundRegion->name.c_str());
                     dataManagement->display();
                     return CommandCodes::CONTINUE;
                 }));

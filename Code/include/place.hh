@@ -17,7 +17,7 @@ public:
     class Region *region = nullptr;
     Proxy<Climate> *climate = nullptr;
 
-    Place(std::string name, int population, double area);
+    Place(std::string name, int population, double area, Region *region);
 
     void show();
 
