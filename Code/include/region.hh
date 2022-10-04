@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <proxy.hh>
 #include <place.hh>
 
 /**
@@ -28,7 +29,7 @@ public:
      *
      * @return nothing
      */
-    void showByNameID();
+    void showByNameId();
 
     Region *search(std::string id);
 };

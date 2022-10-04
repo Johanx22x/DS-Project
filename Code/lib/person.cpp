@@ -16,6 +16,10 @@ void Person::show() {
 
     while (curr != nullptr) {
         printf("\nPerson name: %s\nPerson ID: %s\nPerson age: %d\nPerson Join Date: %s", curr->name.c_str(), curr->id.c_str(), curr->age, asctime(gmtime(&curr->joinDate)));
+        if (curr->climates != nullptr) {
+            printf("Climates sub-list:");
+            curr->climates->show();
+        }
         curr = curr->next;
     }
 }

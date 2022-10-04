@@ -16,8 +16,8 @@ public:
     time_t joinDate;
     Person *prev = nullptr;
     Person *next = nullptr;
-    Place *location = nullptr;
-    Proxy<Climate> *climates = nullptr;
+    class Place *location = nullptr;
+    Proxy<class Climate> *climates = nullptr;
 
     /**
      * Person constructor

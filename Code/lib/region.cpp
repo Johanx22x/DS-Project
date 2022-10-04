@@ -22,7 +22,7 @@ void Region::show() {
     }
 }
 
-void Region::showByNameID() {
+void Region::showByNameId() {
     Region *curr = this;
 
     while (curr != nullptr) {

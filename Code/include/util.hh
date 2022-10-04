@@ -51,6 +51,30 @@ Person *deleteNodePerson(Person *list, Person *node);
 Rain *deleteNodeRain(Rain *list, Rain *node);
 
 /**
+ * Delete a given node from the list
+ *
+ * @param list The list
+ * @param node The element to be deleted
+ */
+Region *deleteNodeRegion(Region *list, Region *node);
+
+/**
+ * Delete a given node from the list
+ *
+ * @param list The list
+ * @param node The element to be deleted
+ */
+Place *deleteNodePlace(Place *list, Place *node);
+
+/**
+ * Delete a given node from the list
+ *
+ * @param list The list
+ * @param node The element to be deleted
+ */
+Instant *deleteNodeInstant(Instant *list, Instant *node);
+
+/**
  * Inserts an element at the beginning of a list
  *
  * @tparam T The type of the list
@@ -64,3 +88,11 @@ T *insert(T *list, T *node) {
     node->next = list;
     return node;
 }
+
+/**
+ * Delete a given node from the list
+ *
+ * @param list The list
+ * @param node The element to be deleted
+ */
+Climate *deleteNodeClimate(Climate *list, Climate *node);

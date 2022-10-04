@@ -42,4 +42,23 @@ public:
             curr = curr->next;
         }
     }
+
+    Proxy<T> *deleteNode(Proxy<T> *list, Proxy<T> *node) {
+        if (list == nullptr) return nullptr;
+
+        if (list->link == node->link) return list->next;
+
+        Proxy<T> *curr = list;
+        Proxy<T> *prev;
+        while (curr != nullptr) {
+            if (curr->link == node->link) {
+                prev->next = curr->next;
+                return list;
+            }
+            prev = curr;
+            curr = curr->next;
+        }
+
+        return nullptr;
+    }
 };
