@@ -17,7 +17,7 @@
 
 using std::string;
 
-Person *people = new Person("Johan Rodriguez", "2022141892", 18, 1531721412);
+Person *people = new Person("Johan Rodriguez", "2022141892", 18, "Santa Rosa", 1531721412);
 Region *regions = new Region("San Carlos", "5", "Alajuela, Costa Rica");
 Place *places = new Place("Santa Clara", 500, 1250.3, regions);
 // FIXME: time_t params for new Instant
@@ -25,6 +25,9 @@ Instant *instants = new Instant("A beautiful day", 0, 0, 0);
 // FIXME: time_t params for new climate
 Rain *rains = new Rain("Storm", "1", 0.2);
 Climate *climates = new Climate("1", 2.3, 4.1, 8.2, 0.4, 31.8, 'N', true, 0, 1, 2, rains, places, people);
+
+
+// TODO: Change the switch used in modify options to a Menu class implementation
 
 int main() {
     // NOTE: Load data
@@ -253,7 +256,7 @@ int main() {
                             string attributeModify;
                             printf("Do you want to modify another information of this instant register? [y/n]: ");
                             getline(std::cin, attributeModify);
-                            if (!(attributeModify == "y" or attributeModify == "Y")) {
+                            if (!(attributeModify == "y" || attributeModify == "Y")) {
                                 break;
                             }
                         }
@@ -435,7 +438,7 @@ int main() {
                                         std::cin.clear();
                                         std::cin.ignore(INT32_MAX, '\n');
                                         getline(std::cin, attributeModify);
-                                        if (!(attributeModify == "y" or attributeModify == "Y")) {
+                                        if (!(attributeModify == "y" || attributeModify == "Y")) {
                                             break;
                                         }
                                     }
@@ -445,7 +448,7 @@ int main() {
                             string attributeModify;
                             printf("Do you want to modify another information of this climate register? [y/n]: ");
                             getline(std::cin, attributeModify);
-                            if (!(attributeModify == "y" or attributeModify == "Y")) {
+                            if (!(attributeModify == "y" || attributeModify == "Y")) {
                                 break;
                             }
                         }
@@ -655,7 +658,7 @@ int main() {
                             string attributeModify;
                             printf("Do you want to modify another information of this place? [y/n]: ");
                             getline(std::cin, attributeModify);
-                            if (!(attributeModify == "y" or attributeModify == "Y")) {
+                            if (!(attributeModify == "y" || attributeModify == "Y")) {
                                 break;
                             }
                         }
@@ -823,7 +826,7 @@ int main() {
                             string attributeModify;
                             printf("Do you want to modify another information of this region? [y/n]: ");
                             getline(std::cin, attributeModify);
-                            if (!(attributeModify == "y" or attributeModify == "Y")) {
+                            if (!(attributeModify == "y" || attributeModify == "Y")) {
                                 break;
                             }
                         }
@@ -960,7 +963,7 @@ int main() {
                             string attributeModify;
                             printf("Do you want to modify another information of this person? [y/n]: ");
                             getline(std::cin, attributeModify);
-                            if (!(attributeModify == "y" or attributeModify == "Y")) {
+                            if (!(attributeModify == "y" || attributeModify == "Y")) {
                                 break;
                             }
                         }
@@ -993,14 +996,18 @@ int main() {
                     // TODO: Do a validation to age
                     std::cin >> age;
 
+                    printf("Enter the location of the person: ");
+                    string location;
+                    getline(std::cin, location);
+
                     // TODO: Implement join date based on user input
                     time_t joinDate;
                     time(&joinDate);
 
                     if (people == nullptr) {
-                        people = new Person(name, id, age, joinDate);
+                        people = new Person(name, id, age, location, joinDate);
                     } else {
-                        people = sortedInsert(people, new Person(name, id, age, joinDate));
+                        people = sortedInsert(people, new Person(name, id, age, location, joinDate));
                     }
                     printf("\n\u001b[34m%s joined at %s\u001b[0m", name.c_str(), asctime(gmtime(&joinDate)));
 
