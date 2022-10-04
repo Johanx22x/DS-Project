@@ -240,3 +240,25 @@ Instant *deleteNodeInstant(Instant *list, Instant *node) {
 
     return list;
 }
+
+Climate *deleteNodeClimate(Climate *list, Climate *node) {
+    if (list == nullptr) return nullptr; 
+    else if (node == nullptr) return list;
+
+    // Check for the first node
+    if (list->id == node->id) {
+        return list->next;
+    }
+
+    Climate *curr = list;
+    Climate *prev;
+    while (curr != nullptr) {
+        if (curr->id == node->id) {
+            prev->next = curr->next;
+        }
+        prev = curr;
+        curr = curr->next;
+    }
+
+    return list;
+}

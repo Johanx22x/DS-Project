@@ -88,3 +88,11 @@ T *insert(T *list, T *node) {
     node->next = list;
     return node;
 }
+
+/**
+ * Delete a given node from the list
+ *
+ * @param list The list
+ * @param node The element to be deleted
+ */
+Climate *deleteNodeClimate(Climate *list, Climate *node);
