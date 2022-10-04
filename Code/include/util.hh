@@ -40,7 +40,7 @@ Place *insert(Place *list, Place *node);
  * @param list The list
  * @param node The element to be deleted
  */
-Person *deleteNodePerson(Person *list, Person *node);
+Person *deleteNode(Person *list, Person *node);
 
 /**
  * Delete a given node from the list
@@ -48,7 +48,7 @@ Person *deleteNodePerson(Person *list, Person *node);
  * @param list The list
  * @param node The element to be deleted
  */
-Rain *deleteNodeRain(Rain *list, Rain *node);
+Rain *deleteNode(Rain *list, Rain *node);
 
 /**
  * Delete a given node from the list
@@ -56,7 +56,7 @@ Rain *deleteNodeRain(Rain *list, Rain *node);
  * @param list The list
  * @param node The element to be deleted
  */
-Region *deleteNodeRegion(Region *list, Region *node);
+Region *deleteNode(Region *list, Region *node);
 
 /**
  * Delete a given node from the list
@@ -64,7 +64,7 @@ Region *deleteNodeRegion(Region *list, Region *node);
  * @param list The list
  * @param node The element to be deleted
  */
-Place *deleteNodePlace(Place *list, Place *node);
+Place *deleteNode(Place *list, Place *node);
 
 /**
  * Delete a given node from the list
@@ -72,7 +72,7 @@ Place *deleteNodePlace(Place *list, Place *node);
  * @param list The list
  * @param node The element to be deleted
  */
-Instant *deleteNodeInstant(Instant *list, Instant *node);
+Instant *deleteNode(Instant *list, Instant *node);
 
 /**
  * Inserts an element at the beginning of a list
@@ -95,4 +95,4 @@ T *insert(T *list, T *node) {
  * @param list The list
  * @param node The element to be deleted
  */
-Climate *deleteNodeClimate(Climate *list, Climate *node);
+Climate *deleteNode(Climate *list, Climate *node);

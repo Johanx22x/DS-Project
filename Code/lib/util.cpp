@@ -18,7 +18,7 @@ int getInt() {
     return data;
 }
 
-// FIXME: This function produce an error with lower and upper
+// FIXME: This function produces an error with lower and upper
 // TODO: Implement toLower() function to fix this error
 Person *sortedInsert(Person *list, Person *node) {
     if (list == nullptr) return node;
@@ -121,7 +121,7 @@ Climate *sortedInsert(Climate *list, Climate *node) {
     return list;
 }
 
-Person *deleteNodePerson(Person *list, Person *node) {
+Person *deleteNode(Person *list, Person *node) {
     if (list == nullptr) return nullptr; 
     else if (node == nullptr) return list;
 
@@ -146,7 +146,7 @@ Person *deleteNodePerson(Person *list, Person *node) {
     return list;
 }
 
-Rain *deleteNodeRain(Rain *list, Rain *node) {
+Rain *deleteNode(Rain *list, Rain *node) {
     if (list == nullptr) return nullptr; 
     else if (node == nullptr) return list;
 
@@ -168,7 +168,7 @@ Rain *deleteNodeRain(Rain *list, Rain *node) {
     return list;
 }
 
-Region *deleteNodeRegion(Region *list, Region *node) {
+Region *deleteNode(Region *list, Region *node) {
     if (list == nullptr) return nullptr; 
     else if (node == nullptr) return list;
 
@@ -190,7 +190,7 @@ Region *deleteNodeRegion(Region *list, Region *node) {
     return list;
 }
 
-Place *deleteNodePlace(Place *list, Place *node) {
+Place *deleteNode(Place *list, Place *node) {
     if (list == nullptr) return nullptr; 
     else if (node == nullptr) return list;
 
@@ -216,7 +216,7 @@ Place *deleteNodePlace(Place *list, Place *node) {
     return list;
 }
 
-Instant *deleteNodeInstant(Instant *list, Instant *node) {
+Instant *deleteNode(Instant *list, Instant *node) {
     if (list == nullptr) return nullptr; 
     else if (node == nullptr) return list;
 
@@ -241,7 +241,7 @@ Instant *deleteNodeInstant(Instant *list, Instant *node) {
     return list;
 }
 
-Climate *deleteNodeClimate(Climate *list, Climate *node) {
+Climate *deleteNode(Climate *list, Climate *node) {
     if (list == nullptr) return nullptr; 
     else if (node == nullptr) return list;
 

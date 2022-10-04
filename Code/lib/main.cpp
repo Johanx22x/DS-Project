@@ -188,7 +188,7 @@ int main() {
                     std::cin >> option; 
 
                     if (option == 2) {
-                        instants = deleteNodeInstant(instants, toModify);  
+                        instants = deleteNode(instants, toModify);  
                     } else if (option == 1) {
                         bool modifyFlag = true;
                         while (modifyFlag) {
@@ -331,8 +331,8 @@ int main() {
                         Person *foundPerson = people->search(toModify->person->id);
                         foundPlace->climate = foundPlace->climate->deleteNode(foundPlace->climate, new Proxy(toModify));
                         foundPerson->climates = foundPerson->climates->deleteNode(foundPerson->climates, new Proxy(toModify));
-                        rains = deleteNodeRain(rains, toModify->rain);
-                        climates = deleteNodeClimate(climates, toModify);  
+                        rains = deleteNode(rains, toModify->rain);
+                        climates = deleteNode(climates, toModify);  
                     } else if (option == 1) {
                         bool modifyFlag = true;
                         while (modifyFlag) {
@@ -600,7 +600,7 @@ int main() {
                     std::cin >> option; 
 
                     if (option == 2) {
-                        places = deleteNodePlace(places, toModify);  
+                        places = deleteNode(places, toModify);  
                     } else if (option == 1) {
                         bool modifyFlag = true;
                         while (modifyFlag) {
@@ -763,7 +763,7 @@ int main() {
                     std::cin >> option; 
 
                     if (option == 2) {
-                        regions = deleteNodeRegion(regions, toModify);  
+                        regions = deleteNode(regions, toModify);  
                     } else if (option == 1) {
                         bool modifyFlag = true;
                         while (modifyFlag) {
@@ -903,7 +903,7 @@ int main() {
                     std::cin >> option; 
 
                     if (option == 2) {
-                        people = deleteNodePerson(people, toModify);  
+                        people = deleteNode(people, toModify);  
                     } else if (option == 1) {
                         bool modifyFlag = true;
                         while (modifyFlag) {
