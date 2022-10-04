@@ -14,6 +14,10 @@ void Place::show() {
     
     do {
         printf("\nPlace name: %s\nPlace population: %d\nPlace area: %f\nPlace region: %s\n", curr->name.c_str(), curr->population, curr->area, curr->region->name.c_str());
+        if (curr->climate != nullptr) {
+            printf("Climates sub-list:");
+            curr->climate->show();
+        }
         curr = curr->next;
     } while (curr != this);
 }
