@@ -26,6 +26,9 @@ Instant *instants = new Instant("A beautiful day", 0, 0, 0);
 Rain *rains = new Rain("Storm", "1", 0.2);
 Climate *climates = new Climate("1", 2.3, 4.1, 8.2, 0.4, 31.8, 'N', true, 0, 1, 2, rains, places, people);
 
+
+// TODO: Change the switch used in modify options to a Menu class implementation
+
 int main() {
     // NOTE: Load data
     regions->places = new Proxy(places);
