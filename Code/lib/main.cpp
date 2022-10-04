@@ -24,11 +24,13 @@ Place *places = new Place("Santa Clara", 500, 1250.3, regions);
 Instant *instants = new Instant("A beautiful day", 0, 0, 0);
 // FIXME: time_t params for new climate
 Rain *rains = new Rain("Storm", "1", 0.2);
-Climate *climates = new Climate(2.3, 4.1, 8.2, 0.4, 31.8, 'N', true, 0, 1, 2);
+Climate *climates = new Climate("1", 2.3, 4.1, 8.2, 0.4, 31.8, 'N', true, 0, 1, 2, rains, places, people);
 
 int main() {
     // NOTE: Load data
     regions->places = new Proxy(places);
+    people->climates = new Proxy(climates);
+    places->climate = new Proxy(climates);
 
     // NOTE: Main menu definition
     Menu *menu = new Menu("Main Menu");
@@ -91,11 +93,17 @@ int main() {
     reports->addItem( new MenuItem(1, "Display the information of all the lists", 
                 [](Menu *reports, Menu *) -> CommandCodes {
                     // TODO: Print detailed information for every node, including sub-lists
+                    printf("\n\u001b[4;34mPerson list:\u001b[0m");
                     people->show();
+                    printf("\n\u001b[4;34mRegion list:\u001b[0m");
                     regions->show();
+                    printf("\n\u001b[4;34mPlace list:\u001b[0m");
                     places->show();
+                    printf("\n\u001b[4;34mClimate list:\u001b[0m");
                     climates->show();
+                    printf("\n\u001b[4;34mRain list:\u001b[0m");
                     rains->show();
+                    printf("\n\u001b[4;34mInstant list:\u001b[0m");
                     instants->show();
                     reports->display();
                     return CommandCodes::CONTINUE;
@@ -140,49 +148,13 @@ int main() {
                 }));
     
     // NOTE: dataManagement menu items definition
-    dataManagement->addItem(new MenuItem(20, "Relate a climate register to a person",
-                [](Menu *dataManagement, Menu *) -> CommandCodes {
-                    // TODO: Relate a climate register to a person
-                    dataManagement->display();
-                    return CommandCodes::CONTINUE;
-                }));
-    dataManagement->addItem(new MenuItem(19, "Relate a place with a climate register",
-                [](Menu *dataManagement, Menu *) -> CommandCodes {
-                    // TODO: implement function body (Relate a place with a region)
-                    // TODO: Relate to the correspondient rain node
-                    dataManagement->display();
-                    return CommandCodes::CONTINUE;
-                }));
-    dataManagement->addItem(new MenuItem(18, "Show registered climates",
-                [](Menu *dataManagement, Menu *) -> CommandCodes {
-                    climates->show();
-                    dataManagement->display();
-                    return CommandCodes::CONTINUE;
-                }));
-    dataManagement->addItem(new MenuItem(17, "Modify a registered climate",
-                [](Menu *dataManagement, Menu *) -> CommandCodes {
-                    // TODO: implement function body (user input)
-                    dataManagement->display();
-                    return CommandCodes::CONTINUE;
-                }));
-    dataManagement->addItem(new MenuItem(16, "Add a new climate to the register", 
-                [](Menu *dataManagement, Menu *) -> CommandCodes {
-                    // TODO: implement function body (user input)
-                    
-                    // TODO: Implement time_t input
-                    // FIXME: time_t params
-                    if (climates == nullptr) {
-                        climates = new Climate(3.2, 1.0, 2.1, 4.9, 1.8, 'N', false, 8, 9, 10);
-                    } else {
-                        climates->append(new Climate(3.2, 1.0, 2.1, 4.9, 1.8, 'N', false, 8, 9, 10));
-                    }
-                    printf("\n\u001b[34mThe data was added to climate register!\u001b[0m\n");
-                    dataManagement->display();
-                    return CommandCodes::CONTINUE;
-                }));
     dataManagement->addItem(new MenuItem(15, "Show registered instants",
                 [](Menu *dataManagement, Menu *) -> CommandCodes {
-                    instants->show();
+                    if (places == nullptr) {
+                        printf("\n\u001b[31mNo elements in the instants list!\u001b[0m\n");
+                    } else {
+                        instants->show();
+                    }
                     dataManagement->display();
                     return CommandCodes::CONTINUE;
                 }));
@@ -314,7 +286,280 @@ int main() {
                     dataManagement->display();
                     return CommandCodes::CONTINUE;
                 }));
-    dataManagement->addItem(new MenuItem(12, "Show registered places",
+    dataManagement->addItem(new MenuItem(12, "Show registered climates",
+                [](Menu *dataManagement, Menu *) -> CommandCodes {
+                    if (climates == nullptr) {
+                        printf("\n\u001b[31mNo elements in the climates list!\u001b[0m\n");
+                    } else {
+                        climates->show();
+                    }
+
+                    dataManagement->display();
+                    return CommandCodes::CONTINUE;
+                }));
+    dataManagement->addItem(new MenuItem(11, "Modify a registered climate",
+                [](Menu *dataManagement, Menu *) -> CommandCodes {
+                    if (climates == nullptr) {
+                        printf("\n\u001b[31mNo elements to modify in the climates list!\u001b[0m\n");
+                        dataManagement->display();
+                        return CommandCodes::CONTINUE;
+                    } 
+
+                    climates->showById();
+
+                    printf("\nEnter the ID of the climate: ");
+                    string id;
+                    // Flush buffer
+                    std::cin.clear();
+                    std::cin.ignore(INT32_MAX, '\n');
+                    getline(std::cin, id);
+
+                    Climate *toModify = climates->search(id);
+                    if (toModify == nullptr) {
+                        printf("\n\u001b[31mThe climate with the id %s doesn't exist in the register!\n\u001b[0m", id.c_str());
+                        dataManagement->display();
+                        return CommandCodes::CONTINUE;
+                    }
+
+                    // TODO: Validate user input (1 or 2)
+                    int option;
+                    printf("\n\u001b[34m%s\u001b[0m\n(1) - Modify this climate register\n(2) - Delete this climate register\nSelect an option: ", toModify->id.c_str());
+                    std::cin >> option; 
+
+                    if (option == 2) {
+                        Place *foundPlace = places->search(toModify->place->name);
+                        Person *foundPerson = people->search(toModify->person->id);
+                        foundPlace->climate = foundPlace->climate->deleteNode(foundPlace->climate, new Proxy(toModify));
+                        foundPerson->climates = foundPerson->climates->deleteNode(foundPerson->climates, new Proxy(toModify));
+                        rains = deleteNodeRain(rains, toModify->rain);
+                        climates = deleteNodeClimate(climates, toModify);  
+                    } else if (option == 1) {
+                        bool modifyFlag = true;
+                        while (modifyFlag) {
+                            printf("\n(1) - Modify id\n");
+                            printf("(2) - Modify the precipitation\n");
+                            printf("(3) - Modify the max temperature\n");
+                            printf("(4) - Modify min temperature\n");
+                            printf("(5) - Modify the wind speed\n");
+                            printf("(6) - Modify the the humidity\n");
+                            printf("(7) - Modify the wind direction\n");
+                            printf("(8) - Modify the rained state (yes or no)\n");
+                            printf("(9) - Modify the date\n");
+                            printf("(10) - Modify the start time\n");
+                            printf("(11) - Modify the end time\n");
+                            printf("(12) - Modify the associate rain register\n");
+                            printf("Select an option: ");
+
+                            // TODO: Validate user input 
+                            int modifyOption;
+                            std::cin >> modifyOption;
+
+                            switch (modifyOption) {
+                                case 1: {
+                                    string newId;
+                                    // Flush buffer
+                                    std::cin.clear();
+                                    std::cin.ignore(INT32_MAX, '\n');
+                                    while (true) {
+                                        printf("Enter the new id for the climate register: ");
+                                        getline(std::cin, newId);
+                                        if (id == newId) {
+                                            printf("\u001b[31mThe ID is the same as the current!\u001b[0m\n");
+                                            continue;
+                                        } else if (rains->search(newId) != nullptr) {
+                                            printf("\u001b[31mThe ID already exist! Choose another ID...\u001b[0m\n");
+                                            continue;
+                                        }
+                                        toModify->id = newId;
+                                        break;
+                                    }
+                                    break;
+                                }
+                                case 12: {
+                                    Rain *rainToModify = toModify->rain;
+
+                                    bool modifyFlag = true;
+                                    while (modifyFlag) {
+                                        printf("\n(1) - Modify id\n");
+                                        printf("(2) - Modify name\n");
+                                        printf("(3) - Modify rainfall value\n");
+                                        printf("Select an option: ");
+
+                                        // TODO: Validate user input 
+                                        int modifyOption;
+                                        std::cin >> modifyOption;
+
+                                        switch (modifyOption) {
+                                            case 1: {
+                                                string newId;
+                                                // Flush buffer
+                                                std::cin.clear();
+                                                std::cin.ignore(INT32_MAX, '\n');
+                                                while (true) {
+                                                    printf("Enter the new id for the rain register: ");
+                                                    getline(std::cin, newId);
+                                                    if (id == newId) {
+                                                        printf("\u001b[31mThe ID is the same as the current!\u001b[0m\n");
+                                                        continue;
+                                                    } else if (rains->search(newId) != nullptr) {
+                                                        printf("\u001b[31mThe ID already exist! Choose another ID...\u001b[0m\n");
+                                                        continue;
+                                                    }
+                                                    rainToModify->id = newId;
+                                                    break;
+                                                }
+                                                break;
+                                            }
+                                            case 2: {
+                                                printf("Enter the new name for the rain register: ");
+                                                string newName;
+                                                // Flush buffer
+                                                std::cin.clear();
+                                                std::cin.ignore(INT32_MAX, '\n');
+                                                getline(std::cin, newName);
+                                                rainToModify->name = newName;
+                                                break;
+                                            }
+                                            case 3: {
+                                                printf("Enter the new rainfall value for the rain register: ");
+                                                // TODO: validate user input
+                                                double newRainfall;
+                                                std::cin >> newRainfall;
+                                                rainToModify->rainfall = newRainfall;
+                                                break;
+                                            }
+                                        }
+                                        string attributeModify;
+                                        printf("Do you want to modify another information of this rain register? [y/n]: ");
+                                        // Flush buffer
+                                        std::cin.clear();
+                                        std::cin.ignore(INT32_MAX, '\n');
+                                        getline(std::cin, attributeModify);
+                                        if (!(attributeModify == "y" or attributeModify == "Y")) {
+                                            break;
+                                        }
+                                    }
+                                    break;
+                                }
+                            }
+                            string attributeModify;
+                            printf("Do you want to modify another information of this climate register? [y/n]: ");
+                            getline(std::cin, attributeModify);
+                            if (!(attributeModify == "y" or attributeModify == "Y")) {
+                                break;
+                            }
+                        }
+                    }
+                    dataManagement->display();
+                    return CommandCodes::CONTINUE;
+                }));
+    dataManagement->addItem(new MenuItem(10, "Add a new climate to the register", 
+                [](Menu *dataManagement, Menu *) -> CommandCodes {
+                    if (people == nullptr) {
+                        printf("\u001b[31mThere isn't a person to associate this new climate!\u001b[0m\n");
+                        return CommandCodes::CONTINUE;
+                    } 
+                    if (places == nullptr) {
+                        printf("\u001b[31mThere isn't a place to associate this new climate!\u001b[0m\n");
+                        return CommandCodes::CONTINUE;
+                    }
+
+                    people->showByNameId();
+                    printf("\nEnter the ID of the person making the registration: ");
+                    string personId;
+                    // Flush buffer
+                    std::cin.clear();
+                    std::cin.ignore(INT32_MAX, '\n');
+                    getline(std::cin, personId);
+
+                    Person *foundPerson = people->search(personId);
+                    if (foundPerson == nullptr) {
+                        printf("\n\u001b[31mThe person with the ID %s doesn't exist in the register!\n\u001b[0m", personId.c_str());
+                        dataManagement->display();
+                        return CommandCodes::CONTINUE;
+                    }
+
+                    places->showByName();
+                    printf("\nEnter the name of the place where the climate will be registered: ");
+                    string placeName;
+                    getline(std::cin, placeName);
+
+                    Place *foundPlace = places->search(placeName);
+                    if (foundPlace == nullptr) {
+                        printf("\n\u001b[31mThe place with the name %s doesn't exist in the register!\n\u001b[0m", placeName.c_str());
+                        dataManagement->display();
+                        return CommandCodes::CONTINUE;
+                    }
+
+                    // TODO: implement function body (user input for climate)
+                    
+                    // TODO: Implement time_t input
+                    // FIXME: time_t params
+
+                    string climateId;
+                    while (true) {
+                        printf("\nEnter an ID for the climate: ");
+                        getline(std::cin, climateId);
+                        if (climates == nullptr) { break; } 
+                        if (climates->search(climateId) == nullptr) { break; }
+                        printf("\u001b[31mThis ID already exist! Choose another id...\u001b[0m\n");
+                    }
+                    
+                    // NOTE: Add the rain of the climate
+                    printf("\nEnter a descriptive name for the rain: ");
+                    string rainName;
+                    getline(std::cin, rainName);
+
+                    string id;
+                    while (true) {
+                        printf("Enter the id of the rain: ");
+                        getline(std::cin, id);
+                        if (rains == nullptr) { break; } 
+                        if (rains->search(id) == nullptr) { break; }
+                        printf("\u001b[31mThis ID already exist! Choose another id...\u001b[0m\n");
+                    }
+
+                    // TODO: Do a validation to rainfall
+                    printf("Enter the average mm rainfall value of the rain: ");
+                    double rainfall = 0.0;
+                    std::cin >> rainfall;
+
+                    Rain *newRain = new Rain(rainName, id, rainfall);
+                    if (rains == nullptr) {
+                        rains = newRain;
+                    } else {
+                        rains = insert(rains, newRain);
+                    }
+
+                    Climate *newClimate = new Climate(climateId, 3.2, 1.0, 2.1, 4.9, 1.8, 'N', false, 8, 9, 10, newRain, foundPlace, foundPerson);
+                    if (climates == nullptr) {
+                        climates = newClimate;
+                    } else {
+                        climates->append(newClimate);
+                    }
+
+                    if (foundPerson->climates == nullptr) {
+                        foundPerson->climates = new Proxy(newClimate);
+                    } else {
+                        foundPerson->climates->append(new Proxy(newClimate));
+                    }
+
+                    if (foundPlace->climate == nullptr) {
+                        foundPlace->climate = new Proxy(newClimate);
+                    } else {
+                        foundPlace->climate->append(new Proxy(newClimate));
+                    }
+
+                    printf("\n\u001b[34mThe data was added to the person %s!\u001b[0m\n", foundPerson->name.c_str());
+                    printf("\n\u001b[34mThe data was added to the place %s!\u001b[0m\n", foundPlace->name.c_str());
+
+                    printf("\n\u001b[34mThe data was added to climate register!\u001b[0m\n");
+                    printf("\n\u001b[34mAdded a new rain register called: %s\u001b[0m\n", rainName.c_str());
+
+                    dataManagement->display();
+                    return CommandCodes::CONTINUE;
+                }));
+    dataManagement->addItem(new MenuItem(9, "Show registered places",
                 [](Menu *dataManagement, Menu *) -> CommandCodes {
                     if (places == nullptr) {
                         printf("\n\u001b[31mNo elements in the places list!\u001b[0m\n");
@@ -325,7 +570,7 @@ int main() {
                     dataManagement->display();
                     return CommandCodes::CONTINUE;
                 }));
-    dataManagement->addItem(new MenuItem(11, "Modify a registered place",
+    dataManagement->addItem(new MenuItem(8, "Modify a registered place",
                 [](Menu *dataManagement, Menu *) -> CommandCodes {
                     if (places == nullptr) {
                         printf("\n\u001b[31mNo elements to modify in the places list!\u001b[0m\n");
@@ -418,7 +663,7 @@ int main() {
                     dataManagement->display();
                     return CommandCodes::CONTINUE;
                 }));
-    dataManagement->addItem(new MenuItem(10, "Add a new place",
+    dataManagement->addItem(new MenuItem(7, "Add a new place",
                 [](Menu *dataManagement, Menu *) -> CommandCodes {
                     if (regions == nullptr) {
                         printf("\n\u001b[31mThere is no region to which to relate this new place!\u001b[0m\n\n");
@@ -477,7 +722,7 @@ int main() {
                     dataManagement->display();
                     return CommandCodes::CONTINUE;
                 }));
-    dataManagement->addItem(new MenuItem(9, "Show registered regions",
+    dataManagement->addItem(new MenuItem(6, "Show registered regions",
                 [](Menu *dataManagement, Menu *) -> CommandCodes {
                     if (regions == nullptr) {
                         printf("\n\u001b[31mNo elements in the region list!\u001b[0m\n");
@@ -488,7 +733,7 @@ int main() {
                     dataManagement->display();
                     return CommandCodes::CONTINUE;
                 }));
-    dataManagement->addItem(new MenuItem(8, "Modify a registered region", 
+    dataManagement->addItem(new MenuItem(5, "Modify a registered region", 
                 [](Menu *dataManagement, Menu *) -> CommandCodes {
                     if (regions == nullptr) {
                         printf("\n\u001b[31mNo elements to modify in the region list!\u001b[0m\n");
@@ -586,7 +831,7 @@ int main() {
                     dataManagement->display();
                     return CommandCodes::CONTINUE;
                 }));
-    dataManagement->addItem(new MenuItem(7, "Add a new region", 
+    dataManagement->addItem(new MenuItem(4, "Add a new region", 
                 [](Menu *dataManagement, Menu*) -> CommandCodes {
                     printf("\nEnter the name of the region: ");
                     string name;
@@ -618,145 +863,6 @@ int main() {
                     dataManagement->display();
                     return CommandCodes::CONTINUE;
                 }));
-    dataManagement->addItem(new MenuItem(6, "Show registered rains", 
-                [](Menu *dataManagement, Menu*) -> CommandCodes {
-                    if (rains == nullptr) {
-                        printf("\n\u001b[31mNo elements in the rain list!\u001b[0m\n");
-                    } else {
-                        rains->show();
-                    }
-
-                    dataManagement->display();
-                    return CommandCodes::CONTINUE;
-                }));
-    dataManagement->addItem(new MenuItem(5, "Modify a registered rain", 
-                [](Menu *dataManagement, Menu *) -> CommandCodes {
-                    if (rains == nullptr) {
-                        printf("\n\u001b[31mNo elements to modify in the rain list!\u001b[0m\n");
-                        dataManagement->display();
-                        return CommandCodes::CONTINUE;
-                    } 
-
-                    rains->showByNameId();
-
-                    printf("\nEnter the ID of the rain: ");
-                    string id;
-                    // Flush buffer
-                    std::cin.clear();
-                    std::cin.ignore(INT32_MAX, '\n');
-                    getline(std::cin, id);
-
-                    Rain *toModify = rains->search(id);
-                    if (toModify == nullptr) {
-                        printf("\n\u001b[31mThe rain with id %s doesn't exist in the register!\n\u001b[0m", id.c_str());
-                        dataManagement->display();
-                        return CommandCodes::CONTINUE;
-                    }
-
-                    // TODO: Validate user input (1 or 2)
-                    int option;
-                    printf("\n\u001b[34m%s - %s\u001b[0m\n(1) - Modify this rain register\n(2) - Delete this rain register\nSelect an option: ", toModify->name.c_str(), toModify->id.c_str());
-                    std::cin >> option; 
-
-                    if (option == 2) {
-                        rains = deleteNodeRain(rains, toModify);  
-                    } else if (option == 1) {
-                        bool modifyFlag = true;
-                        while (modifyFlag) {
-                            printf("\n(1) - Modify id\n");
-                            printf("(2) - Modify name\n");
-                            printf("(3) - Modify rainfall value\n");
-                            printf("Select an option: ");
-
-                            // TODO: Validate user input 
-                            int modifyOption;
-                            std::cin >> modifyOption;
-
-                            switch (modifyOption) {
-                                case 1: {
-                                    string newId;
-                                    // Flush buffer
-                                    std::cin.clear();
-                                    std::cin.ignore(INT32_MAX, '\n');
-                                    while (true) {
-                                        printf("Enter the new id for the rain register: ");
-                                        getline(std::cin, newId);
-                                        if (id == newId) {
-                                            printf("\u001b[31mThe ID is the same as the current!\u001b[0m\n");
-                                            continue;
-                                        } else if (rains->search(newId) != nullptr) {
-                                            printf("\u001b[31mThe ID already exist! Choose another ID...\u001b[0m\n");
-                                            continue;
-                                        }
-                                        toModify->id = newId;
-                                        break;
-                                    }
-                                    break;
-                                }
-                                case 2: {
-                                    printf("Enter the new name for the rain register: ");
-                                    string newName;
-                                    // Flush buffer
-                                    std::cin.clear();
-                                    std::cin.ignore(INT32_MAX, '\n');
-                                    getline(std::cin, newName);
-                                    toModify->name = newName;
-                                    break;
-                                }
-                                case 3: {
-                                    printf("Enter the new rainfall value for the rain register: ");
-                                    // TODO: validate user input
-                                    double newRainfall;
-                                    std::cin >> newRainfall;
-                                    toModify->rainfall = newRainfall;
-                                    break;
-                                }
-                            }
-
-                            string attributeModify;
-                            printf("Do you want to modify another information of this rain register? [y/n]: ");
-                            getline(std::cin, attributeModify);
-                            if (!(attributeModify == "y" or attributeModify == "Y")) {
-                                break;
-                            }
-                        }
-                    }
-                    dataManagement->display();
-                    return CommandCodes::CONTINUE;
-                }));
-    dataManagement->addItem(new MenuItem(4, "Add a new rain",
-                [](Menu *dataManagement, Menu *) -> CommandCodes {
-                    printf("\nEnter a descriptive name for the rain: ");
-                    string name;
-                    // Flush buffer
-                    std::cin.clear();
-                    std::cin.ignore(INT32_MAX, '\n');
-                    getline(std::cin, name);
-
-                    string id;
-                    while (true) {
-                        printf("Enter the id of the rain: ");
-                        getline(std::cin, id);
-                        if (rains == nullptr) { break; } 
-                        if (rains->search(id) == nullptr) { break; }
-                        printf("\u001b[31mThis ID already exist! Choose another id...\u001b[0m\n");
-                    }
-
-                    // TODO: Do a validation to rainfall
-                    printf("Enter the average mm rainfall value of the rain: ");
-                    double rainfall = 0.0;
-                    std::cin >> rainfall;
-
-                    if (rains == nullptr) {
-                        rains = new Rain(name, id, rainfall);
-                    } else {
-                        rains = insert(rains, new Rain(name, id, rainfall));
-                    }
-                    printf("\n\u001b[34mAdded a new rain register called: %s\u001b[0m\n", name.c_str());
-
-                    dataManagement->display();
-                    return CommandCodes::CONTINUE;
-                })); 
     dataManagement->addItem(new MenuItem(3, "Show registered persons", 
                 [](Menu *dataManagement, Menu*) -> CommandCodes {
                     if (people == nullptr) {
@@ -896,7 +1002,7 @@ int main() {
                     } else {
                         people = sortedInsert(people, new Person(name, id, age, joinDate));
                     }
-                    printf("\n\u001b[34m%s joined at %s\u001b[0m\n", name.c_str(), asctime(gmtime(&joinDate)));
+                    printf("\n\u001b[34m%s joined at %s\u001b[0m", name.c_str(), asctime(gmtime(&joinDate)));
 
                     dataManagement->display();
                     return CommandCodes::CONTINUE;
