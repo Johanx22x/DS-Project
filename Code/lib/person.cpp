@@ -4,18 +4,19 @@
 //#include <bits/types/time_t.h>
 #include <string>
 
-Person::Person(std::string name, std::string id, short int age, time_t joinDate) {
+Person::Person(std::string name, std::string id, short int age, std::string location, time_t joinDate) {
     this->name = name;
     this->id = id;
     this->age = age;
     this->joinDate = joinDate;
+    this->location = location;
 }
 
 void Person::show() {
     Person *curr = this;
 
     while (curr != nullptr) {
-        printf("\nPerson name: %s\nPerson ID: %s\nPerson age: %d\nPerson Join Date: %s", curr->name.c_str(), curr->id.c_str(), curr->age, asctime(gmtime(&curr->joinDate)));
+        printf("\nPerson name: %s\nPerson ID: %s\nPerson age: %d\nPerson location: %s\nPerson Join Date: %s", curr->name.c_str(), curr->id.c_str(), curr->age, curr->location.c_str(), asctime(gmtime(&curr->joinDate)));
         if (curr->climates != nullptr) {
             printf("Climates sub-list:");
             curr->climates->show();

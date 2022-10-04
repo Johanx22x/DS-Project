@@ -3,7 +3,6 @@
 #include <string>
 #include <proxy.hh>
 #include <climate.hh>
-#include <place.hh>
 
 /**
  * Defines a structure that represents a person
@@ -13,10 +12,10 @@ public:
     std::string name;
     std::string id;
     short int age;
+    std::string location;
     time_t joinDate;
     Person *prev = nullptr;
     Person *next = nullptr;
-    class Place *location = nullptr;
     Proxy<class Climate> *climates = nullptr;
 
     /**
@@ -27,7 +26,7 @@ public:
      * @param age       The age of the person
      * @param joinDate  Date in which the person was registered
      */
-    Person(std::string name, std::string id, short int age, time_t joinDate);
+    Person(std::string name, std::string id, short int age, std::string location, time_t joinDate);
 
     /**
      * Show all the nodes of the struct
