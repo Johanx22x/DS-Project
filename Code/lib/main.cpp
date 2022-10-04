@@ -913,6 +913,7 @@ int main() {
                             printf("\n(1) - Modify id\n");
                             printf("(2) - Modify name\n");
                             printf("(3) - Modify age\n");
+                            printf("(4) - Modify location\n");
                             printf("Select an option: ");
 
                             // TODO: Validate user input 
@@ -956,6 +957,16 @@ int main() {
                                     short newAge;
                                     std::cin >> newAge;
                                     toModify->age = newAge;
+                                    break;
+                                }
+                                case 4: {
+                                    printf("Enter the new location for the person: ");
+                                    string newLocation;
+                                    // Flush buffer
+                                    std::cin.clear();
+                                    std::cin.ignore(INT32_MAX, '\n');
+                                    getline(std::cin, newLocation);
+                                    toModify->name = newLocation;
                                     break;
                                 }
                             }
