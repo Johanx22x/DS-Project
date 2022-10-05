@@ -48,4 +48,6 @@ public:
      * @param id The element id to search
      */
     Person *search(std::string id);
+
+    std::string str();
 };
