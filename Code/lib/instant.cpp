@@ -1,41 +1,66 @@
+#include <algorithm>
 #include <cstdio>
 #include <ctime>
 #include <instant.hh>
+#include <sstream>
 #include <string>
 
-Instant::Instant(std::string name, time_t date, time_t startTime, time_t endTime) {
-    this->name = name;
-    this->date = date;
-    this->startTime = startTime;
-    this->endTime = endTime;
+Instant::Instant(std::string name, time_t date, time_t startTime,
+                 time_t endTime) {
+  this->name = name;
+  this->date = date;
+  this->startTime = startTime;
+  this->endTime = endTime;
+}
+
+std::string Instant::str() {
+  std::ostringstream out;
+  char endBuf[13];
+  char startBuf[13];
+  char dateBuf[200];
+
+  tm *datetmp = gmtime(&this->date);
+  strftime(dateBuf, sizeof(dateBuf), "%a %b %d %Y", datetmp);
+
+  tm *endtmp = gmtime(&this->endTime);
+  strftime(endBuf, sizeof(endBuf), "%H:%M:%S", endtmp);
+
+  tm *starttmp = gmtime(&this->startTime);
+  strftime(startBuf, sizeof(startBuf), "%H:%M:%S", starttmp);
+
+  out << "Name: " << this->name << "\nDate: " << dateBuf
+      << "\nEnd Time: " << endBuf << "\nStart Time: " << startBuf;
+  return out.str();
 }
 
 void Instant::show() {
-    Instant *curr = this;
+  Instant *curr = this;
 
-    while (curr != nullptr) {
-        // TODO: Implement start and end time
-        printf("\nInstant name: %s\nInstant date: %s", curr->name.c_str(), asctime(gmtime(&curr->date)));
-        curr = curr->next;
-    }
+  while (curr != nullptr) {
+    // TODO: Implement start and end time
+    printf("\nInstant name: %s\nInstant date: %s", curr->name.c_str(),
+           asctime(gmtime(&curr->date)));
+    curr = curr->next;
+  }
 }
 
 void Instant::showByName() {
-    Instant *curr = this;
+  Instant *curr = this;
 
-    while (curr != nullptr) {
-        printf("\nInstant name: %s", curr->name.c_str());
-        curr = curr->next;
-    }
+  while (curr != nullptr) {
+    printf("\nInstant name: %s", curr->name.c_str());
+    curr = curr->next;
+  }
 }
 
 Instant *Instant::search(std::string name) {
-    Instant *curr = this;
-    
-    while (curr != nullptr) {
-        if (curr->name == name) return curr;
-        curr = curr->next;
-    }
+  Instant *curr = this;
 
-    return nullptr;
+  while (curr != nullptr) {
+    if (curr->name == name)
+      return curr;
+    curr = curr->next;
+  }
+
+  return nullptr;
 }

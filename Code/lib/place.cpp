@@ -31,7 +31,7 @@ void Place::showByName() {
     } while (curr != this);
 }
 
-Place* Place::search(std::string name) {
+Place* Place::find(std::string name) {
     Place *curr = this;
 
     do {

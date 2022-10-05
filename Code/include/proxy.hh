@@ -61,4 +61,12 @@ public:
 
         return nullptr;
     }
+
+    // TODO: make a better size calculation method that doesn't have to traverse the entire
+    // list each time we want to get its size
+    std::size_t size() {
+        size_t _siz = 0;
+        for (Proxy<T> *tmp = this; tmp != nullptr; tmp = tmp->next) _siz++;
+        return _siz;
+    }
 };

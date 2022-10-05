@@ -2,6 +2,7 @@
 #include <ctime>
 #include <person.hh>
 //#include <bits/types/time_t.h>
+#include <sstream>
 #include <string>
 
 Person::Person(std::string name, std::string id, short int age, std::string location, time_t joinDate) {
@@ -23,6 +24,12 @@ void Person::show() {
         }
         curr = curr->next;
     }
+}
+
+std::string Person::str() {
+    std::ostringstream out;
+    out << "Person's name: " << this->name.c_str() << "\nPerson's ID: " << this->id << "\nPerson's age: " << this->age << "\nPerson's join date: " << asctime(gmtime(&this->joinDate));
+    return out.str();
 }
 
 void Person::showByNameId() {

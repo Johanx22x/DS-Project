@@ -30,7 +30,7 @@ double Rain::max() {
     return maxi;
 }
 
-std::string Rain::averageRainfall() {
+double Rain::average() {
     double average = 0;
     int nodes = 0;
     Rain *tmp = this;
@@ -47,15 +47,21 @@ std::string Rain::averageRainfall() {
     
     average = average / nodes;
 
+    return average;
+}
+
+std::string Rain::fmtAverage() {
+    double avg = average();
+
     std::string out;
 
-    if (average == 0) {
+    if (avg == 0) {
         out = "extremo seco";
-    } else if (average < 0.2) {
+    } else if (avg < 0.2) {
         out = "seco";
-    } else if (average < 0.4) {
+    } else if (avg < 0.4) {
         out = "normal";
-    } else if (average < 0.8) {
+    } else if (avg < 0.8) {
         out = "lluvioso";
     } else {
         out = "extremo lluvioso";

@@ -117,39 +117,165 @@ int main() {
     return CommandCodes::EXIT;
   }));
 
-  // NOTE: consultations menu items definition
   consultations->addItem(
-      new MenuItem(4, "Display the person with more registers",
+      new MenuItem(4, "Display the person with the most registrations",
                    [](Menu *consultations, Menu *) -> CommandCodes {
                      // TODO: implement function body
-                     consultations->display();
-                     return CommandCodes::CONTINUE;
-                   }));
-  consultations->addItem(
-      new MenuItem(3,
-                   "Show the month with more extreme rain registers of a given "
-                   "year and place",
-                   // NOTE: Print both, extremely rainy and extremely dry
-                   // NOTE: In case of tie print all the months with the max tie
-                   [](Menu *consultations, Menu *) -> CommandCodes {
-                     // TODO: implement function body
+                     Person *maxRegs = people;
+                     Person *tmp = people;
+
+                     for (; tmp != nullptr; tmp = tmp->next) {
+                       if (tmp->climates->size() > maxRegs->climates->size())
+                         maxRegs = tmp;
+                     }
+
+                     std::cout << maxRegs->str() << "\n";
                      consultations->display();
                      return CommandCodes::CONTINUE;
                    }));
   consultations->addItem(new MenuItem(
-      2, "Display the dates with more minutes difference in sunrise",
-      // NOTE: In case of a tie print only one
+      3, "Show the month with the most extreme rains of a given year and place",
+      // NOTE: Print both, extremely rainy and extremely dry
+      // NOTE: In case of tie print all the months with the max tie
       [](Menu *consultations, Menu *) -> CommandCodes {
         // TODO: implement function body
+
+        printf("Type in the year: ");
+        int year;
+        std::cin >> year;
+
+        places->showByName();
+
+        printf("Enter the name of the place: ");
+        string name;
+        std::cin.clear();
+        std::cin.ignore(INT32_MAX, '\n');
+        getline(std::cin, name);
+
+        Place *found = places->find(name);
+
+        if (found == nullptr) {
+          printf("Can't find that place\n");
+          return CommandCodes::CONTINUE;
+        }
+
+        // here maxRr is initialized as a null pointer becaus we also need to
+        // validate the year, since this function asks the user for a year and a
+        // place
+        Climate *maxRr = nullptr;
+
+        for (Proxy<Climate> *tmp = found->climate; tmp != nullptr;
+             tmp = tmp->next) {
+          if (gmtime(&tmp->link->date)->tm_year + 1900 == year) {
+            if (maxRr == nullptr)
+              maxRr = tmp->link;
+            if (tmp->link->rain->average() > maxRr->rain->average()) {
+              maxRr = tmp->link;
+            }
+          }
+        }
+
+        if (maxRr == nullptr) {
+          fprintf(stderr, "No rains stored for the given year\n");
+          return CommandCodes::CONTINUE;
+        }
+
+        std::cout << maxRr->str() << "\n";
         consultations->display();
         return CommandCodes::CONTINUE;
       }));
   consultations->addItem(new MenuItem(
-      1,
-      "Earliest sunrise and latest occultation time of the sun of a given year",
+      2, "Display earliest and latest sunrise",
+      // NOTE: In case of a tie print only one
+      [](Menu *consultations, Menu *) -> CommandCodes {
+        // TODO: implement function body
+
+        Instant *max = instants;
+        Instant *min = instants;
+
+        // t represents today in milliseconds
+        time_t t = time(nullptr);
+
+        // today holds an instance of tm, its only use if to hold the current
+        // year kind of a waste of resources, but who cares, we're in 2022 not
+        // in the 80's ram is one of the cheapest and most affordable resources
+        //
+        // today
+        tm *today = gmtime(&t);
+
+        // calculate max startTime
+        for (Instant *tmp = instants; tmp != nullptr; tmp = tmp->next) {
+          if (gmtime(&tmp->date)->tm_year == (*today).tm_year &&
+              tmp->startTime > max->startTime)
+            max = tmp;
+        }
+
+        // calculate min startTime
+        for (Instant *tmp = instants; tmp != nullptr; tmp = tmp->next) {
+          if (gmtime(&tmp->date)->tm_year == (*today).tm_year &&
+              tmp->startTime < min->startTime)
+            min = tmp;
+        }
+
+        if (max == min) {
+          std::cout << max->str() << "\n";
+        } else {
+          std::cout << "Max start time: \n"
+                    << max->str() << "\nMin start time: \n"
+                    << min->str() << "\n";
+        }
+
+        consultations->display();
+        return CommandCodes::CONTINUE;
+      }));
+  consultations->addItem(new MenuItem(
+      1, "Show earliest and latest sunsets within a given year",
       // NOTE: In case of a tie print them all
       [](Menu *consultations, Menu *) -> CommandCodes {
         // TODO: implement function body
+        Instant *max = nullptr;
+        Instant *min = nullptr;
+
+        int year;
+        printf("Enter the year: ");
+        std::cin >> year;
+
+        // calculate max endTime
+        for (Instant *tmp = instants; tmp != nullptr; tmp = tmp->next) {
+          if ((gmtime(&tmp->date)->tm_year + 1900) == year) {
+            if (max == nullptr)
+              max = tmp;
+            if (tmp->endTime > max->endTime) {
+              max = tmp;
+            }
+          }
+        }
+
+        // calculate min endTime
+        for (Instant *tmp = instants; tmp != nullptr; tmp = tmp->next) {
+          if ((gmtime(&tmp->date)->tm_year + 1900) == year) {
+            if (min == nullptr)
+              min = tmp;
+            if (tmp->endTime < min->endTime)
+              min = tmp;
+          }
+        }
+
+        // FIXME: check for null pointers, this is gonna segfault
+        if (max == min) {
+          if (max == nullptr) {
+            fprintf(stderr, "Couldn't find anything for the given year\n");
+            consultations->display();
+            return CommandCodes::CONTINUE;
+          }
+          std::cout << "Max and min end times: \n" << max->str() << "\n";
+          std::cout << min->str();
+        } else {
+          std::cout << "Max end time: \n"
+                    << max->str() << "\nMin end time: \n"
+                    << min->str() << "\n";
+        }
+
         consultations->display();
         return CommandCodes::CONTINUE;
       }));
@@ -157,6 +283,46 @@ int main() {
       new MenuItem(0, "Back", [](Menu *, Menu *) -> CommandCodes {
         return CommandCodes::EXIT;
       }));
+  /* // NOTE: consultations menu items definition */
+  /* consultations->addItem( */
+  /*     new MenuItem(4, "Display the person with more registers", */
+  /*                  [](Menu *consultations, Menu *) -> CommandCodes { */
+  /*                    // TODO: implement function body */
+  /*                    consultations->display(); */
+  /*                    return CommandCodes::CONTINUE; */
+  /*                  })); */
+  /* consultations->addItem( */
+  /*     new MenuItem(3, */
+  /*                  "Show the month with more extreme rain registers of a given " */
+  /*                  "year and place", */
+  /*                  // NOTE: Print both, extremely rainy and extremely dry */
+  /*                  // NOTE: In case of tie print all the months with the max tie */
+  /*                  [](Menu *consultations, Menu *) -> CommandCodes { */
+  /*                    // TODO: implement function body */
+  /*                    consultations->display(); */
+  /*                    return CommandCodes::CONTINUE; */
+  /*                  })); */
+  /* consultations->addItem(new MenuItem( */
+  /*     2, "Display the dates with more minutes difference in sunrise", */
+  /*     // NOTE: In case of a tie print only one */
+  /*     [](Menu *consultations, Menu *) -> CommandCodes { */
+  /*       // TODO: implement function body */
+  /*       consultations->display(); */
+  /*       return CommandCodes::CONTINUE; */
+  /*     })); */
+  /* consultations->addItem(new MenuItem( */
+  /*     1, */
+  /*     "Earliest sunrise and latest occultation time of the sun of a given year", */
+  /*     // NOTE: In case of a tie print them all */
+  /*     [](Menu *consultations, Menu *) -> CommandCodes { */
+  /*       // TODO: implement function body */
+  /*       consultations->display(); */
+  /*       return CommandCodes::CONTINUE; */
+  /*     })); */
+  /* consultations->addItem( */
+  /*     new MenuItem(0, "Back", [](Menu *, Menu *) -> CommandCodes { */
+  /*       return CommandCodes::EXIT; */
+  /*     })); */
 
   // NOTE: dataManagement menu items definition
   dataManagement->addItem(new MenuItem(
@@ -234,7 +400,7 @@ int main() {
                   printf("\u001b[31mThe name is the same as the "
                          "current!\u001b[0m\n");
                   continue;
-                } else if (places->search(newName) != nullptr) {
+                } else if (places->find(newName) != nullptr) {
                   printf("\u001b[31mThe name already exist! Choose another "
                          "name...\u001b[0m\n");
                   continue;
@@ -363,7 +529,7 @@ int main() {
         std::cin >> option;
 
         if (option == 2) {
-          Place *foundPlace = places->search(toModify->place->name);
+          Place *foundPlace = places->find(toModify->place->name);
           Person *foundPerson = people->search(toModify->person->id);
           foundPlace->climate = foundPlace->climate->deleteNode(
               foundPlace->climate, new Proxy(toModify));
@@ -535,7 +701,7 @@ int main() {
         string placeName;
         getline(std::cin, placeName);
 
-        Place *foundPlace = places->search(placeName);
+        Place *foundPlace = places->find(placeName);
         if (foundPlace == nullptr) {
           printf("\n\u001b[31mThe place with the name %s doesn't exist in the "
                  "register!\n\u001b[0m",
@@ -659,7 +825,7 @@ int main() {
         std::cin.ignore(INT32_MAX, '\n');
         getline(std::cin, name);
 
-        Place *toModify = places->search(name);
+        Place *toModify = places->find(name);
         if (toModify == nullptr) {
           printf("\n\u001b[31mThe place with name %s doesn't exist in the "
                  "register!\n\u001b[0m",
@@ -702,7 +868,7 @@ int main() {
                   printf("\u001b[31mThe name is the same as the "
                          "current!\u001b[0m\n");
                   continue;
-                } else if (places->search(newName) != nullptr) {
+                } else if (places->find(newName) != nullptr) {
                   printf("\u001b[31mThe name already exist! Choose another "
                          "name...\u001b[0m\n");
                   continue;
@@ -774,7 +940,7 @@ int main() {
           if (places == nullptr) {
             break;
           }
-          if (places->search(name) == nullptr) {
+          if (places->find(name) == nullptr) {
             break;
           }
           printf("\u001b[31mThis place already exist! Choose another place or "

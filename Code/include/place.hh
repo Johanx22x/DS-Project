@@ -22,7 +22,7 @@ public:
 
     void showByName();
 
-    Place* search(std::string name);
+    Place* find(std::string name);
 
     std::string str(); 
 };

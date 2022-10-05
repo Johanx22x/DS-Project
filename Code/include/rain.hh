@@ -28,7 +28,9 @@ public:
      *
      * @returns std::string A neatly formatted string that denotes the average rainfall
      */
-    std::string averageRainfall();
+    std::string fmtAverage();
+
+    double average();
 
     Rain *search(std::string id);
 
