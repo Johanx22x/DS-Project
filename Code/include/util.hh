@@ -8,8 +8,7 @@
 /**
  * Returns the first character of stdin as an int
  */
-[[deprecated("Use std::cin instead")]]
-int getInt();
+[[deprecated("Use std::cin instead")]] int getInt();
 
 /**
  * Sorts and insert a Person node into a Person list
@@ -81,12 +80,11 @@ Instant *deleteNode(Instant *list, Instant *node);
  * @param list The list
  * @param node The element to be inserted
  */
-template <typename T> 
-T *insert(T *list, T *node) {
-    if (list == nullptr)
-        return nullptr;
-    node->next = list;
-    return node;
+template <typename T> T *insert(T *list, T *node) {
+  if (list == nullptr)
+    return nullptr;
+  node->next = list;
+  return node;
 }
 
 /**

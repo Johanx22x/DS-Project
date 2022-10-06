@@ -1,6 +1,3 @@
 #pragma once
 
-enum class CommandCodes {
-    CONTINUE,
-    EXIT
-};
+enum class CommandCodes { CONTINUE, EXIT };
