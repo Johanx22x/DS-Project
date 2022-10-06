@@ -366,10 +366,11 @@ time_t getTime() {
     tm *newTime = localtime(&now);
 
     int hours = getInt("Enter the hour");
-    while (hours < 0 || hours > 24) {
-        eprint("Invalid input, must be a number between 0 and 24!");
+    while (hours < 0 || hours > 23) {
+        eprint("Invalid input, must be a number between 0 and 23!");
         hours = getInt("Enter the hour");
     }
+
     newTime->tm_hour = 5 + hours;
 
     int minutes = getInt("Enter the minutes");

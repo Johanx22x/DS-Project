@@ -42,7 +42,7 @@ Place* Place::find(std::string name) {
     return nullptr;
 }
 
-std::string Place::str() {
+std::string Place::tstr() {
     std::string myStr;
     std::ostringstream os;
     os << "\tPlace name: " << name << "\n\tPlace population: " << population << "\n\tPlace area: " << area << "\n";

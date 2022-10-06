@@ -79,7 +79,7 @@ MenuItem *consultationMenu[] = {
       "Display earliest and latest sunrise",
       // NOTE: In case of a tie print only one
       [](Menu *, Program *ctx) -> CommandCodes {
-        // TODO: implement function body
+        // FIXME: must be a specific year given by the user
 
         Instant *max = ctx->instants;
         Instant *min = ctx->instants;

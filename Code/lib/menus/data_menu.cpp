@@ -8,6 +8,7 @@
 #include <util.hh>
 
 extern "C" {
+
 // NOTE: dataManagement menu items definition
 MenuItem *dataItems[] = {
   new MenuItem(
@@ -51,89 +52,107 @@ MenuItem *dataItems[] = {
           return CommandCodes::CONTINUE;
         }
 
-        // TODO: Validate user input (1 or 2)
-        int option;
-        printf("\n\u001b[34m%s\u001b[0m\n(1) - Modify this place register\n(2) "
-               "- Delete this place register\nSelect an option: ",
+        printf("\n\u001b[34m%s\u001b[0m\n(0) - Cancel\n(1) - Modify this place register\n(2) "
+               "- Delete this place register\n",
                toModify->name.c_str());
-        std::cin >> option;
+
+        int option = getInt("Select an option");
+        while (option < 0 || option > 2) {
+            eprint("Invalid input");
+            option = getInt("Select an option");
+        }
 
         if (option == 2) {
-          ctx->instants = deleteNode(ctx->instants, toModify);
-        } else if (option == 1) {
-          bool modifyFlag = true;
-          while (modifyFlag) {
-            printf("\n(1) - Modify name\n");
+            std::string attributeModify;
+            printf("Are you sure you want do delete \u001b[34m%s\u001b[0m? [y/n]: ", toModify->name.c_str());
+            // Flush buffer
+            std::cin.clear();
+            std::cin.ignore(INT32_MAX, '\n');
+            getline(std::cin, attributeModify);
+
+            if (attributeModify == "y" || attributeModify == "Y") {
+                ctx->instants = deleteNode(ctx->instants, toModify);
+                printf("\u001b[34m%s was removed from the registry!\u001b[0m\n", toModify->name.c_str());
+
+                ctx->dataManagement->display();
+                return CommandCodes::CONTINUE;
+            }
+
+            printf("\u001b[31m%s was not removed from the registry!\u001b[0m\n", toModify->name.c_str());
+            ctx->dataManagement->display();
+            return CommandCodes::CONTINUE;
+        }
+
+        bool modifyFlag = true;
+        while (modifyFlag) {
+            printf("\n(0) - Cancel\n");
+            printf("(1) - Modify name\n");
             printf("(2) - Modify date\n");
             printf("(3) - Modify start time\n");
             printf("(4) - Modify end time\n");
-            printf("Select an option: ");
 
-            // TODO: Validate user input
-            int modifyOption;
-            std::cin >> modifyOption;
+            int modifyOption = getInt("Select an option");;
+            while (modifyOption < 0 || modifyOption > 4) {
+                eprint("Invalid input!");
+                modifyOption = getInt("Select an option");
+            }
 
-            // FIXME: Provide a time_t management
             switch (modifyOption) {
-            case 1: {
-              std::string newName;
-              // Flush buffer
-              std::cin.clear();
-              std::cin.ignore(INT32_MAX, '\n');
-              while (true) {
-                printf("Enter the new name for the instant: ");
-                getline(std::cin, newName);
-                if (name == newName) {
-                  printf("\u001b[31mThe name is the same as the "
-                         "current!\u001b[0m\n");
-                  continue;
-                } else if (ctx->places->find(newName) != nullptr) {
-                  printf("\u001b[31mThe name already exist! Choose another "
-                         "name...\u001b[0m\n");
-                  continue;
-                }
-                toModify->name = newName;
-                break;
-              }
-              break;
-            }
-            case 2: {
-              // TODO: Do a validation to date
-              int date;
-              printf("Enter the new date for the instant: ");
-              std::cin >> date;
-              toModify->date = date;
-              break;
-            }
-            case 3: {
-              // TODO: Do a validation to start time
-              int startTime;
-              printf("Enter the new start time for the instant: ");
-              std::cin >> startTime;
-              toModify->startTime = startTime;
-              break;
-            }
-            case 4: {
-              // TODO: Do a validation to end time
-              int endTime;
-              printf("Enter the new end time for the instant: ");
-              std::cin >> endTime;
-              toModify->endTime = endTime;
-              break;
-            }
+                case 1: {
+                            std::string newName;
+                            // Flush buffer
+                            std::cin.clear();
+                            std::cin.ignore(INT32_MAX, '\n');
+                            while (true) {
+                                printf("Enter the new name for the instant: ");
+                                getline(std::cin, newName);
+                                if (name == newName) {
+                                    printf("\u001b[31mThe name is the same as the "
+                                            "current!\u001b[0m\n");
+                                    continue;
+                                } else if (ctx->places->find(newName) != nullptr) {
+                                    printf("\u001b[31mThe name already exist! Choose another "
+                                            "name...\u001b[0m\n");
+                                    continue;
+                                }
+                                toModify->name = newName;
+                                break;
+                            }
+                            break;
+                        }
+                case 2: {
+                            printf("Enter the new date for the instant\n");
+                            time_t date = getDate();
+
+                            toModify->date = date;
+                            break;
+                        }
+                case 3: {
+                            printf("Enter the new start time for the instant (24 hours format)\n");
+                            time_t startTime = getTime();
+
+                            toModify->startTime = startTime;
+                            break;
+                        }
+                case 4: {
+                            printf("Enter the new end time for the instant (24 hours format)\n");
+                            time_t endTime = getTime();
+
+                            toModify->endTime = endTime;
+                            break;
+                        }
             }
 
             std::string attributeModify;
             printf("Do you want to modify another information of this instant "
-                   "register? [y/n]: ");
+                    "register? [y/n]: ");
             getline(std::cin, attributeModify);
             if (!(attributeModify == "y" || attributeModify == "Y")) {
-              break;
+                break;
             }
-          }
         }
-        ctx->dataManagement->display();
-        return CommandCodes::CONTINUE;
+      ctx->dataManagement->display();
+      return CommandCodes::CONTINUE;
       }),
   new MenuItem(
       13, 
@@ -156,12 +175,20 @@ MenuItem *dataItems[] = {
                  "name...\u001b[0m\n");
         }
 
-        // TODO: Implement time_t input
-        // FIXME: time_t params
+        printf("Enter the date\n");
+        time_t date = getDate();
+
+        printf("Enter the start time (24 hour format)\n");
+        time_t startTime = getTime();
+
+        printf("Enter the end time (24 hour format)\n");
+        time_t endTime = getTime();
+
+        Instant *newIntant = new Instant(name, date, startTime, endTime);
         if (ctx->instants == nullptr) {
-          ctx->instants = new Instant(name, 1, 1, 1);
+          ctx->instants = newIntant;
         } else {
-          ctx->instants = sortedInsert(ctx->instants, new Instant(name, 1, 1, 1));
+          ctx->instants = sortedInsert(ctx->instants, newIntant);
         }
         printf("\n\u001b[34m%s was added to instant register!\u001b[0m\n",
                name.c_str());
@@ -387,6 +414,7 @@ MenuItem *dataItems[] = {
                             break;
                         }
                 case 9: {
+                            printf("Enter the date");
                             time_t newDate = getDate();
 
                             toModify->date = newDate;
@@ -609,6 +637,7 @@ MenuItem *dataItems[] = {
         bool itRained = true;
         if (opt == 'n' || opt == 'N') itRained = false;
 
+        printf("Enter the date");
         time_t date = getDate();
 
         printf("Enter the start time of this climate (24 hour format)\n");
@@ -1302,7 +1331,7 @@ MenuItem *dataItems[] = {
         std::cin.ignore(INT32_MAX, '\n');
         getline(std::cin, location);
 
-        // TEST: test this function
+        printf("Enter the date");
         time_t joinDate = getDate();
 
         if (ctx->people == nullptr) {
