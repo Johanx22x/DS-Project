@@ -369,18 +369,18 @@ time_t getTime() {
 
     int hours = getInt("Enter the hour");
     while (hours < 0 || hours > 23) {
-        eprint("Invalid input, must be a number between 0 and 23!");
+        eprint("Invalid input, must be a number between 1 and 23!");
         hours = getInt("Enter the hour");
     }
 
-    newTime->tm_hour = 5 + hours;
+    newTime->tm_hour = hours - 6;
 
     int minutes = getInt("Enter the minutes");
-    while (minutes < 0 || minutes > 60) {
-        eprint("Invalid input, must be a number between 0 and 60!");
+    while (minutes < 1 || minutes > 59) {
+        eprint("Invalid input, must be a number between 1 and 59!");
         minutes = getInt("Enter the minutes");
     }
-    newTime->tm_min = 30 + minutes;
+    newTime->tm_min = minutes;
 
     // Set the seconds to 0
     newTime->tm_sec = 0;
