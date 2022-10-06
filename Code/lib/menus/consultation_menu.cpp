@@ -1,6 +1,4 @@
-#include "command_codes.hh"
 #include <cstdint>
-#include <cstdio>
 #include <menu.hh>
 #include <program.hh>
 #include <string>
@@ -8,7 +6,6 @@
 
 extern "C" {
 MenuItem *consultationMenu[] = {
-
   new MenuItem(
       4, 
       "Display the person with the most registrations",
@@ -75,13 +72,9 @@ MenuItem *consultationMenu[] = {
             if (tmp->link->rain->average() > maxRr->rain->average()) {
               maxRr = tmp->link;
             }
-            std::cout << max->str() << "\n";
-          } else {
-            std::cout << "Max start time: \n"
-                      << max->str() << "\nMin start time: \n"
-                      << min->str() << "\n";
           }
-          
+        }
+
         if (maxRr == nullptr) {
           fprintf(stderr, "No rains stored for the given year\n");
 
@@ -190,6 +183,7 @@ MenuItem *consultationMenu[] = {
               min = tmp;
             }
           }
+        }
 
         if (max == nullptr || min == nullptr) {
             fprintf(stderr, "Couldn't find anything for the given year\n");
