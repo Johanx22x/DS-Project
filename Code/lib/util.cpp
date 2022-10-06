@@ -61,6 +61,7 @@ Place *insert(Place *list, Place *node) {
 
 Instant *sortedInsert(Instant *list, Instant* node) {
     if (list == nullptr) return node;
+    if (node == nullptr) return list;
 
     if (list->date < node->date) {
         node->next = list;
@@ -78,8 +79,9 @@ Instant *sortedInsert(Instant *list, Instant* node) {
     // case for when the new node ends up between 2 nodes
     if (tmp->next != nullptr) {
         node->next = tmp->next;
-        tmp->prev->next = tmp->next = node;
+        tmp->next->prev = node;
         node->prev = tmp;
+        tmp->next = node;
     } else { // this one executes if the new node ends up at the end
         tmp->next = node;
         node->prev = tmp;

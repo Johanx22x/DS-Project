@@ -143,9 +143,12 @@ MenuItem *dataItems[] = {
                         }
             }
 
-            std::string attributeModify;
             printf("Do you want to modify another information of this instant "
                     "register? [y/n]: ");
+            std::string attributeModify;
+            // Flush buffer
+            std::cin.clear();
+            std::cin.ignore(INT32_MAX, '\n');
             getline(std::cin, attributeModify);
             if (!(attributeModify == "y" || attributeModify == "Y")) {
                 break;

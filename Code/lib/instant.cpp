@@ -29,7 +29,7 @@ std::string Instant::str() {
   strftime(startBuf, sizeof(startBuf), "%H:%M:%S", starttmp);
 
   out << "Name: " << this->name << "\nDate: " << dateBuf
-      << "\nEnd Time: " << endBuf << "\nStart Time: " << startBuf;
+      << "\nStart Time: " << endBuf << "\nEnd Time: " << startBuf;
   return out.str();
 }
 

@@ -2,6 +2,7 @@
 #include <menu.hh>
 #include <program.hh>
 #include <string>
+#include <util.hh>
 
 extern "C" {
 MenuItem *consultationMenu[] = {
@@ -19,6 +20,7 @@ MenuItem *consultationMenu[] = {
         }
 
         std::cout << maxRegs->str() << "\n";
+
         ctx->consultations->display();
         return CommandCodes::CONTINUE;
       }),
@@ -28,11 +30,17 @@ MenuItem *consultationMenu[] = {
       // NOTE: Print both, extremely rainy and extremely dry
       // NOTE: In case of tie print all the months with the max tie
       [](Menu *, Program *ctx) -> CommandCodes {
-        // TODO: implement function body
 
-        printf("Type in the year: ");
-        int year;
-        std::cin >> year;
+        // t represents today in milliseconds
+        time_t t = time(nullptr);
+        // today
+        tm *today = gmtime(&t);
+
+        int year = getInt("Type in the year");
+        while (year > (*today).tm_year+1900) {
+            eprint("Invalid year!");
+            year = getInt("Type in the year");
+        }
 
         ctx->places->showByName();
 
@@ -46,6 +54,8 @@ MenuItem *consultationMenu[] = {
 
         if (found == nullptr) {
           printf("Can't find that place\n");
+
+          ctx->consultations->display();
           return CommandCodes::CONTINUE;
         }
 
@@ -56,7 +66,7 @@ MenuItem *consultationMenu[] = {
 
         for (Proxy<Climate> *tmp = found->climate; tmp != nullptr;
              tmp = tmp->next) {
-          if (gmtime(&tmp->link->date)->tm_year + 1900 == year) {
+          if (gmtime(&tmp->link->date)->tm_year+1900 == year) {
             if (maxRr == nullptr)
               maxRr = tmp->link;
             if (tmp->link->rain->average() > maxRr->rain->average()) {
@@ -67,22 +77,25 @@ MenuItem *consultationMenu[] = {
 
         if (maxRr == nullptr) {
           fprintf(stderr, "No rains stored for the given year\n");
+
+          ctx->consultations->display();
           return CommandCodes::CONTINUE;
         }
 
         std::cout << maxRr->str() << "\n";
+
         ctx->consultations->display();
         return CommandCodes::CONTINUE;
       }),
   new MenuItem(
       2, 
-      "Display earliest and latest sunrise",
+      "Display earliest and latest sunrise for a given year",
       // NOTE: In case of a tie print only one
       [](Menu *, Program *ctx) -> CommandCodes {
-        // FIXME: must be a specific year given by the user
 
-        Instant *max = ctx->instants;
-        Instant *min = ctx->instants;
+
+        Instant *max = nullptr;
+        Instant *min = nullptr;
 
         // t represents today in milliseconds
         time_t t = time(nullptr);
@@ -94,25 +107,36 @@ MenuItem *consultationMenu[] = {
         // today
         tm *today = gmtime(&t);
 
+        int year = getInt("Type in the year");
+        while (year > (*today).tm_year+1900) {
+            eprint("Invalid year!");
+            year = getInt("Type in the year");
+        }
+
         // calculate max startTime
         for (Instant *tmp = ctx->instants; tmp != nullptr; tmp = tmp->next) {
-          if (gmtime(&tmp->date)->tm_year == (*today).tm_year &&
+          if ((gmtime(&tmp->date)->tm_year + 1900) == year &&
               tmp->startTime > max->startTime)
             max = tmp;
         }
 
         // calculate min startTime
         for (Instant *tmp = ctx->instants; tmp != nullptr; tmp = tmp->next) {
-          if (gmtime(&tmp->date)->tm_year == (*today).tm_year &&
+          if ((gmtime(&tmp->date)->tm_year + 1900) == year &&
               tmp->startTime < min->startTime)
             min = tmp;
         }
 
+        if (max == nullptr || min == nullptr) {
+            fprintf(stderr, "Couldn't find anything for the given year\n");
+            ctx->consultations->display();
+            return CommandCodes::CONTINUE;
+        }
         if (max == min) {
           std::cout << max->str() << "\n";
         } else {
-          std::cout << "Max start time: \n"
-                    << max->str() << "\nMin start time: \n"
+          std::cout << "\nMax start time: \n"
+                    << max->str() << "\n\nMin start time: \n"
                     << min->str() << "\n";
         }
 
@@ -121,16 +145,23 @@ MenuItem *consultationMenu[] = {
       }),
   new MenuItem(
       1, 
-      "Show earliest and latest sunsets within a given year",
-      // NOTE: In case of a tie print them all
+      "Show earliest sunrise and latest sunset within a given year",
+      // FIXME: In case of a tie print them all
       [](Menu *, Program *ctx) -> CommandCodes {
         // TODO: implement function body
         Instant *max = nullptr;
         Instant *min = nullptr;
 
-        int year;
-        printf("Enter the year: ");
-        std::cin >> year;
+        // t represents today in milliseconds
+        time_t t = time(nullptr);
+        // today
+        tm *today = gmtime(&t);
+
+        int year = getInt("Type in the year");
+        while (year > (*today).tm_year+1900) {
+            eprint("Invalid year!");
+            year = getInt("Type in the year");
+        }
 
         // calculate max endTime
         for (Instant *tmp = ctx->instants; tmp != nullptr; tmp = tmp->next) {
@@ -143,29 +174,29 @@ MenuItem *consultationMenu[] = {
           }
         }
 
-        // calculate min endTime
+        // calculate min startTime
         for (Instant *tmp = ctx->instants; tmp != nullptr; tmp = tmp->next) {
           if ((gmtime(&tmp->date)->tm_year + 1900) == year) {
             if (min == nullptr)
               min = tmp;
-            if (tmp->endTime < min->endTime)
+            if (tmp->startTime < min->startTime) {
               min = tmp;
+            }
           }
         }
 
-        // FIXME: check for null pointers, this is gonna segfault
-        if (max == min) {
-          if (max == nullptr) {
+        if (max == nullptr || min == nullptr) {
             fprintf(stderr, "Couldn't find anything for the given year\n");
             ctx->consultations->display();
             return CommandCodes::CONTINUE;
-          }
-          std::cout << "Max and min end times: \n" << max->str() << "\n";
+        }
+        if (max == min) {
+          std::cout << "Max sunset and min sunrise times: \n" << max->str() << "\n";
           std::cout << min->str();
         } else {
-          std::cout << "Max end time: \n"
-                    << max->str() << "\nMin end time: \n"
-                    << min->str() << "\n";
+          std::cout << "\nMax sunset end time: \n"
+                    << max->str() << "\n\nMin sunrise start time: \n"
+                    << min->str() << "\n\n";
         }
 
         ctx->consultations->display();
