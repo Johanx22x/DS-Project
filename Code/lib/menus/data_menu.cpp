@@ -527,7 +527,7 @@ MenuItem *dataItems[] = {
           return CommandCodes::CONTINUE;
         }
 
-        printf("\n\u001b[34m%s\u001b[0m\n", toModify->name.c_str()));
+        printf("\n\u001b[34m%s\u001b[0m\n", toModify->name.c_str());
                
         printf("(0) - Cancel\n");
         printf("(1) - Modify this place register\n");
@@ -539,7 +539,7 @@ MenuItem *dataItems[] = {
             option = validateInt("Select an option");
         }
         
-        if (option = 0) {
+        if (option == 0) {
             ctx->dataManagement->display();
             return CommandCodes::CONTINUE;
         }
