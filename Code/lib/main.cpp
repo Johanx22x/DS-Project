@@ -22,25 +22,9 @@ int main() {
        std::filesystem::directory_iterator("./bin/")) {
 #if defined(_WIN32)
     std::string fileName = entry.path().string();
-
-    // store the position of last '.' in the file name
-    int position = fileName.find_last_of(".");
-
-    // store the characters after the '.' from the file_name string
-    std::string result = fileName.substr(position);
-
-    if (result.compare(DL) == 0) {
-      HMODULE menuhandle = dlopen(fileName.c_str());
-
-      setupHandler setup = (setupHandler)dlsym(menuhandle, "setup");
-
-      if (setup == nullptr) {
-        fprintf(stderr, "Couldn't load %s\n", fileName.c_str());
-        continue;
-      }
 #else
     std::string fileName = entry.path();
-
+#endif
     // store the position of last '.' in the file name
     int position = fileName.find_last_of(".");
 
@@ -48,7 +32,11 @@ int main() {
     std::string result = fileName.substr(position);
 
     if (result.compare(DL) == 0) {
+#if defined(_WIN32)
+      HMODULE menuhandle = dlopen(fileName.c_str());
+#else
       void *menuhandle = dlopen(fileName.c_str(), RTLD_LAZY);
+#endif
 
       setupHandler setup = (setupHandler)dlsym(menuhandle, "setup");
 
@@ -56,8 +44,6 @@ int main() {
         fprintf(stderr, "Couldn't load %s\n", fileName.c_str());
         continue;
       }
-
-#endif
       setup(program);
     }
   }
