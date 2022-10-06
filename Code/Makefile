@@ -39,10 +39,16 @@ menu: $(COMMAND_LIB)
 
 ifeq ($(OS),Windows_NT)
 bin/%.dll: lib/menus/%.cpp $(OBJECTS)
-	$(CC) $(CFLAGS) -shared -fPIC -o $@ $^
+	$(CC) $(CFLAGS) -shared  -o $@ $^
+
+obj/%.o: lib/%.cpp | folders
+	$(CC) $(CFLAGS) $(DEPFLAGS) -c -o $@ $<
 else
 bin/%.so: lib/menus/%.cpp $(OBJECTS)
 	$(CC) $(CFLAGS) -shared -fPIC -o $@ $^
+
+obj/%.o: lib/%.cpp | folders
+	$(CC) $(CFLAGS) -fPIC $(DEPFLAGS) -c -o $@ $<
 endif
 
 $(BINARY): $(OBJECTS)
@@ -51,8 +57,6 @@ $(BINARY): $(OBJECTS)
 folders:
 	@$(FOLDERS_COMMAND)
 
-obj/%.o: lib/%.cpp | folders
-	$(CC) $(CFLAGS) -fPIC $(DEPFLAGS) -c -o $@ $<
 
 .PHONY: clean
 clean:
