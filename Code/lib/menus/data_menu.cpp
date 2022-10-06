@@ -401,11 +401,6 @@ MenuItem *dataItems[] = {
           return CommandCodes::CONTINUE;
         }
 
-        // TODO: implement function body (user input for climate)
-
-        // TODO: Implement time_t input
-        // FIXME: time_t params
-
         std::string climateId;
         while (true) {
           printf("\nEnter an ID for the climate: ");
@@ -420,9 +415,74 @@ MenuItem *dataItems[] = {
                  "id...\u001b[0m\n");
         }
 
+        double precipitation = getDouble("Enter the precipitation");
+
+        double maxTemp = getDouble("Enter the maximum temperature");
+
+        double minTemp = getDouble("Enter the minimum temperature");
+
+        double windSpeed = getDouble("Enter the wind speed");
+
+        double humidity = getDouble("Enter the humidity");
+
+        // FIXME: improve this
+        char windDirection = 0x00;
+        bool windFlag = false;
+        while (!windFlag) {
+            printf("Enter the wind direction [ N / S / E / W ] : ");
+            std::cin >> windDirection; 
+            switch (windDirection) {
+                case 'n': 
+                    windFlag = true;
+                    break;
+                case 'N': 
+                    windFlag = true;
+                    break;
+                case 's': 
+                    windFlag = true;
+                    break;
+                case 'S': 
+                    windFlag = true;
+                    break;
+                case 'e': 
+                    windFlag = true;
+                    break;
+                case 'E': 
+                    windFlag = true;
+                    break;
+                case 'w': 
+                    windFlag = true;
+                    break;
+                case 'W': 
+                    windFlag = true;
+                    break;
+                default:
+                    eprint("Invalid option!");
+                    break;
+            }
+        }
+
+        char opt;
+        printf("did it rain? [Y/n]: ");
+        std::cin >> opt;
+
+        bool itRained = true;
+        if (opt == 'n' || opt == 'N') itRained = false;
+
+        time_t date = getDate();
+
+        printf("Enter the start time of this climate (24 hour format)\n");
+        time_t startTime = getTime();
+
+        printf("Enter the end time of this climate (24 hour format)\n");
+        time_t endTime = getTime();
+
         // NOTE: Add the rain of the climate
         printf("\nEnter a descriptive name for the rain: ");
         std::string rainName;
+        // Flush buffer
+        std::cin.clear();
+        std::cin.ignore(INT32_MAX, '\n');
         getline(std::cin, rainName);
 
         std::string id;
@@ -439,10 +499,7 @@ MenuItem *dataItems[] = {
                  "id...\u001b[0m\n");
         }
 
-        // TODO: Do a validation to rainfall
-        printf("Enter the average mm rainfall value of the rain: ");
-        double rainfall = 0.0;
-        std::cin >> rainfall;
+        double rainfall = getDouble("Enter the average mm rainfall value of the rain");
 
         Rain *newRain = new Rain(rainName, id, rainfall);
         if (ctx->rains == nullptr) {
@@ -452,8 +509,8 @@ MenuItem *dataItems[] = {
         }
 
         Climate *newClimate =
-            new Climate(climateId, 3.2, 1.0, 2.1, 4.9, 1.8, 'N', false, 8, 9,
-                        10, newRain, foundPlace, foundPerson);
+            new Climate(climateId, precipitation, maxTemp, minTemp, windSpeed, humidity, windDirection, itRained, date, startTime,
+                        endTime, newRain, foundPlace, foundPerson);
         if (ctx->climates == nullptr) {
           ctx->climates = newClimate;
         } else {
@@ -533,10 +590,10 @@ MenuItem *dataItems[] = {
         printf("(1) - Modify this place register\n");
         printf("(2) - Delete this place register\n");
 
-        int option = validateInt("Select an option");
+        int option = getInt("Select an option");
         while (option < 0 || option > 2) {
             eprint("Invalid option!");
-            option = validateInt("Select an option");
+            option = getInt("Select an option");
         }
         
         if (option == 0) {
@@ -569,10 +626,10 @@ MenuItem *dataItems[] = {
             printf("(2) - Modify population\n");
             printf("(3) - Modify area\n");
 
-            int modifyOption = validateInt("Select an option");
+            int modifyOption = getInt("Select an option");
             while (option < 0 || option > 3) {
                 eprint("Invalid option!");
-                option = validateInt("Select an option");
+                option = getInt("Select an option");
             }
 
             switch (modifyOption) {
@@ -602,7 +659,7 @@ MenuItem *dataItems[] = {
                             break;
                         }
                 case 2: {
-                            int population = validateInt("Enter the new population value for the place");
+                            int population = getInt("Enter the new population value for the place");
                             toModify->population = population;
 
                             printValid("Place population changed!");
@@ -610,7 +667,7 @@ MenuItem *dataItems[] = {
                             break;
                         }
                 case 3: {
-                            double area = validateDouble("Enter the new area for the region register");
+                            double area = getDouble("Enter the new area for the region register");
                             toModify->area = area;
 
                             printValid("Place area changed!");
@@ -673,9 +730,9 @@ MenuItem *dataItems[] = {
                  "try to add the distric in the name...\u001b[0m\n");
         }
 
-        int population = validateInt("Enter the population of the place");
+        int population = getInt("Enter the population of the place");
 
-        double area = validateDouble("Enter the area of the place");
+        double area = getDouble("Enter the area of the place");
 
         Place *newPlace = new Place(name, population, area, foundRegion);
         if (ctx->places == nullptr) {
@@ -743,10 +800,10 @@ MenuItem *dataItems[] = {
         printf("(1) - Modify this region register\n");
         printf("(2) - Delete this region register\n");
 
-        int option = validateInt("Select an option");
+        int option = getInt("Select an option");
         while (option < 0 || option > 2) {
             printf("Invalid option!");
-            option = validateInt("Select an option");
+            option = getInt("Select an option");
         }
         
         if (option == 0) {
@@ -779,10 +836,10 @@ MenuItem *dataItems[] = {
             printf("(2) - Modify name\n");
             printf("(3) - Modify location\n");
 
-            int modifyOption = validateInt("Select an option");
+            int modifyOption = getInt("Select an option");
             while (modifyOption < 0 || modifyOption > 4) {
                 printf("Invalid option!");
-                modifyOption = validateInt("Select an option");
+                modifyOption = getInt("Select an option");
             }
 
             switch (modifyOption) {
@@ -940,10 +997,10 @@ MenuItem *dataItems[] = {
         printf("(1) - Modify this person\n");
         printf("(2) - Delete this person\n");
 
-        int option = validateInt("Select an option");
+        int option = getInt("Select an option");
         while (option < 0 || option > 2) {
             eprint("Invalid option!");
-            option = validateInt("Select an option");
+            option = getInt("Select an option");
         }
 
         if (option == 0) {
@@ -976,10 +1033,10 @@ MenuItem *dataItems[] = {
             printf("(3) - Modify age\n");
             printf("(4) - Modify location\n");
 
-            int modifyOption = validateInt("Select an option");
+            int modifyOption = getInt("Select an option");
             while (modifyOption < 0 || modifyOption > 4) {
                 printf("Invalid option!");
-                modifyOption = validateInt("Select an option");
+                modifyOption = getInt("Select an option");
             }
 
             switch (modifyOption) {
@@ -1026,10 +1083,10 @@ MenuItem *dataItems[] = {
                             break;
                         }
                 case 3: {
-                            short int newAge = validateInt("Enter the new person's age");
+                            short int newAge = getInt("Enter the new person's age");
                             while (newAge < 12 || newAge > 125) {
                                 printf("\u001b[31mThe person's age must be an integer value between 12 and 125!\u001b[0m\n");
-                                newAge = validateInt("Enter the person's age");
+                                newAge = getInt("Enter the person's age");
                             }
                             toModify->age = newAge;
 
@@ -1092,10 +1149,10 @@ MenuItem *dataItems[] = {
                  "id...\u001b[0m\n");
         }
 
-        short int age = validateInt("Enter the person's age");
+        short int age = getInt("Enter the person's age");
         while (age < 12 || age > 125) {
             printf("\u001b[31mThe person's age must be an integer value between 12 and 125!\u001b[0m\n");
-            age = validateInt("Enter the person's age");
+            age = getInt("Enter the person's age");
         }
 
         std::string location;

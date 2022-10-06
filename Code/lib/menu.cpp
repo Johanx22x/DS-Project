@@ -53,7 +53,7 @@ void Menu::display() {
 }
 
 CommandCodes Menu::prompt() {
-    int option = validateInt("Select an option");
+    int option = getInt("Select an option");
 
     MenuItem *curr = options.at(option);
 

@@ -101,14 +101,14 @@ Climate *deleteNode(Climate *list, Climate *node);
  *
  * @param message The message to display every time that the input fails
  */
-int validateInt(std::string message);
+int getInt(std::string message);
 
 /**
  * Do a safe validation to the user input for double values
  *
  * @param message The message to display every time that the input fails
  */
-double validateDouble(std::string message);
+double getDouble(std::string message);
 
 /**
  * Display a message as an error
@@ -130,3 +130,10 @@ void printValid(std::string message);
  * @return time The date the user entered
  */
 time_t getDate();
+
+/**
+ * Get the time according to the user input
+ *
+ * @return time The time the user entered
+ */
+time_t getTime();

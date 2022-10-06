@@ -126,9 +126,11 @@ Person *deleteNode(Person *list, Person *node) {
     }
 
     Person *curr = list;
-    Person *prev;
+    Person *prev = nullptr;
     while (curr != nullptr) {
-        if (curr->id == node->id) {
+        if (curr->id == node->id && curr->next == nullptr) {
+            prev->next = curr->next;
+        } else if (curr->id == node->id) {
             prev->next = curr->next;
             curr->next->prev = prev;
         }
@@ -223,7 +225,9 @@ Instant *deleteNode(Instant *list, Instant *node) {
     Instant *curr = list;
     Instant *prev;
     while (curr != nullptr) {
-        if (curr->name == node->name) {
+        if (curr->name == node->name && curr->next == nullptr) {
+            prev->next = curr->next;
+        } else if (curr->name == node->name) {
             prev->next = curr->next;
             curr->next->prev = prev;
         }
@@ -256,7 +260,7 @@ Climate *deleteNode(Climate *list, Climate *node) {
     return list;
 }
 
-double validateDouble(std::string message) {
+double getDouble(std::string message) {
     double input;
     bool valid = false;
 
@@ -277,7 +281,7 @@ double validateDouble(std::string message) {
     return input;
 }
 
-int validateInt(std::string message) {
+int getInt(std::string message) {
     int input;
     bool valid = false;
 
@@ -310,18 +314,18 @@ time_t getDate() {
     time_t now = time(0);
     tm *newTime = localtime(&now);
 
-    int year = validateInt("Enter the year");
+    int year = getInt("Enter the year");
     while (year-1900 > newTime->tm_year) {
         eprint("Invalid year!");
-        year = validateInt("Enter the year");
+        year = getInt("Enter the year");
     }
 
     newTime->tm_year = year-1900;
 
-    int month = validateInt("Enter the month");
+    int month = getInt("Enter the month");
     while (month < 1 || month > 12) {
         eprint("Invalid month!");
-        month = validateInt("Enter the month");
+        month = getInt("Enter the month");
     }
 
     newTime->tm_mon = month-1;
@@ -329,29 +333,54 @@ time_t getDate() {
     // empty months map container
     std::map<int, int> months;
     // insert elements in random order
-    months.insert(std::pair<int, int>(1, 31));
-    months.insert(std::pair<int, int>(2, 28));
-    months.insert(std::pair<int, int>(3, 31));
-    months.insert(std::pair<int, int>(4, 30));
-    months.insert(std::pair<int, int>(5, 31));
-    months.insert(std::pair<int, int>(6, 30));
-    months.insert(std::pair<int, int>(7, 31));
+    months.insert(std::pair<int, int>(2, 31));
+    months.insert(std::pair<int, int>(3, 28));
+    months.insert(std::pair<int, int>(4, 31));
+    months.insert(std::pair<int, int>(5, 30));
+    months.insert(std::pair<int, int>(6, 31));
+    months.insert(std::pair<int, int>(7, 30));
     months.insert(std::pair<int, int>(8, 31));
-    months.insert(std::pair<int, int>(9, 30));
-    months.insert(std::pair<int, int>(10, 31));
-    months.insert(std::pair<int, int>(11, 30));
-    months.insert(std::pair<int, int>(12, 31));
+    months.insert(std::pair<int, int>(9, 31));
+    months.insert(std::pair<int, int>(10, 30));
+    months.insert(std::pair<int, int>(11, 31));
+    months.insert(std::pair<int, int>(12, 30));
+    months.insert(std::pair<int, int>(13, 31));
 
     int daysNumber = months.upper_bound(month)->second;
     printf("\u001b[34mThis month has only %d days!\u001b[0m\n", daysNumber);
-    int day = validateInt("Enter the day");
+    int day = getInt("Enter the day");
 
     while (day < 1 || day > daysNumber) {
         printf("\u001b[31mThis month has only %d days!\u001b[0m\n", daysNumber);
-        day = validateInt("Enter the day");
+        day = getInt("Enter the day");
     }
     
     newTime->tm_mday = day;
+
+    time_t time = mktime(newTime);
+    return time;
+}
+
+time_t getTime() {
+    time_t now = time(0);
+    tm *newTime = localtime(&now);
+
+    int hours = getInt("Enter the hour");
+    while (hours < 0 || hours > 24) {
+        eprint("Invalid input, must be a number between 0 and 24!");
+        hours = getInt("Enter the hour");
+    }
+    newTime->tm_hour = 5 + hours;
+
+    int minutes = getInt("Enter the minutes");
+    while (minutes < 0 || minutes > 60) {
+        eprint("Invalid input, must be a number between 0 and 60!");
+        minutes = getInt("Enter the minutes");
+    }
+    newTime->tm_min = 30 + minutes;
+
+    // Set the seconds to 0
+    newTime->tm_sec = 0;
 
     time_t time = mktime(newTime);
     return time;
