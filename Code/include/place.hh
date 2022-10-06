@@ -1,28 +1,28 @@
 #pragma once
-#include <cstdio>
-#include <string>
-#include <proxy.hh>
 #include <climate.hh>
+#include <cstdio>
+#include <proxy.hh>
+#include <string>
 
 /**
  * Defines a structure that represents a place
  */
 class Place {
 public:
-    std::string name;
-    int population;
-    double area;
-    Place *next = this;
-    class Region *region = nullptr;
-    Proxy<class Climate> *climate = nullptr;
+  std::string name;
+  int population;
+  double area;
+  Place *next = this;
+  class Region *region = nullptr;
+  Proxy<class Climate> *climate = nullptr;
 
-    Place(std::string name, int population, double area, Region *region);
+  Place(std::string name, int population, double area, Region *region);
 
-    void show();
+  void show();
 
-    void showByName();
+  void showByName();
 
-    Place* find(std::string name);
+  Place *find(std::string name);
 
-    std::string str(); 
+  std::string str();
 };

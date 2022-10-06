@@ -31,6 +31,11 @@ MenuItem *MenuItem::withMenu(Menu* menu) {
     return this;
 }
 
+MenuItem *MenuItem::withContext(class Program *ctx) {
+  this->ctx = ctx;
+  return this;
+}
+
 Menu::Menu(std::string name, std::map<int8_t, MenuItem*> initializer) {
     this->name = name;
     this->options = initializer;
@@ -53,7 +58,7 @@ CommandCodes Menu::prompt() {
 
     MenuItem *curr = options.at(option);
 
-    return curr->action(this, curr->menu);
+    return curr->action(this, curr->ctx);
 }
 
 void Menu::addItem(MenuItem *item) {
