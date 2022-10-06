@@ -1,9 +1,10 @@
 #pragma once
 
-#include "person.hh"
-#include "place.hh"
+#include <person.hh>
+#include <place.hh>
 #include <climate.hh>
 #include <instant.hh>
+#include <ctime>
 
 /**
  * Returns the first character of stdin as an int
@@ -114,7 +115,7 @@ double validateDouble(std::string message);
  *
  * @param message The message to display as an error
  */
-void printErr(std::string message);
+void eprint(std::string message);
 
 /**
  * Display a message as a valid notification
@@ -122,3 +123,10 @@ void printErr(std::string message);
  * @param message The message to display as a valid notification
  */
 void printValid(std::string message);
+
+/**
+ * Get the date according to the user input
+ *
+ * @return time The date the user entered
+ */
+time_t getDate();

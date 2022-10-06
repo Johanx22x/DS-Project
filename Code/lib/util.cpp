@@ -1,4 +1,6 @@
 #include <climits>
+#include <clocale>
+#include <ctime>
 #include <person.hh>
 #include <util.hh>
 #include <cstdio>
@@ -7,17 +9,7 @@
 #include <climate.hh>
 #include <place.hh>
 #include <region.hh>
-
-/**
- * Reads the first char in stdin
- *
- * @returns int The first char found in the stdin buffer
- */
-int getInt() {
-    int data = 0;
-    std::cin >> data;
-    return data;
-}
+#include <map>
 
 // FIXME: This function produces an error with lower and upper
 // TODO: Implement toLower() function to fix this error
@@ -306,10 +298,61 @@ int validateInt(std::string message) {
     return input;
 }
 
-void printErr(std::string message) {
+void eprint(std::string message) {
     printf("\u001b[31m%s\u001b[0m\n", message.c_str());
 }
 
 void printValid(std::string message) {
     printf("\u001b[34m%s\u001b[0m\n", message.c_str());
+}
+
+time_t getDate() {
+    time_t now = time(0);
+    tm *newTime = localtime(&now);
+
+    int year = validateInt("Enter the year");
+    while (year-1900 > newTime->tm_year) {
+        eprint("Invalid year!");
+        year = validateInt("Enter the year");
+    }
+
+    newTime->tm_year = year-1900;
+
+    int month = validateInt("Enter the month");
+    while (month < 1 || month > 12) {
+        eprint("Invalid month!");
+        month = validateInt("Enter the month");
+    }
+
+    newTime->tm_mon = month-1;
+
+    // empty months map container
+    std::map<int, int> months;
+    // insert elements in random order
+    months.insert(std::pair<int, int>(1, 31));
+    months.insert(std::pair<int, int>(2, 28));
+    months.insert(std::pair<int, int>(3, 31));
+    months.insert(std::pair<int, int>(4, 30));
+    months.insert(std::pair<int, int>(5, 31));
+    months.insert(std::pair<int, int>(6, 30));
+    months.insert(std::pair<int, int>(7, 31));
+    months.insert(std::pair<int, int>(8, 31));
+    months.insert(std::pair<int, int>(9, 30));
+    months.insert(std::pair<int, int>(10, 31));
+    months.insert(std::pair<int, int>(11, 30));
+    months.insert(std::pair<int, int>(12, 31));
+
+    int daysNumber = months.upper_bound(month)->second;
+    printf("\u001b[34mThis month has only %d days!\u001b[0m\n", daysNumber);
+    int day = validateInt("Enter the day");
+
+    while (day < 1 || day > daysNumber) {
+        printf("\u001b[31mThis month has only %d days!\u001b[0m\n", daysNumber);
+        day = validateInt("Enter the day");
+    }
+    
+    newTime->tm_mday = day;
+
+    time_t time = mktime(newTime);
+    return time;
 }

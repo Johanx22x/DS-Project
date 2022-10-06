@@ -535,7 +535,7 @@ MenuItem *dataItems[] = {
 
         int option = validateInt("Select an option");
         while (option < 0 || option > 2) {
-            printErr("Invalid option!");
+            eprint("Invalid option!");
             option = validateInt("Select an option");
         }
         
@@ -571,7 +571,7 @@ MenuItem *dataItems[] = {
 
             int modifyOption = validateInt("Select an option");
             while (option < 0 || option > 3) {
-                printErr("Invalid option!");
+                eprint("Invalid option!");
                 option = validateInt("Select an option");
             }
 
@@ -842,7 +842,7 @@ MenuItem *dataItems[] = {
                             break;
                         }
                 default: {
-                             printErr("Invalid input!");
+                             eprint("Invalid input!");
                              break;
                          }
             }
@@ -942,7 +942,7 @@ MenuItem *dataItems[] = {
 
         int option = validateInt("Select an option");
         while (option < 0 || option > 2) {
-            printErr("Invalid option!");
+            eprint("Invalid option!");
             option = validateInt("Select an option");
         }
 
@@ -1051,7 +1051,7 @@ MenuItem *dataItems[] = {
                             break;
                         }
                 default:
-                        printErr("Invalid input!");
+                        eprint("Invalid input!");
                         break;
             }
 
@@ -1105,9 +1105,8 @@ MenuItem *dataItems[] = {
         std::cin.ignore(INT32_MAX, '\n');
         getline(std::cin, location);
 
-        // TODO: Implement join date based on user input
-        time_t joinDate;
-        time(&joinDate);
+        // TEST: test this function
+        time_t joinDate = getDate();
 
         if (ctx->people == nullptr) {
           ctx->people = new Person(name, id, age, location, joinDate);
