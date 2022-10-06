@@ -1,3 +1,4 @@
+#include <climits>
 #include <person.hh>
 #include <util.hh>
 #include <cstdio>
@@ -261,4 +262,54 @@ Climate *deleteNode(Climate *list, Climate *node) {
     }
 
     return list;
+}
+
+double validateDouble(std::string message) {
+    double input;
+    bool valid = false;
+
+    while (!valid) { // repeat as long as the input is not valid
+        printf("%s: ", message.c_str());
+        std::cin >> input;
+
+        if (std::cin.fail()) {
+            printf("\u001b[31mIt isn't a double!\u001b[0m\n");
+            // clear error flags
+            std::cin.clear(); 
+            // Wrong input remains on the stream, so you need to get rid of it
+            std::cin.ignore(INT_MAX, '\n');
+        } else {
+            valid = true;
+        }
+    }
+    return input;
+}
+
+int validateInt(std::string message) {
+    int input;
+    bool valid = false;
+
+    while (!valid) { // repeat as long as the input is not valid
+        printf("%s: ", message.c_str());
+        std::cin >> input;
+
+        if (std::cin.fail()) {
+            printf("\u001b[31mIt isn't an integer!\u001b[0m\n");
+            // clear error flags
+            std::cin.clear(); 
+            // Wrong input remains on the stream, so you need to get rid of it
+            std::cin.ignore(INT_MAX, '\n');
+        } else {
+            valid = true;
+        }
+    }
+    return input;
+}
+
+void printErr(std::string message) {
+    printf("\u001b[31m%s\u001b[0m\n", message.c_str());
+}
+
+void printValid(std::string message) {
+    printf("\u001b[34m%s\u001b[0m\n", message.c_str());
 }

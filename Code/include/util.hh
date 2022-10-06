@@ -94,3 +94,31 @@ template <typename T> T *insert(T *list, T *node) {
  * @param node The element to be deleted
  */
 Climate *deleteNode(Climate *list, Climate *node);
+
+/**
+ * Do a safe validation to the user input for integers values
+ *
+ * @param message The message to display every time that the input fails
+ */
+int validateInt(std::string message);
+
+/**
+ * Do a safe validation to the user input for double values
+ *
+ * @param message The message to display every time that the input fails
+ */
+double validateDouble(std::string message);
+
+/**
+ * Display a message as an error
+ *
+ * @param message The message to display as an error
+ */
+void printErr(std::string message);
+
+/**
+ * Display a message as a valid notification
+ *
+ * @param message The message to display as a valid notification
+ */
+void printValid(std::string message);

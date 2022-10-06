@@ -1,4 +1,6 @@
+#include <climits>
 #include <cstdint>
+#include <ios>
 #include <menu.hh>
 #include <program.hh>
 #include <string>
@@ -712,26 +714,26 @@ MenuItem *dataItems[] = {
         }
 
         // TODO: Validate user input (1 or 2)
-        int option;
         printf(
             "\n\u001b[34m%s - %s\u001b[0m\n(1) - Modify this region "
-            "register\n(2) - Delete this region register\nSelect an option: ",
+            "register\n(2) - Delete this region register\n",
             toModify->name.c_str(), toModify->id.c_str());
-        std::cin >> option;
+        int option = validateInt("Select an option");
+        while (option < 1 || option > 2) {
+            printf("Invalid option!");
+            option = validateInt("Select an option");
+        }
 
         if (option == 2) {
           ctx->regions = deleteNode(ctx->regions, toModify);
         } else if (option == 1) {
           bool modifyFlag = true;
           while (modifyFlag) {
-            printf("\n(1) - Modify id\n");
+            printf("\n(0) - Cancel\n");
+            printf("(1) - Modify id\n");
             printf("(2) - Modify name\n");
             printf("(3) - Modify location\n");
-            printf("Select an option: ");
-
-            // TODO: Validate user input
-            int modifyOption;
-            std::cin >> modifyOption;
+            int modifyOption = validateInt("Select an option");
 
             switch (modifyOption) {
             case 1: {
@@ -768,7 +770,6 @@ MenuItem *dataItems[] = {
             }
             case 3: {
               printf("Enter the new location for the region register: ");
-              // TODO: validate user input
               std::string newLocation;
               // Flush buffer
               std::cin.clear();
@@ -777,6 +778,8 @@ MenuItem *dataItems[] = {
               toModify->location = newLocation;
               break;
             }
+            default:
+              break;
             }
 
             std::string attributeModify;
@@ -864,96 +867,137 @@ MenuItem *dataItems[] = {
 
         Person *toModify = ctx->people->search(id);
         if (toModify == nullptr) {
-          printf("\n\u001b[31mThe person with the id %s doesn't exist in the "
-                 "register!\n\u001b[0m",
-                 id.c_str());
+          printf("\n\u001b[31mThe person with the id %s doesn't exist in the register!\n\u001b[0m", id.c_str());
           ctx->dataManagement->display();
           return CommandCodes::CONTINUE;
         }
 
-        // TODO: Validate user input (1 or 2)
-        int option;
-        printf("\n\u001b[34m%s - %s\u001b[0m\n(1) - Modify this person\n(2) - "
-               "Delete this person\nSelect an option: ",
-               toModify->name.c_str(), toModify->id.c_str());
-        std::cin >> option;
+        printf("\n\u001b[34m%s - %s\u001b[0m\n", toModify->name.c_str(), toModify->id.c_str());
+        printf("(0) - Cancel\n");
+        printf("(1) - Modify this person\n");
+        printf("(2) - Delete this person\n");
 
+        int option = validateInt("Select an option");
+        while (option < 0 || option > 2) {
+            printErr("Invalid option!");
+            option = validateInt("Select an option");
+        }
+
+        if (option == 0) {
+            ctx->dataManagement->display();
+            return CommandCodes::CONTINUE;
+        } 
         if (option == 2) {
-          ctx->people = deleteNode(ctx->people, toModify);
-        } else if (option == 1) {
-          bool modifyFlag = true;
-          while (modifyFlag) {
-            printf("\n(1) - Modify id\n");
+            std::string attributeModify;
+            printf("Are you sure you want do delete \u001b[34m%s %s\u001b[0m? [y/n]: ", toModify->name.c_str(), toModify->id.c_str());
+            // Flush buffer
+            std::cin.clear();
+            std::cin.ignore(INT32_MAX, '\n');
+            getline(std::cin, attributeModify);
+            if (attributeModify == "y" || attributeModify == "Y") {
+                ctx->people = deleteNode(ctx->people, toModify);
+                ctx->dataManagement->display();
+                printf("\u001b[34m%s was removed from the registry!\u001b[0m\n", toModify->name.c_str());
+                ctx->dataManagement->display();
+                return CommandCodes::CONTINUE;
+            }
+            printf("\u001b[31m%s was not removed from the registry!\u001b[0m\n", toModify->name.c_str());
+            ctx->dataManagement->display();
+            return CommandCodes::CONTINUE;
+        }
+        bool modifyFlag = true;
+        while (modifyFlag) {
+            printf("\n(0) - Cancel\n");
+            printf("(1) - Modify id\n");
             printf("(2) - Modify name\n");
             printf("(3) - Modify age\n");
             printf("(4) - Modify location\n");
-            printf("Select an option: ");
 
-            // TODO: Validate user input
-            int modifyOption;
-            std::cin >> modifyOption;
+            int modifyOption = validateInt("Select an option");
+            while (modifyOption < 0 || modifyOption > 4) {
+                printErr("Invalid option!");
+                modifyOption = validateInt("Select an option");
+            }
 
             switch (modifyOption) {
-            case 1: {
-              std::string newId;
-              // Flush buffer
-              std::cin.clear();
-              std::cin.ignore(INT32_MAX, '\n');
-              while (true) {
-                printf("Enter the new id for the person: ");
-                getline(std::cin, newId);
-                if (id == newId) {
-                  printf("\u001b[31mThe ID is the same as the "
-                         "current!\u001b[0m\n");
-                  continue;
-                } else if (ctx->people->search(newId) != nullptr) {
-                  printf("\u001b[31mThe ID already exist! Choose another "
-                         "ID...\u001b[0m\n");
-                  continue;
-                }
-                toModify->id = newId;
-                break;
-              }
-              break;
-            }
-            case 2: {
-              printf("Enter the new name for the person: ");
-              std::string newName;
-              // Flush buffer
-              std::cin.clear();
-              std::cin.ignore(INT32_MAX, '\n');
-              getline(std::cin, newName);
-              toModify->name = newName;
-              break;
-            }
-            case 3: {
-              printf("Enter the new age for the person: ");
-              // TODO: validate user input
-              short newAge;
-              std::cin >> newAge;
-              toModify->age = newAge;
-              break;
-            }
-            case 4: {
-              printf("Enter the new location for the person: ");
-              std::string newLocation;
-              // Flush buffer
-              std::cin.clear();
-              std::cin.ignore(INT32_MAX, '\n');
-              getline(std::cin, newLocation);
-              toModify->name = newLocation;
-              break;
-            }
+                case 0: {
+                            ctx->dataManagement->display();
+                            return CommandCodes::CONTINUE;
+                        }
+                case 1: {
+                            std::string newId;
+                            // Flush buffer
+                            std::cin.clear();
+                            std::cin.ignore(INT32_MAX, '\n');
+                            while (true) {
+                                printf("Enter the new id for the person: ");
+                                getline(std::cin, newId);
+                                if (id == newId) {
+                                    printf("\u001b[31mThe ID is the same as the "
+                                            "current!\u001b[0m\n");
+                                    continue;
+                                } else if (ctx->people->search(newId) != nullptr) {
+                                    printf("\u001b[31mThe ID already exist! Choose another "
+                                            "ID...\u001b[0m\n");
+                                    continue;
+                                }
+                                toModify->id = newId;
+
+                                printValid("Person's ID changed");
+
+                                break;
+                            }
+                            break;
+                        }
+                case 2: {
+                            printf("Enter the new person's name: ");
+                            std::string newName;
+                            // Flush buffer
+                            std::cin.clear();
+                            std::cin.ignore(INT32_MAX, '\n');
+                            getline(std::cin, newName);
+                            toModify->name = newName;
+
+                            printValid("Person's name changed");
+
+                            break;
+                        }
+                case 3: {
+                            short int newAge = validateInt("Enter the new person's age");
+                            while (newAge < 12 || newAge > 125) {
+                                printf("\u001b[31mThe person's age must be an integer value between 12 and 125!\u001b[0m\n");
+                                newAge = validateInt("Enter the person's age");
+                            }
+                            toModify->age = newAge;
+
+                            printValid("Person's age changed!");
+
+                            break;
+                        }
+                case 4: {
+                            printf("Enter the new location for the person: ");
+                            std::string newLocation;
+                            // Flush buffer
+                            std::cin.clear();
+                            std::cin.ignore(INT32_MAX, '\n');
+                            getline(std::cin, newLocation);
+                            toModify->name = newLocation;
+
+                            printValid("Person's location changed!");
+
+                            break;
+                        }
+                default:
+                        printErr("Invalid input!");
+                        break;
             }
 
             std::string attributeModify;
-            printf("Do you want to modify another information of this person? "
-                   "[y/n]: ");
+            printf("Do you want to modify another information of this person? [y/n]: ");
             getline(std::cin, attributeModify);
             if (!(attributeModify == "y" || attributeModify == "Y")) {
-              break;
+                break;
             }
-          }
         }
         ctx->dataManagement->display();
         return CommandCodes::CONTINUE;
@@ -985,13 +1029,17 @@ MenuItem *dataItems[] = {
                  "id...\u001b[0m\n");
         }
 
-        printf("Enter the age of the person: ");
-        int age = 0;
-        // TODO: Do a validation to age
-        std::cin >> age;
+        short int age = validateInt("Enter the person's age");
+        while (age < 12 || age > 125) {
+            printf("\u001b[31mThe person's age must be an integer value between 12 and 125!\u001b[0m\n");
+            age = validateInt("Enter the person's age");
+        }
 
-        printf("Enter the location of the person: ");
         std::string location;
+        printf("Enter the location of the person: ");
+        // Flush buffer
+        std::cin.clear();
+        std::cin.ignore(INT32_MAX, '\n');
         getline(std::cin, location);
 
         // TODO: Implement join date based on user input
