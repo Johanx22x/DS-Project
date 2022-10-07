@@ -94,3 +94,9 @@ template <typename T> T *insert(T *list, T *node) {
  * @param node The element to be deleted
  */
 Climate *deleteNode(Climate *list, Climate *node);
+
+
+/**
+ * Flush flushes stdin
+ */
+void flush();

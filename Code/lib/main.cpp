@@ -13,7 +13,7 @@
 #include <dlfcn.h>
 #endif
 
-typedef void (*setupHandler)(Program *);
+typedef void (*SetupHandler)(Program *);
 
 int main() {
   Program *program = new Program();
@@ -38,7 +38,7 @@ int main() {
       void *menuhandle = dlopen(fileName.c_str(), RTLD_LAZY);
 #endif
 
-      setupHandler setup = (setupHandler)dlsym(menuhandle, "setup");
+      SetupHandler setup = (SetupHandler)dlsym(menuhandle, "setup");
 
       if (setup == nullptr) {
         fprintf(stderr, "Couldn't load %s\n", fileName.c_str());
