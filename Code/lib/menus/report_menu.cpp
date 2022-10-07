@@ -25,12 +25,127 @@ extern "C" {
 
 // TODO: Implement all the 9 items of reports
 MenuItem *reportItems[] = {
-    new MenuItem(9, "Not yet implemented!",
-                 [](Menu *, Program *ctx) -> CommandCodes {
-                   // TODO: implement function body
-                   ctx->reports->display();
-                   return CommandCodes::CONTINUE;
-                 }),
+    new MenuItem(9, "Max and min temperature register of a given year per month",
+            [](Menu *, Program *ctx) -> CommandCodes {
+            // t represents today in milliseconds
+            time_t t = time(nullptr);
+            // today
+            tm *today = gmtime(&t);
+
+            int year = getInt("Type in the year");
+            while (year > (*today).tm_year+1900) {
+                eprint("Invalid year!");
+                year = getInt("Type in the year");
+            }
+
+            // empty months map container
+            std::map<int, double> monthsMinTemp;
+            // insert elements in random order
+            monthsMinTemp.insert(std::pair<int, double>(2, 1000.0));
+            monthsMinTemp.insert(std::pair<int, double>(3, 1000.0));
+            monthsMinTemp.insert(std::pair<int, double>(4, 1000.0));
+            monthsMinTemp.insert(std::pair<int, double>(5, 1000.0));
+            monthsMinTemp.insert(std::pair<int, double>(6, 1000.0));
+            monthsMinTemp.insert(std::pair<int, double>(7, 1000.0));
+            monthsMinTemp.insert(std::pair<int, double>(8, 1000.0));
+            monthsMinTemp.insert(std::pair<int, double>(9, 1000.0));
+            monthsMinTemp.insert(std::pair<int, double>(10, 1000.0));
+            monthsMinTemp.insert(std::pair<int, double>(11, 1000.0));
+            monthsMinTemp.insert(std::pair<int, double>(12, 1000.0));
+            monthsMinTemp.insert(std::pair<int, double>(13, 1000.0));
+
+            // empty months map container
+            std::map<int, double> monthsMaxTemp;
+            // insert elements in random order
+            monthsMaxTemp.insert(std::pair<int, double>(2, 0.0));
+            monthsMaxTemp.insert(std::pair<int, double>(3, 0.0));
+            monthsMaxTemp.insert(std::pair<int, double>(4, 0.0));
+            monthsMaxTemp.insert(std::pair<int, double>(5, 0.0));
+            monthsMaxTemp.insert(std::pair<int, double>(6, 0.0));
+            monthsMaxTemp.insert(std::pair<int, double>(7, 0.0));
+            monthsMaxTemp.insert(std::pair<int, double>(8, 0.0));
+            monthsMaxTemp.insert(std::pair<int, double>(9, 0.0));
+            monthsMaxTemp.insert(std::pair<int, double>(10, 0.0));
+            monthsMaxTemp.insert(std::pair<int, double>(11, 0.0));
+            monthsMaxTemp.insert(std::pair<int, double>(12, 0.0));
+            monthsMaxTemp.insert(std::pair<int, double>(13, 0.0));
+
+            // calculate max endTime
+            for (Climate *tmp = ctx->climates; tmp != nullptr; tmp = tmp->next) {
+                tm *date = (gmtime(&tmp->date));
+                if ((date->tm_year + 1900) == year) {
+                    int month = date->tm_mon + 1;
+                    double maxTemp = monthsMaxTemp.upper_bound(month)->second;
+                    double minTemp = monthsMinTemp.upper_bound(month)->second;
+
+                    if (tmp->maxTemp > maxTemp) {
+                        monthsMaxTemp.upper_bound(month)->second = tmp->maxTemp;
+                    }
+                    if (tmp->minTemp < minTemp) {
+                        monthsMinTemp.upper_bound(month)->second = tmp->minTemp;
+                    }
+                }
+            }
+
+            for (unsigned long int i = 1; i <= monthsMaxTemp.size(); i++) {
+                double maxTemp = monthsMaxTemp.upper_bound(i)->second;
+                double minTemp = monthsMinTemp.upper_bound(i)->second;
+
+                std::string monthstr;
+                switch (i) {
+                    case 1:
+                        monthstr = "January";
+                        break;
+                    case 2:
+                        monthstr = "February";
+                        break;
+                    case 3:
+                        monthstr = "March";
+                        break;
+                    case 4:
+                        monthstr = "April";
+                        break;
+                    case 5:
+                        monthstr = "May";
+                        break;
+                    case 6:
+                        monthstr = "June";
+                        break;
+                    case 7:
+                        monthstr = "July";
+                        break;
+                    case 8:
+                        monthstr = "August";
+                        break;
+                    case 9:
+                        monthstr = "September";
+                        break;
+                    case 10:
+                        monthstr = "October";
+                        break;
+                    case 11:
+                        monthstr = "November";
+                        break;
+                    case 12:
+                        monthstr = "December";
+                        break;
+                    default:
+                        monthstr = "Not set";
+                        break;
+                }
+
+                printf("Month: %s\n", monthstr.c_str());
+                printf("Maximum temperature -> %f\n", maxTemp);
+                if (minTemp == 1000) {
+                    printf("Minimum temperature -> %f\n\n", 0.0);
+                } else {
+                    printf("Minimum temperature -> %f\n\n", minTemp);
+                }
+            }
+
+            ctx->reports->display();
+            return CommandCodes::CONTINUE;
+            }),
     new MenuItem(8, "Not yet implemented!",
                  [](Menu *, Program *ctx) -> CommandCodes {
                    // TODO: implement function body
