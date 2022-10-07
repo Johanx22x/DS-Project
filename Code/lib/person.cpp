@@ -17,7 +17,11 @@ void Person::show() {
     Person *curr = this;
 
     while (curr != nullptr) {
-        printf("\nPerson name: %s\nPerson ID: %s\nPerson age: %d\nPerson location: %s\nPerson Join Date: %s", curr->name.c_str(), curr->id.c_str(), curr->age, curr->location.c_str(), asctime(gmtime(&curr->joinDate)));
+        char dateBuf[200];
+        tm *datetmp = gmtime(&this->joinDate);
+        strftime(dateBuf, sizeof(dateBuf), "%a %b %d %Y", datetmp);
+
+        printf("\nPerson name: %s\nPerson ID: %s\nPerson age: %d\nPerson location: %s\nPerson Join Date: %s\n", curr->name.c_str(), curr->id.c_str(), curr->age, curr->location.c_str(), dateBuf);
         if (curr->climates != nullptr) {
             printf("Climates sub-list:");
             curr->climates->show();
