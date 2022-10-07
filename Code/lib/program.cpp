@@ -80,7 +80,7 @@ Program::Program() {
   Rain *rainFive = new Rain("Strong rain", "R-6", 72.31);
   this->rains = insert(this->rains, rainFive);
 
-  Climate *climateOne = new Climate("2", 4.1, 8.1, 2.1, 0.1, 83.12, 'S', true, 1665147440, 1665147440, 1665147823, rainOne, santaElena, johan);
+  Climate *climateOne = new Climate("2", 4.1, 8.1, 2.1, 0.1, 83.12, 'S', true, 1661247440, 1661247440, 1661249940, rainOne, santaElena, johan);
   this->climates->append(climateOne);
   santaElena->climate = new Proxy(climateOne);
   johan->climates = new Proxy(climateOne);
@@ -90,17 +90,17 @@ Program::Program() {
   santaCecilia->climate = new Proxy(climateTwo);
   johan->climates->append(new Proxy(climateTwo));
 
-  Climate *climateThree = new Climate("4", 1.2, 8.2, 8.5, 8.3, 74.31, 'E', false, 1665147440, 1665147440, 1665147823, rainThree, guapiles, maria);
+  Climate *climateThree = new Climate("4", 1.2, 8.2, 8.5, 8.3, 74.31, 'E', false, 1664347440, 1664347440, 1661247440, rainThree, guapiles, maria);
   this->climates->append(climateThree);
   guapiles->climate = new Proxy(climateThree);
   maria->climates = new Proxy(climateThree);
 
-  Climate *climateFour = new Climate("5", 5.3, 9.2, 3.1, 5.2, 41.21, 'S', false, 1665147440, 1665147440, 1665147823, rainFour, sanRamonPlace, gabriel);
+  Climate *climateFour = new Climate("5", 5.3, 9.2, 3.1, 5.2, 41.21, 'S', false, 1661947440, 1661947440, 1665231440, rainFour, sanRamonPlace, gabriel);
   this->climates->append(climateFour);
   sanRamonPlace->climate = new Proxy(climateFour);
   gabriel->climates = new Proxy(climateFour);
 
-  Climate *climateFive = new Climate("6", 9.1, 9.4, 7.7, 5.1, 84.92, 'N', true, 1665147440, 1665147440, 1665147823, rainFive, sanRamonPlace, alonso);
+  Climate *climateFive = new Climate("6", 9.1, 9.4, 7.7, 5.1, 84.92, 'N', true, 1612347440, 1612347440, 1665148440, rainFive, sanRamonPlace, alonso);
   this->climates->append(climateFive);
   sanRamonPlace->climate->append(new Proxy(climateFive));
   alonso->climates = new Proxy(climateFive);

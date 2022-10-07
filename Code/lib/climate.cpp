@@ -34,7 +34,7 @@ void Climate::show() {
 
     while (curr != nullptr) {
         printf("\n%s\n", curr->str().c_str());
-        printf("Associate rain: \n\tID: %s\n\tName: %s\n", curr->rain->id.c_str(), curr->rain->name.c_str());
+        printf("Associate rain: \n\tID: %s\n\tName: %s\n\tRainfall: %f\n", curr->rain->id.c_str(), curr->rain->name.c_str(), curr->rain->rainfall);
         curr = curr->next;
     }
 }
@@ -81,7 +81,7 @@ std::string Climate::str() {
         << this->maxTemp << "\nMinimum temperature: " << this->minTemp 
         << "\nWind speed: " << this->windSpeed << "\nHumidity: " << this->humidity 
         << "\nWind direction: " << this->windDirection << "\nRain: " << rainState 
-        << "\nDate: " << dateBuf << "\nEnd Time: " << endBuf << "\nStart Time: " << startBuf;
+        << "\nDate: " << dateBuf << "\nStart Time: " << startBuf << "\nEnd Time: " << endBuf;
     return out.str();
 }
 
