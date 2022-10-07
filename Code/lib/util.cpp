@@ -15,44 +15,45 @@
 #include <map>
 
 void flush() {
-  char __c;
-  while ((__c = getchar() != '\n' && __c != EOF))
-    ;
+  char __c; 
+  while ((__c = getchar() != '\n' && __c != EOF)) ;
 }
 
-// FIXME: This function produces an error sorting alphabetical
 Person *sortedInsert(Person *list, Person *node) {
-    if (list == nullptr) return node;
+    if (list == nullptr) return nullptr;
     if (node == nullptr) return list;
 
-    if (list->name.at(0) >= node->name.at(0)) {
+    if (node->name < list->name) {
         node->next = list;
         list->prev = node;
         return node;
     }
 
-    Person *tmp = list;
+    Person *curr = list;
+    Person *prev;
 
-    while (node->name.at(0) >= tmp->name.at(0)) {
-        if (tmp->next == nullptr) {
-            break;
+    while (curr != nullptr) {
+        if (node->name <= curr->name) {
+            if (prev->next == nullptr) {
+                prev->next = node;
+                node->prev = curr;
+            } else {
+                node->next = prev->next;
+                node->prev = prev;
+                curr->prev = node;
+                prev->next = node;
+            }
+            return list;
         }
-        tmp = tmp->next;
+
+        prev = curr;
+        curr = curr->next;
     }
 
-    std::cout << tmp->name << " es menor que " << node->name << "\n";
+    prev->next = node;
+    node->prev = prev;
 
-    if (tmp->next == nullptr) {
-        tmp->next = node;
-        node->prev = tmp;
-        return list;
-    } else { // case for when the new node ends up between 2 nodes
-        node->next = tmp->next;
-        tmp->next->prev = node;
-        node->prev = tmp;
-        tmp->next = node;
-        return list;
-    }
+    return list;
 }
 
 Place *insert(Place *list, Place *node) {
@@ -76,7 +77,7 @@ Instant *sortedInsert(Instant *list, Instant* node) {
     if (list == nullptr) return node;
     if (node == nullptr) return list;
 
-    if (list->date < node->date) {
+    if (list->date > node->date) {
         node->next = list;
         list->prev = node;
         return node;
@@ -84,7 +85,7 @@ Instant *sortedInsert(Instant *list, Instant* node) {
 
     Instant *tmp = list;
 
-    while (node->date > tmp->date) {
+    while (node->date <= tmp->date) {
         if (tmp->next == nullptr) break;
         tmp = tmp->next;
     }

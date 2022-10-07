@@ -1331,7 +1331,7 @@ MenuItem *dataItems[] = {
         std::cin.ignore(INT32_MAX, '\n');
         getline(std::cin, location);
 
-        printf("Enter the date");
+        printf("Enter the date\n");
         time_t joinDate = getDate();
 
         if (ctx->people == nullptr) {
