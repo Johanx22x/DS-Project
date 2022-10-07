@@ -19,12 +19,10 @@ public:
       new Person("Johan Rodriguez", "2022141892", 18, "Santa Rosa", 1531721412);
   Region *regions = new Region("San Carlos", "5", "Alajuela, Costa Rica");
   Place *places = new Place("Santa Clara", 500, 1250.3, regions);
-  // FIXME: time_t params for new Instant
-  Instant *instants = new Instant("A beautiful day", 0, 0, 0);
-  // FIXME: time_t params for new climate
+  Instant *instants = new Instant("Sunny monday", 1588485717, 1588485717, 1588489021);
   Rain *rains = new Rain("Storm", "1", 0.2);
-  Climate *climates = new Climate("1", 2.3, 4.1, 8.2, 0.4, 31.8, 'N', true, 0,
-                                  1, 2, rains, places, people);
+  Climate *climates = new Climate("1", 2.3, 4.1, 8.2, 0.4, 31.8, 'N', true, 1665147440,
+                                  1665147440, 1665147823, rains, places, people);
   Menu *menu = new Menu("Main Menu");
 
   // NOTE: Sub-menus definition
