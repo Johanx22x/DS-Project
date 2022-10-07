@@ -1,3 +1,4 @@
+#include <cctype>
 #include <climate.hh>
 #include <climits>
 #include <clocale>
@@ -19,12 +20,12 @@ void flush() {
     ;
 }
 
-// FIXME: This function produces an error with lower and upper
-// TODO: Implement toLower() function to fix this error
+// FIXME: This function produces an error sorting alphabetical
 Person *sortedInsert(Person *list, Person *node) {
     if (list == nullptr) return node;
+    if (node == nullptr) return list;
 
-    if (list->name >= node->name) {
+    if (list->name.at(0) >= node->name.at(0)) {
         node->next = list;
         list->prev = node;
         return node;
@@ -32,23 +33,26 @@ Person *sortedInsert(Person *list, Person *node) {
 
     Person *tmp = list;
 
-    while (node->name < tmp->name) {
-        if (tmp->next == nullptr) break;
+    while (node->name.at(0) >= tmp->name.at(0)) {
+        if (tmp->next == nullptr) {
+            break;
+        }
         tmp = tmp->next;
     }
 
-    // case for when the new node ends up between 2 nodes
-    if (tmp->next != nullptr) {
+    std::cout << tmp->name << " es menor que " << node->name << "\n";
+
+    if (tmp->next == nullptr) {
+        tmp->next = node;
+        node->prev = tmp;
+        return list;
+    } else { // case for when the new node ends up between 2 nodes
         node->next = tmp->next;
         tmp->next->prev = node;
         node->prev = tmp;
         tmp->next = node;
-    } else { // this one executes if the new node ends up at the end
-        tmp->next = node;
-        node->prev = tmp;
+        return list;
     }
-
-    return list;
 }
 
 Place *insert(Place *list, Place *node) {

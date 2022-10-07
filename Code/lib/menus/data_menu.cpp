@@ -362,7 +362,6 @@ MenuItem *dataItems[] = {
                             break;
                         }
                 case 7: {
-                            // FIXME: improve this
                             char windDirection = 0x00;
                             bool windFlag = false;
                             while (!windFlag) {
@@ -596,7 +595,6 @@ MenuItem *dataItems[] = {
 
         double humidity = getDouble("Enter the humidity");
 
-        // FIXME: improve this
         char windDirection = 0x00;
         bool windFlag = false;
         while (!windFlag) {
@@ -966,7 +964,6 @@ MenuItem *dataItems[] = {
           return CommandCodes::CONTINUE;
         }
 
-        // TODO: Validate user input (1 or 2)
         printf( "\n\u001b[34m%s - %s\u001b[0m\n", toModify->name.c_str(), toModify->id.c_str());
         printf("(0) - Cancel\n");
         printf("(1) - Modify this region register\n");

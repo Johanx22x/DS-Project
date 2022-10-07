@@ -16,7 +16,7 @@
 class Program {
 public:
   Person *people =
-      new Person("Johan Rodriguez", "2022141892", 18, "Santa Rosa", 1531721412);
+      new Person("Aaron Gonzalez", "2021", 19, "La Tigra", 1665147823);
   Region *regions = new Region("San Carlos", "5", "Alajuela, Costa Rica");
   Place *places = new Place("Santa Clara", 500, 1250.3, regions);
   Instant *instants = new Instant("Sunny monday", 1588485717, 1588485717, 1588489021);

@@ -10,7 +10,6 @@ MenuItem *consultationMenu[] = {
       4, 
       "Display the person with the most registrations",
       [](Menu *, Program *ctx) -> CommandCodes {
-        // TODO: implement function body
         Person *maxRegs = ctx->people;
         Person *tmp = ctx->people;
 
@@ -148,7 +147,6 @@ MenuItem *consultationMenu[] = {
       "Show earliest sunrise and latest sunset within a given year",
       // FIXME: In case of a tie print them all
       [](Menu *, Program *ctx) -> CommandCodes {
-        // TODO: implement function body
         Instant *max = nullptr;
         Instant *min = nullptr;
 
