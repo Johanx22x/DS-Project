@@ -25,7 +25,7 @@ extern "C" {
 
 // TODO: Implement all the 9 items of reports
 MenuItem *reportItems[] = {
-    new MenuItem(9, "Max and min temperature register of a given year per month",
+    new MenuItem(9, "Max and min temperature register of a given year and place per month",
             [](Menu *, Program *ctx) -> CommandCodes {
             // t represents today in milliseconds
             time_t t = time(nullptr);
@@ -36,6 +36,20 @@ MenuItem *reportItems[] = {
             while (year > (*today).tm_year+1900) {
                 eprint("Invalid year!");
                 year = getInt("Type in the year");
+            }
+
+            ctx->places->showByName();
+            printf("Enter place name: ");
+            std::string placeName;
+            std::cin.clear();
+            std::cin.ignore(INT32_MAX, '\n');
+            getline(std::cin, placeName);
+
+            Place *place = ctx->places->find(placeName);
+
+            if (place == nullptr) {
+                fprintf(stderr, "Couldn't find a place with that name!\n");
+                return CommandCodes::CONTINUE;
             }
 
             // empty months map container
@@ -74,15 +88,17 @@ MenuItem *reportItems[] = {
             for (Climate *tmp = ctx->climates; tmp != nullptr; tmp = tmp->next) {
                 tm *date = (gmtime(&tmp->date));
                 if ((date->tm_year + 1900) == year) {
-                    int month = date->tm_mon + 1;
-                    double maxTemp = monthsMaxTemp.upper_bound(month)->second;
-                    double minTemp = monthsMinTemp.upper_bound(month)->second;
+                    if (tmp->place->name == place->name) {
+                        int month = date->tm_mon + 1;
+                        double maxTemp = monthsMaxTemp.upper_bound(month)->second;
+                        double minTemp = monthsMinTemp.upper_bound(month)->second;
 
-                    if (tmp->maxTemp > maxTemp) {
-                        monthsMaxTemp.upper_bound(month)->second = tmp->maxTemp;
-                    }
-                    if (tmp->minTemp < minTemp) {
-                        monthsMinTemp.upper_bound(month)->second = tmp->minTemp;
+                        if (tmp->maxTemp > maxTemp) {
+                            monthsMaxTemp.upper_bound(month)->second = tmp->maxTemp;
+                        }
+                        if (tmp->minTemp < minTemp) {
+                            monthsMinTemp.upper_bound(month)->second = tmp->minTemp;
+                        }
                     }
                 }
             }
@@ -134,7 +150,7 @@ MenuItem *reportItems[] = {
                         break;
                 }
 
-                printf("Month: %s\n", monthstr.c_str());
+                printf("Place: %s\nMonth: %s\n", place->name.c_str(), monthstr.c_str());
                 printf("Maximum temperature -> %f\n", maxTemp);
                 if (minTemp == 1000) {
                     printf("Minimum temperature -> %f\n\n", 0.0);
@@ -146,9 +162,111 @@ MenuItem *reportItems[] = {
             ctx->reports->display();
             return CommandCodes::CONTINUE;
             }),
-    new MenuItem(8, "Not yet implemented!",
+    new MenuItem(8, "Display the amount of rainy days of a given year and place per month",
                  [](Menu *, Program *ctx) -> CommandCodes {
-                   // TODO: implement function body
+                 // t represents today in milliseconds
+                 time_t t = time(nullptr);
+                 // today
+                 tm *today = gmtime(&t);
+
+                 int year = getInt("Type in the year");
+                 while (year > (*today).tm_year+1900) {
+                     eprint("Invalid year!");
+                     year = getInt("Type in the year");
+                 }
+
+                  ctx->places->showByName();
+                 printf("Enter place name: ");
+                 std::string placeName;
+                 std::cin.clear();
+                 std::cin.ignore(INT32_MAX, '\n');
+                 getline(std::cin, placeName);
+
+                 Place *place = ctx->places->find(placeName);
+
+                 if (place == nullptr) {
+                     fprintf(stderr, "Couldn't find a place with that name!\n");
+                     return CommandCodes::CONTINUE;
+                 }
+
+                 // empty months map container
+                 std::map<int, int> rainyDays;
+                 // insert elements in random order
+                 rainyDays.insert(std::pair<int, int>(2, 0));
+                 rainyDays.insert(std::pair<int, int>(3, 0));
+                 rainyDays.insert(std::pair<int, int>(4, 0));
+                 rainyDays.insert(std::pair<int, int>(5, 0));
+                 rainyDays.insert(std::pair<int, int>(6, 0));
+                 rainyDays.insert(std::pair<int, int>(7, 0));
+                 rainyDays.insert(std::pair<int, int>(8, 0));
+                 rainyDays.insert(std::pair<int, int>(9, 0));
+                 rainyDays.insert(std::pair<int, int>(10, 0));
+                 rainyDays.insert(std::pair<int, int>(11, 0));
+                 rainyDays.insert(std::pair<int, int>(12, 0));
+                 rainyDays.insert(std::pair<int, int>(13, 0));
+
+                 for (Climate *tmp = ctx->climates; tmp != nullptr; tmp = tmp->next) {
+                     tm *date = (gmtime(&tmp->date));
+                     if ((date->tm_year + 1900) == year) {
+                         if (tmp->place->name == place->name) {
+                             int month = date->tm_mon + 1;
+
+                             if (tmp->itRained) {
+                                 rainyDays.upper_bound(month)->second++;
+                             }
+                         }
+                     }
+                 }
+
+                 for (unsigned long int i = 1; i <= rainyDays.size(); i++) {
+                     int rainMonth = rainyDays.upper_bound(i)->second;
+
+                     std::string monthstr;
+                     switch (i) {
+                         case 1:
+                             monthstr = "January";
+                             break;
+                         case 2:
+                             monthstr = "February";
+                             break;
+                         case 3:
+                             monthstr = "March";
+                             break;
+                         case 4:
+                             monthstr = "April";
+                             break;
+                         case 5:
+                             monthstr = "May";
+                             break;
+                         case 6:
+                             monthstr = "June";
+                             break;
+                         case 7:
+                             monthstr = "July";
+                             break;
+                         case 8:
+                             monthstr = "August";
+                             break;
+                         case 9:
+                             monthstr = "September";
+                             break;
+                         case 10:
+                             monthstr = "October";
+                             break;
+                         case 11:
+                             monthstr = "November";
+                             break;
+                         case 12:
+                             monthstr = "December";
+                             break;
+                         default:
+                             monthstr = "Not set";
+                             break;
+                     }
+
+                     printf("Place: %s\nMonth: %s\n", place->name.c_str(), monthstr.c_str());
+                     printf("Rain days: %d\n\n", rainMonth);
+                 }
                    ctx->reports->display();
                    return CommandCodes::CONTINUE;
                  }),
@@ -161,6 +279,7 @@ MenuItem *reportItems[] = {
           std::cin >> year;
           flush();
 
+          ctx->places->showByName();
           printf("Enter the place name: ");
           std::string placeName;
           getline(std::cin, placeName);
@@ -248,7 +367,7 @@ MenuItem *reportItems[] = {
           printf("Enter region id: ");
           std::string regionId;
           getline(std::cin, regionId);
-          /* flush(); */
+          flush();
 
           printf("DEBUG: Region ID: %s\n", regionId.c_str());
 
