@@ -351,10 +351,9 @@ MenuItem *reportItems[] = {
     new MenuItem(
         5, "Show climate values for a given region within a given time period",
         [](Menu *, Program *ctx) -> CommandCodes {
-          // TODO: implement function body
           int range[2] = {};
 
-          printf("Enter perdiod start year: ");
+          printf("Enter period start year: ");
           std::cin >> range[0];
           flush();
 
@@ -367,9 +366,6 @@ MenuItem *reportItems[] = {
           printf("Enter region id: ");
           std::string regionId;
           getline(std::cin, regionId);
-          flush();
-
-          printf("DEBUG: Region ID: %s\n", regionId.c_str());
 
           Region *region = ctx->regions->search(regionId);
 
@@ -383,7 +379,8 @@ MenuItem *reportItems[] = {
             int rainyDays = 0;
             double rainfall = 0;
             double maxTmp = 0;
-            double minTmp = 0;
+            // NOTE: temporal fix 
+            double minTmp = 10000;
 
             bool shouldPrint = false;
             for (Climate *cTmp = tmp->link->climate->link; cTmp != nullptr;
@@ -399,12 +396,7 @@ MenuItem *reportItems[] = {
 
                   rainyDays++;
 
-                  for (Rain *rTmp = cTmp->rain; rTmp != nullptr;
-                       rTmp = rTmp->next) {
-
-                    printf("DEBUG: sumando rainfall\n");
-                    rainfall += rTmp->rainfall;
-                  }
+                  rainfall += cTmp->rain->rainfall;
                 }
 
                 if (cTmp->maxTemp > maxTmp)
@@ -416,9 +408,9 @@ MenuItem *reportItems[] = {
             }
 
             if (shouldPrint) {
-              printf("Place: %s\n\tTotal Rainfall: %f\n\tMax Temperature: "
+              printf("Place: %s\n\tRainy days: %d\n\tTotal Rainfall: %f\n\tMax Temperature: "
                      "%f\n\tMin Temperature: %f\n",
-                     tmp->link->name.c_str(), rainfall, maxTmp, minTmp);
+                     tmp->link->name.c_str(), rainyDays, rainfall, maxTmp, minTmp);
             } else {
               fprintf(stderr, "No data found for that date range!\n");
               return CommandCodes::CONTINUE;
@@ -431,19 +423,17 @@ MenuItem *reportItems[] = {
     new MenuItem(
         4, "Show monthly average rainfall for each region",
         [](Menu *, Program *ctx) -> CommandCodes {
-          // TODO: implement function body
+            // FIXME: Check for more than one region
           printf("Enter year: ");
           int year;
           std::cin >> year;
-
           flush();
-          int monthlyAvg[12] = {};
-          // \/ shame
-          for (Region *tmp = ctx->regions; tmp != nullptr; tmp = tmp->next) {
-            for (int month = 0; month < 12; month++) {
-              for (Proxy<Climate> *cTmp = tmp->places->link->climate;
 
-                   cTmp != nullptr; cTmp = cTmp->next) {
+          printf("\n");
+          for (Region *tmp = ctx->regions; tmp != nullptr; tmp = tmp->next) {
+            int monthlyAvg[12] = {};
+            for (int month = 0; month < 12; month++) {
+              for (Proxy<Climate> *cTmp = tmp->places->link->climate; cTmp != nullptr; cTmp = cTmp->next) {
                 tm *__t = gmtime(&cTmp->link->date);
                 if (__t->tm_year + 1900 == year && __t->tm_mon == month) {
                   // NOTE: dear future self, do not fret, this does work as
@@ -455,11 +445,11 @@ MenuItem *reportItems[] = {
                 }
               }
             }
+              printf("Region: %s\n", tmp->name.c_str());
+              for (int i = 0; i < 12; i++) {
+                printf("Month: %d -> %d\n", i+1, monthlyAvg[i]);
+              }
           }
-
-          for (const auto &d : monthlyAvg)
-            printf("%d ", d);
-          printf("\n");
 
           ctx->reports->display();
           return CommandCodes::CONTINUE;
@@ -467,7 +457,6 @@ MenuItem *reportItems[] = {
     new MenuItem(
         3, "Display average monthly rainfall within a given year",
         [](Menu *, Program *ctx) -> CommandCodes {
-          // TODO: implement function body
           printf("Enter year: ");
           int year;
           std::cin >> year;
@@ -479,13 +468,11 @@ MenuItem *reportItems[] = {
           Place *tmp = place;
           do {
             if (gmtime(&tmp->climate->link->date)->tm_year + 1900 == year) {
-              tmp->show();
-              std::cout << tmp->climate->link->rain->fmtAverage() << "\n";
+              tmp->showByName();
+              std::cout << "Average rainfall: " << tmp->climate->link->rain->fmtAverage() << "\n";
             }
             tmp = tmp->next;
           } while (tmp != place);
-          /* for (Place *tmp = place; tmp != nullptr;) { */
-          /* } */
 
           ctx->reports->display();
           return CommandCodes::CONTINUE;

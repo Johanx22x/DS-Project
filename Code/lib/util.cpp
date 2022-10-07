@@ -57,8 +57,8 @@ Person *sortedInsert(Person *list, Person *node) {
 }
 
 Place *insert(Place *list, Place *node) {
-  if (list == nullptr)
-    return node;
+  if (list == nullptr) return node;
+  if (node == nullptr) return list;
 
   node->next = list;
 
@@ -66,11 +66,11 @@ Place *insert(Place *list, Place *node) {
 
   do {
     curr = curr->next;
-  } while (curr != list);
+  } while (curr->next != list);
 
   curr->next = node;
 
-  return list;
+  return node;
 }
 
 Instant *sortedInsert(Instant *list, Instant* node) {

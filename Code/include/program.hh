@@ -20,7 +20,7 @@ public:
   Region *regions = new Region("San Carlos", "5", "Alajuela, Costa Rica");
   Place *places = new Place("Santa Clara", 500, 1250.3, regions);
   Instant *instants = new Instant("Sunny monday", 1588485717, 1588485717, 1588489021);
-  Rain *rains = new Rain("Storm", "1", 0.2);
+  Rain *rains = new Rain("Storm", "R-1", 12.32);
   Climate *climates = new Climate("1", 2.3, 4.1, 8.2, 0.4, 31.8, 'N', true, 1665147440,
                                   1665147440, 1665147823, rains, places, people);
   Menu *menu = new Menu("Main Menu");

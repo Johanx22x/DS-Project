@@ -45,7 +45,7 @@ Place* Place::find(std::string name) {
 std::string Place::tstr() {
     std::string myStr;
     std::ostringstream os;
-    os << "\tPlace name: " << name << "\n\tPlace population: " << population << "\n\tPlace area: " << area << "\n";
+    os << "\tPlace name: " << name << "\n\tPlace population: " << population << "\n\tPlace area: " << area;
     myStr = os.str(); //now convert stream to my_str string
     return myStr;
 }
