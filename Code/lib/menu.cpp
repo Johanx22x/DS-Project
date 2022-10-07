@@ -53,8 +53,7 @@ void Menu::display() {
 }
 
 CommandCodes Menu::prompt() {
-    printf("Select an option: ");
-    int option = getInt();
+    int option = getInt("Select an option");
 
     MenuItem *curr = options.at(option);
 

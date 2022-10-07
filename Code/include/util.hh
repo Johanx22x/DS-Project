@@ -1,9 +1,10 @@
 #pragma once
 
-#include "person.hh"
-#include "place.hh"
+#include <person.hh>
+#include <place.hh>
 #include <climate.hh>
 #include <instant.hh>
+#include <ctime>
 
 /**
  * Returns the first character of stdin as an int
@@ -95,8 +96,49 @@ template <typename T> T *insert(T *list, T *node) {
  */
 Climate *deleteNode(Climate *list, Climate *node);
 
-
 /**
  * Flush flushes stdin
  */
 void flush();
+
+/**
+ * Do a safe validation to the user input for integers values
+ *
+ * @param message The message to display every time that the input fails
+ */
+int getInt(std::string message);
+
+/**
+ * Do a safe validation to the user input for double values
+ *
+ * @param message The message to display every time that the input fails
+ */
+double getDouble(std::string message);
+
+/**
+ * Display a message as an error
+ *
+ * @param message The message to display as an error
+ */
+void eprint(std::string message);
+
+/**
+ * Display a message as a valid notification
+ *
+ * @param message The message to display as a valid notification
+ */
+void printValid(std::string message);
+
+/**
+ * Get the date according to the user input
+ *
+ * @return time The date the user entered
+ */
+time_t getDate();
+
+/**
+ * Get the time according to the user input
+ *
+ * @return time The time the user entered
+ */
+time_t getTime();

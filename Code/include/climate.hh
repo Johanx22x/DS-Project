@@ -40,4 +40,6 @@ public:
   Climate *search(std::string id);
 
   std::string str();
+
+  std::string tstr();
 };

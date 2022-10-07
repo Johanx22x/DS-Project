@@ -24,5 +24,5 @@ public:
 
   Place *find(std::string name);
 
-  std::string str();
+  std::string tstr();
 };

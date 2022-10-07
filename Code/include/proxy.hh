@@ -36,7 +36,7 @@ public:
     Proxy<T> *curr = this;
 
     while (curr != nullptr) {
-      std::cout << "\n" << curr->link->str();
+      std::cout << "\n" << curr->link->tstr() << "\n";
       curr = curr->next;
     }
   }
