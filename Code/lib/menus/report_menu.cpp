@@ -1,3 +1,13 @@
+/**
+ * Script to charge the reports MenuItems in the dinamic library
+ * Here is defined all the report management and functionality
+ *
+ * @author Aaron Gonzalez, Johan Rodriguez
+ * @version 1.0
+ *
+ * last modification: 07/10/2022
+ */
+
 #include <climate.hh>
 #include <command_codes.hh>
 #include <cstdint>
@@ -103,54 +113,15 @@ MenuItem *reportItems[] = {
                 }
             }
 
-            for (unsigned long int i = 1; i <= monthsMaxTemp.size(); i++) {
+            printf("\nPlace: %s\n", place->name.c_str());
+             std::string monthName[] = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+            for (size_t i = 0; i < monthsMaxTemp.size(); i++) {
                 double maxTemp = monthsMaxTemp.upper_bound(i)->second;
                 double minTemp = monthsMinTemp.upper_bound(i)->second;
 
-                std::string monthstr;
-                switch (i) {
-                    case 1:
-                        monthstr = "January";
-                        break;
-                    case 2:
-                        monthstr = "February";
-                        break;
-                    case 3:
-                        monthstr = "March";
-                        break;
-                    case 4:
-                        monthstr = "April";
-                        break;
-                    case 5:
-                        monthstr = "May";
-                        break;
-                    case 6:
-                        monthstr = "June";
-                        break;
-                    case 7:
-                        monthstr = "July";
-                        break;
-                    case 8:
-                        monthstr = "August";
-                        break;
-                    case 9:
-                        monthstr = "September";
-                        break;
-                    case 10:
-                        monthstr = "October";
-                        break;
-                    case 11:
-                        monthstr = "November";
-                        break;
-                    case 12:
-                        monthstr = "December";
-                        break;
-                    default:
-                        monthstr = "Not set";
-                        break;
-                }
+                std::string monthstr = monthName[i];
 
-                printf("Place: %s\nMonth: %s\n", place->name.c_str(), monthstr.c_str());
+                printf("Month: %s\n", monthstr.c_str());
                 printf("Maximum temperature -> %f\n", maxTemp);
                 if (minTemp == 1000) {
                     printf("Minimum temperature -> %f\n\n", 0.0);
@@ -217,54 +188,14 @@ MenuItem *reportItems[] = {
                          }
                      }
                  }
-
-                 for (unsigned long int i = 1; i <= rainyDays.size(); i++) {
+                
+                 std::string monthName[] = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+                 printf("\nPlace: %s\n", place->name.c_str());
+                 for (size_t i = 0; i < rainyDays.size(); i++) {
                      int rainMonth = rainyDays.upper_bound(i)->second;
 
-                     std::string monthstr;
-                     switch (i) {
-                         case 1:
-                             monthstr = "January";
-                             break;
-                         case 2:
-                             monthstr = "February";
-                             break;
-                         case 3:
-                             monthstr = "March";
-                             break;
-                         case 4:
-                             monthstr = "April";
-                             break;
-                         case 5:
-                             monthstr = "May";
-                             break;
-                         case 6:
-                             monthstr = "June";
-                             break;
-                         case 7:
-                             monthstr = "July";
-                             break;
-                         case 8:
-                             monthstr = "August";
-                             break;
-                         case 9:
-                             monthstr = "September";
-                             break;
-                         case 10:
-                             monthstr = "October";
-                             break;
-                         case 11:
-                             monthstr = "November";
-                             break;
-                         case 12:
-                             monthstr = "December";
-                             break;
-                         default:
-                             monthstr = "Not set";
-                             break;
-                     }
-
-                     printf("Place: %s\nMonth: %s\n", place->name.c_str(), monthstr.c_str());
+                     std::string monthstr = monthName[i];
+                     printf("Month: %s\n", monthstr.c_str());
                      printf("Rain days: %d\n\n", rainMonth);
                  }
                    ctx->reports->display();
@@ -374,8 +305,7 @@ MenuItem *reportItems[] = {
             return CommandCodes::CONTINUE;
           }
 
-          for (Proxy<Place> *tmp = region->places; tmp != nullptr;
-               tmp = tmp->next) {
+          for (Proxy<Place> *tmp = region->places; tmp != nullptr; tmp = tmp->next) {
             int rainyDays = 0;
             double rainfall = 0;
             double maxTmp = 0;
@@ -445,7 +375,7 @@ MenuItem *reportItems[] = {
                 }
               }
             }
-              printf("Region: %s\n", tmp->name.c_str());
+              printf("\nRegion: %s\n", tmp->name.c_str());
               for (int i = 0; i < 12; i++) {
                 printf("Month: %d -> %d\n", i+1, monthlyAvg[i]);
               }

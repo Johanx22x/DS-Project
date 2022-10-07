@@ -1,3 +1,14 @@
+/**
+ * Script to charge the consultations MenuItems in the dinamic library
+ * Here is defined all the consultations management and functionality
+ *
+ * @author Johan Rodriguez, Aaron Gonzalez
+ * @version 1.0
+ *
+ * last modification: 07/10/2022
+ */
+
+#include "command_codes.hh"
 #include "instant.hh"
 #include <cstdint>
 #include <ctime>
@@ -8,80 +19,97 @@
 
 extern "C" {
 MenuItem *consultationMenu[] = {
-    new MenuItem(4, "Display the person with the most registrations",
-                 [](Menu *, Program *ctx) -> CommandCodes {
-                 Person *maxRegs = ctx->people;
+    new MenuItem(
+            4, 
+            "Display the person with the most registrations",
+            [](Menu *, Program *ctx) -> CommandCodes {
+            Person *maxRegs = ctx->people;
 
-                 for (Person *tmp = ctx->people; tmp != nullptr; tmp = tmp->next) {
-                     if (tmp->climates == nullptr) continue;
-                     if (tmp->climates->size() > maxRegs->climates->size()) maxRegs = tmp;
-                 }
+            for (Person *tmp = ctx->people; tmp != nullptr; tmp = tmp->next) {
+                if (tmp->climates == nullptr) continue;
+                if (tmp->climates->size() > maxRegs->climates->size()) maxRegs = tmp;
+            }
 
-                 std::cout << "\n" << maxRegs->str() << "Total registrations: " << maxRegs->climates->size() << "\n";
+            std::cout << "\n" << maxRegs->str() << "Total registrations: " << maxRegs->climates->size() << "\n";
 
-                 ctx->consultations->display();
-                 return CommandCodes::CONTINUE;
-                 }),
+            ctx->consultations->display();
+            return CommandCodes::CONTINUE;
+            }),
     new MenuItem(
         3,
         "Show the month with the most extreme rains of a given year and place",
         // NOTE: Print both, extremely rainy and extremely dry
         // NOTE: In case of tie print all the months with the max tie
         [](Menu *, Program *ctx) -> CommandCodes {
-  // t represents today in milliseconds
-  time_t t = time(nullptr);
-  // today
-  tm *today = gmtime(&t);
+        // t represents today in milliseconds
+        time_t t = time(nullptr);
+        // today
+        tm *today = gmtime(&t);
 
-  int year = getInt("Type in the year");
-  while (year > (*today).tm_year + 1900) {
-    eprint("Invalid year!");
-    year = getInt("Type in the year");
-  }
+        int year = getInt("Type in the year");
+        while (year > (*today).tm_year + 1900) {
+            eprint("Invalid year!");
+            year = getInt("Type in the year");
+        }
 
-  ctx->places->showByName();
+        ctx->places->showByName();
 
-  printf("Enter the name of the place: ");
-  std::string name;
-  std::cin.clear();
-  std::cin.ignore(INT32_MAX, '\n');
-  getline(std::cin, name);
+        printf("Enter the name of the place: ");
+        std::string name;
+        std::cin.clear();
+        std::cin.ignore(INT32_MAX, '\n');
+        getline(std::cin, name);
 
-  Place *found = ctx->places->find(name);
+        Place *found = ctx->places->find(name);
 
-  if (found == nullptr) {
-    printf("Can't find that place\n");
+        if (found == nullptr) {
+            printf("Can't find that place\n");
 
-    ctx->consultations->display();
-    return CommandCodes::CONTINUE;
-  }
+            ctx->consultations->display();
+            return CommandCodes::CONTINUE;
+        }
 
-  // here maxRr is initialized as a null pointer becaus we also need to
-  // validate the year, since this function asks the user for a year and
-  // a place
-  Climate *maxRr = nullptr;
+        // here maxRr is initialized as a null pointer becaus we also need to
+        // validate the year, since this function asks the user for a year and
+        // a place
+        Climate *maxRr = nullptr;
+        Climate *maxDry = nullptr;
 
-  for (Proxy<Climate> *tmp = found->climate; tmp != nullptr; tmp = tmp->next) {
-    if (gmtime(&tmp->link->date)->tm_year + 1900 == year) {
-      if (maxRr == nullptr)
-        maxRr = tmp->link;
-      if (tmp->link->rain->average() > maxRr->rain->average()) {
-        maxRr = tmp->link;
-      }
-    }
-  }
+        Proxy<Climate> *tmp = found->climate;
 
-  if (maxRr == nullptr) {
-    fprintf(stderr, "No rains stored for the given year\n");
+        if (tmp == nullptr) {
+            printf("No rain data stored in %s for the year %d\n", found->name.c_str(), year);
 
-    ctx->consultations->display();
-    return CommandCodes::CONTINUE;
-  }
+            ctx->consultations->display();
+            return CommandCodes::CONTINUE;
+        }
 
-  std::cout << maxRr->str() << "\n";
+        while (tmp->next != nullptr) {
+            Climate *tmpClt = tmp->link;
+            if ((gmtime(&tmpClt->date)->tm_year + 1900) == year) {
+                if (maxRr == nullptr) {
+                    maxRr = tmpClt;
+                    maxDry = tmpClt;
+                }
 
-  ctx->consultations->display();
-  return CommandCodes::CONTINUE;
+                // Here is all the data of the given year and place
+                
+            }
+
+            tmp = tmp->next;
+        }
+
+        if (maxRr == nullptr) {
+            fprintf(stderr, "No rains stored for the given year\n");
+
+            ctx->consultations->display();
+            return CommandCodes::CONTINUE;
+        }
+
+        std::cout << maxRr->str() << "\n";
+
+        ctx->consultations->display();
+        return CommandCodes::CONTINUE;
         }),
     new MenuItem(
         2, "Display earliest and latest sunrise for a given year",

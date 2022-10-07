@@ -1,4 +1,13 @@
-//#include <bits/types/time_t.h>
+/**
+ * Here is defined all the climate methods from the climate header file
+ * See the header file to see the documentation of these methods
+ *
+ * @author Johan Rodriguez, Aaron Gonzalez
+ * @version 1.0
+ *
+ * last modification: 04/10/2022
+ */
+
 #include <person.hh>
 #include <climate.hh>
 #include <cstdio>

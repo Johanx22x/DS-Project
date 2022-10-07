@@ -1,3 +1,13 @@
+/**
+ * Script to charge the data management MenuItems in the dinamic library
+ * Here is defined all the data management and functionality
+ *
+ * @author Johan Rodriguez
+ * @version 1.0
+ *
+ * last modification: 06/10/2022
+ */
+
 #include "command_codes.hh"
 #include <climits>
 #include <cstdint>
