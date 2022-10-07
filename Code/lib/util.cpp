@@ -1,15 +1,23 @@
+#include <climate.hh>
 #include <climits>
 #include <clocale>
 #include <ctime>
 #include <person.hh>
 #include <util.hh>
 #include <cstdio>
-#include <iostream>
 #include <instant.hh>
-#include <climate.hh>
+#include <iostream>
+#include <person.hh>
 #include <place.hh>
 #include <region.hh>
+#include <util.hh>
 #include <map>
+
+void flush() {
+  char __c;
+  while ((__c = getchar() != '\n' && __c != EOF))
+    ;
+}
 
 // FIXME: This function produces an error with lower and upper
 // TODO: Implement toLower() function to fix this error
@@ -44,19 +52,20 @@ Person *sortedInsert(Person *list, Person *node) {
 }
 
 Place *insert(Place *list, Place *node) {
-    if (list == nullptr) return node;
+  if (list == nullptr)
+    return node;
 
-    node->next = list;
-    
-    Place *curr = list;
+  node->next = list;
 
-    do {
-        curr = curr->next;
-    } while (curr != list);
+  Place *curr = list;
 
-    curr->next = node;
+  do {
+    curr = curr->next;
+  } while (curr != list);
 
-    return list;
+  curr->next = node;
+
+  return list;
 }
 
 Instant *sortedInsert(Instant *list, Instant* node) {
@@ -91,33 +100,36 @@ Instant *sortedInsert(Instant *list, Instant* node) {
 }
 
 Climate *sortedInsert(Climate *list, Climate *node) {
-    if (list == nullptr) return node;
+  if (list == nullptr)
+    return node;
 
-    if (list->date < node->date) {
-        node->next = list;
-        return node;
-    }
+  if (list->date < node->date) {
+    node->next = list;
+    return node;
+  }
 
-    Climate *tmp = list;
+  Climate *tmp = list;
 
-    while (node->date > tmp->date) {
-        if (tmp->next == nullptr) break;
-        tmp = tmp->next;
-    }
+  while (node->date > tmp->date) {
+    if (tmp->next == nullptr)
+      break;
+    tmp = tmp->next;
+  }
 
-    if (tmp->next != nullptr) { // this executes when the new node ends up at the end
-        node->next = tmp->next;
-        tmp->next = node;
-    } else {
+  if (tmp->next !=
+      nullptr) { // this executes when the new node ends up at the end
+    node->next = tmp->next;
+    tmp->next = node;
+  } else {
 
-        tmp->next = node;
-    }
+    tmp->next = node;
+  }
 
-    return list;
+  return list;
 }
 
 Person *deleteNode(Person *list, Person *node) {
-    if (list == nullptr) return nullptr; 
+    if (list == nullptr) return nullptr;
     else if (node == nullptr) return list;
 
     // Check for the first node
@@ -144,77 +156,83 @@ Person *deleteNode(Person *list, Person *node) {
 }
 
 Rain *deleteNode(Rain *list, Rain *node) {
-    if (list == nullptr) return nullptr; 
-    else if (node == nullptr) return list;
-
-    // Check for the first node
-    if (list->id == node->id) {
-        return list->next;
-    }
-
-    Rain *curr = list;
-    Rain *prev;
-    while (curr != nullptr) {
-        if (curr->id == node->id) {
-            prev->next = curr->next;
-        }
-        prev = curr;
-        curr = curr->next;
-    }
-
+  if (list == nullptr)
+    return nullptr;
+  else if (node == nullptr)
     return list;
+
+  // Check for the first node
+  if (list->id == node->id) {
+    return list->next;
+  }
+
+  Rain *curr = list;
+  Rain *prev;
+  while (curr != nullptr) {
+    if (curr->id == node->id) {
+      prev->next = curr->next;
+    }
+    prev = curr;
+    curr = curr->next;
+  }
+
+  return list;
 }
 
 Region *deleteNode(Region *list, Region *node) {
-    if (list == nullptr) return nullptr; 
-    else if (node == nullptr) return list;
-
-    // Check for the first node
-    if (list->id == node->id) {
-        return list->next;
-    }
-
-    Region *curr = list;
-    Region *prev;
-    while (curr != nullptr) {
-        if (curr->id == node->id) {
-            prev->next = curr->next;
-        }
-        prev = curr;
-        curr = curr->next;
-    }
-
+  if (list == nullptr)
+    return nullptr;
+  else if (node == nullptr)
     return list;
+
+  // Check for the first node
+  if (list->id == node->id) {
+    return list->next;
+  }
+
+  Region *curr = list;
+  Region *prev;
+  while (curr != nullptr) {
+    if (curr->id == node->id) {
+      prev->next = curr->next;
+    }
+    prev = curr;
+    curr = curr->next;
+  }
+
+  return list;
 }
 
 Place *deleteNode(Place *list, Place *node) {
-    if (list == nullptr) return nullptr; 
-    else if (node == nullptr) return list;
-
-    // Check for the first node
-    if (list->name == node->name) {
-        if (list->next == list) {
-            return nullptr;
-        } else {
-            return list->next;
-        }
-    }
-
-    Place *curr = list;
-    Place *prev;
-    do {
-        if (curr->name == node->name) {
-            prev->next = curr->next;
-        }
-        prev = curr;
-        curr = curr->next;
-    } while (curr != list);
-
+  if (list == nullptr)
+    return nullptr;
+  else if (node == nullptr)
     return list;
+
+  // Check for the first node
+  if (list->name == node->name) {
+    if (list->next == list) {
+      return nullptr;
+    } else {
+      return list->next;
+    }
+  }
+
+  Place *curr = list;
+  Place *prev;
+  do {
+    if (curr->name == node->name) {
+      prev->next = curr->next;
+    }
+    prev = curr;
+    curr = curr->next;
+  } while (curr != list);
+
+  return list;
 }
 
 Instant *deleteNode(Instant *list, Instant *node) {
-    if (list == nullptr) return nullptr; 
+    if (list == nullptr) return nullptr;
     else if (node == nullptr) return list;
 
     // Check for the first node
@@ -241,25 +259,27 @@ Instant *deleteNode(Instant *list, Instant *node) {
 }
 
 Climate *deleteNode(Climate *list, Climate *node) {
-    if (list == nullptr) return nullptr; 
-    else if (node == nullptr) return list;
-
-    // Check for the first node
-    if (list->id == node->id) {
-        return list->next;
-    }
-
-    Climate *curr = list;
-    Climate *prev;
-    while (curr != nullptr) {
-        if (curr->id == node->id) {
-            prev->next = curr->next;
-        }
-        prev = curr;
-        curr = curr->next;
-    }
-
+  if (list == nullptr)
+    return nullptr;
+  else if (node == nullptr)
     return list;
+
+  // Check for the first node
+  if (list->id == node->id) {
+    return list->next;
+  }
+
+  Climate *curr = list;
+  Climate *prev;
+  while (curr != nullptr) {
+    if (curr->id == node->id) {
+      prev->next = curr->next;
+    }
+    prev = curr;
+    curr = curr->next;
+  }
+
+  return list;
 }
 
 double getDouble(std::string message) {

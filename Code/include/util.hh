@@ -97,6 +97,11 @@ template <typename T> T *insert(T *list, T *node) {
 Climate *deleteNode(Climate *list, Climate *node);
 
 /**
+ * Flush flushes stdin
+ */
+void flush();
+
+/**
  * Do a safe validation to the user input for integers values
  *
  * @param message The message to display every time that the input fails
