@@ -30,11 +30,10 @@ void Climate::append(Climate *node) {
 }
 
 void Climate::show() {
-    // TODO: Show more data
     Climate *curr = this;
 
     while (curr != nullptr) {
-        printf("\nClimate: %s\n", curr->id.c_str());
+        printf("\n%s\n", curr->str().c_str());
         printf("Associate rain: \n\tID: %s\n\tName: %s\n", curr->rain->id.c_str(), curr->rain->name.c_str());
         curr = curr->next;
     }
@@ -61,9 +60,53 @@ Climate *Climate::search(std::string id) {
 }
 
 std::string Climate::str() {
-    std::string myStr;
-    std::ostringstream os;
-    os << "\tClimate ID: " << id << "\n\tClimate location: " << place->name << "\n";
-    myStr = os.str(); //now convert stream to my_str string
-    return myStr;
+    std::ostringstream out;
+    char endBuf[13];
+    char startBuf[13];
+    char dateBuf[200];
+
+    tm *datetmp = gmtime(&this->date);
+    strftime(dateBuf, sizeof(dateBuf), "%a %b %d %Y", datetmp);
+
+    tm *endtmp = gmtime(&this->endTime);
+    strftime(endBuf, sizeof(endBuf), "%H:%M:%S", endtmp);
+
+    tm *starttmp = gmtime(&this->startTime);
+    strftime(startBuf, sizeof(startBuf), "%H:%M:%S", starttmp);
+
+    std::string rainState = (itRained) ? "Yes" : "No";
+
+    out << "Climate ID: " << this->id << "\nClimate location: " << place->name 
+        << "\nPrecipitation: " << this->precipitation << "\nMaximum temperature: " 
+        << this->maxTemp << "\nMinimum temperature: " << this->minTemp 
+        << "\nWind speed: " << this->windSpeed << "\nHumidity: " << this->humidity 
+        << "\nWind direction: " << this->windDirection << "\nRain: " << rainState 
+        << "\nDate: " << dateBuf << "\nEnd Time: " << endBuf << "\nStart Time: " << startBuf;
+    return out.str();
+}
+
+std::string Climate::tstr() {
+    std::ostringstream out;
+    char endBuf[13];
+    char startBuf[13];
+    char dateBuf[200];
+
+    tm *datetmp = gmtime(&this->date);
+    strftime(dateBuf, sizeof(dateBuf), "%a %b %d %Y", datetmp);
+
+    tm *endtmp = gmtime(&this->endTime);
+    strftime(endBuf, sizeof(endBuf), "%H:%M:%S", endtmp);
+
+    tm *starttmp = gmtime(&this->startTime);
+    strftime(startBuf, sizeof(startBuf), "%H:%M:%S", starttmp);
+
+    std::string rainState = (itRained) ? "Yes" : "No";
+
+    out << "\tClimate ID: " << this->id << "\n\tClimate location: " << place->name 
+        << "\n\tPrecipitation: " << this->precipitation << "\n\tMaximum temperature: " 
+        << this->maxTemp << "\n\tMinimum temperature: " << this->minTemp 
+        << "\n\tWind speed: " << this->windSpeed << "\n\tHumidity: " << this->humidity 
+        << "\n\tWind direction: " << this->windDirection << "\n\tRain: " << rainState 
+        << "\n\tDate: " << dateBuf << "\n\tEnd Time: " << endBuf << "\n\tStart Time: " << startBuf;
+    return out.str();
 }
