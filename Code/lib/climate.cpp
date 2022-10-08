@@ -13,6 +13,7 @@
 #include <cstdio>
 #include <sstream>
 
+/// See the Climate header file for the documentation
 Climate::Climate(std::string id, double precipitation, double maxTemp, double minTemp, double windSpeed, double humidity, char windDirection, bool itRained, time_t date, time_t startTime, time_t endTime, Rain *rain, Place *place, Person *person) {
     this->id = id;
     this->precipitation = precipitation;
@@ -30,6 +31,7 @@ Climate::Climate(std::string id, double precipitation, double maxTemp, double mi
     this->person = person;
 }
 
+/// See the Climate header file for the documentation
 void Climate::append(Climate *node) {
     Climate *curr = this;
 
@@ -38,6 +40,7 @@ void Climate::append(Climate *node) {
     curr->next = node;
 }
 
+/// See the Climate header file for the documentation
 void Climate::show() {
     Climate *curr = this;
 
@@ -48,6 +51,7 @@ void Climate::show() {
     }
 }
 
+/// See the Climate header file for the documentation
 void Climate::showById() {
     Climate *curr = this;
 
@@ -57,6 +61,7 @@ void Climate::showById() {
     }
 }
 
+/// See the Climate header file for the documentation
 Climate *Climate::search(std::string id) {
     Climate *curr = this;
 
@@ -68,6 +73,7 @@ Climate *Climate::search(std::string id) {
     return nullptr;
 }
 
+/// See the Climate header file for the documentation
 std::string Climate::str() {
     std::ostringstream out;
     char endBuf[13];
@@ -94,6 +100,7 @@ std::string Climate::str() {
     return out.str();
 }
 
+/// See the Climate header file for the documentation
 std::string Climate::tstr() {
     std::ostringstream out;
     char endBuf[13];
