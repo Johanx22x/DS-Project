@@ -215,8 +215,8 @@ MenuItem *consultationMenu[] = {
             std::cout << "\nMax and Min start time (tie): \n"
                       << max->str() << "\n";
           } else {
-            std::cout << "\nMax start time: \n"
-                      << max->str() << "\n\nMin start time: \n"
+            std::cout << "\nMin start time: \n"
+                      << max->str() << "\n\nMax start time: \n"
                       << min->str() << "\n";
           }
 

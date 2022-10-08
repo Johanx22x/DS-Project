@@ -132,67 +132,67 @@ Program::Program() {
   this->rains = insert(this->rains, rainThirteen);
 
   Climate *climateOne = new Climate("2", 4.1, 28.1, 22.1, 0.1, 83.12, 'S', true, 1661247440, 1661247440, 1661249940, rainOne, santaElena, johan);
-  this->climates->append(climateOne);
+  this->climates = sortedInsert(this->climates, climateOne);
   santaElena->climate = new Proxy(climateOne);
   johan->climates = new Proxy(climateOne);
 
   Climate *climateTwo = new Climate("3", 8.2, 31.1, 25.2, 2.5, 23.41, 'W', false, 1665147440, 1665147440, 1665147823, rainTwo, santaCecilia, johan);
-  this->climates->append(climateTwo);
+  this->climates = sortedInsert(this->climates, climateTwo);
   santaCecilia->climate = new Proxy(climateTwo);
   johan->climates->append(new Proxy(climateTwo));
 
   Climate *climateThree = new Climate("4", 1.2, 29.2, 18.5, 8.3, 74.31, 'E', false, 1664347440, 1664347440, 1661247440, rainThree, guapiles, maria);
-  this->climates->append(climateThree);
+  this->climates = sortedInsert(this->climates, climateThree);
   guapiles->climate = new Proxy(climateThree);
   maria->climates = new Proxy(climateThree);
 
   Climate *climateFour = new Climate("5", 5.3, 29.2, 23.1, 5.2, 41.21, 'S', false, 1661947440, 1661947440, 1665231440, rainFour, sanRamonPlace, gabriel);
-  this->climates->append(climateFour);
+  this->climates = sortedInsert(this->climates, climateFour);
   sanRamonPlace->climate = new Proxy(climateFour);
   gabriel->climates = new Proxy(climateFour);
 
   Climate *climateFive = new Climate("6", 9.1, 29.4, 27.7, 5.1, 84.92, 'N', true, 1612347440, 1612347440, 1665148440, rainFive, sanRamonPlace, alonso);
-  this->climates->append(climateFive);
+  this->climates = sortedInsert(this->climates, climateFive);
   sanRamonPlace->climate->append(new Proxy(climateFive));
   alonso->climates = new Proxy(climateFive);
 
   Climate *climateSix = new Climate("7", 2.3, 30, 19.7, 31.2, 13.21, 'W', false, 1641342954, 1641306954, 1641342954, rainSix, ciudadQuesada, alonso);
-  this->climates->append(climateSix);
+  this->climates = sortedInsert(this->climates, climateSix);
   ciudadQuesada->climate = new Proxy(climateSix);
   alonso->climates->append(new Proxy(climateSix));
 
   Climate *climateSeven = new Climate("8", 9.8, 22.1, 19.7, 31.2, 13.21, 'E', true, 1642339614, 1642339614, 1642382814, rainSeven, ciudadQuesada, johan);
-  this->climates->append(climateSeven);
+  this->climates = sortedInsert(this->climates, climateSeven);
   ciudadQuesada->climate->append(new Proxy(climateSeven));
   johan->climates->append(new Proxy(climateSeven));
 
   Climate *climateEight = new Climate("9", 5.5, 28.2, 22.5, 12.2, 44.31, 'S', true, 1644416814, 1644416814, 1644463614, rainEight, ciudadQuesada, maria);
-  this->climates->append(climateEight);
+  this->climates = sortedInsert(this->climates, climateEight);
   ciudadQuesada->climate->append(new Proxy(climateEight));
   maria->climates->append(new Proxy(climateEight));
 
   Climate *climateNine = new Climate("10", 1.2, 35.2, 28.5, 4.2, 9.1, 'W', false, 1648824234, 1648824234, 1648857318, rainNine, ciudadQuesada, gabriel);
-  this->climates->append(climateNine);
+  this->climates = sortedInsert(this->climates, climateNine);
   ciudadQuesada->climate->append(new Proxy(climateNine));
   gabriel->climates->append(new Proxy(climateNine));
 
   Climate *climateTen = new Climate("11", 0.4, 37.6, 30.1, 2.3, 4.1, 'N', false, 1652273754, 1652273754, 1652321274, rainTen, ciudadQuesada, gabriel);
-  this->climates->append(climateTen);
+  this->climates = sortedInsert(this->climates, climateTen);
   ciudadQuesada->climate->append(new Proxy(climateTen));
   gabriel->climates->append(new Proxy(climateTen));
 
   Climate *climateEleven = new Climate("12", 6.4, 28.2, 20.5, 12.7, 31.2, 'N', true, 1660827954, 1660827954, 1660867554, rainEleven, ciudadQuesada, johan);
-  this->climates->append(climateEleven);
+  this->climates = sortedInsert(this->climates, climateEleven);
   ciudadQuesada->climate->append(new Proxy(climateEleven));
   johan->climates->append(new Proxy(climateEleven));
 
   Climate *climateTwelve= new Climate("13", 4.9, 30.6, 22.2, 10.3, 21.1, 'E', true, 1652321274, 1652321274, 1652481274, rainTwelve, ciudadQuesada, alonso);
-  this->climates->append(climateTwelve);
+  this->climates = sortedInsert(this->climates, climateTwelve);
   ciudadQuesada->climate->append(new Proxy(climateTwelve));
   alonso->climates->append(new Proxy(climateTwelve));
 
   Climate *climateThirteen = new Climate("14", 8.2, 29.7, 25.8, 15.9, 27.5, 'N', true, 1671967200, 1671967200, 1672022820, rainThirteen, ciudadQuesada, maria);
-  this->climates->append(climateThirteen);
+  this->climates = sortedInsert(this->climates, climateThirteen);
   ciudadQuesada->climate->append(new Proxy(climateThirteen));
   maria->climates->append(new Proxy(climateThirteen));
 

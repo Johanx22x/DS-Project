@@ -685,7 +685,7 @@ MenuItem *dataItems[] = {
         if (ctx->climates == nullptr) {
           ctx->climates = newClimate;
         } else {
-          ctx->climates->append(newClimate);
+          ctx->climates = sortedInsert(ctx->climates, newClimate);
         }
 
         if (foundPerson->climates == nullptr) {

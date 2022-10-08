@@ -32,15 +32,6 @@ Climate::Climate(std::string id, double precipitation, double maxTemp, double mi
 }
 
 /// See the Climate header file for the documentation
-void Climate::append(Climate *node) {
-    Climate *curr = this;
-
-    while (curr->next != nullptr) curr = curr->next;
-
-    curr->next = node;
-}
-
-/// See the Climate header file for the documentation
 void Climate::show() {
     Climate *curr = this;
 

@@ -86,65 +86,74 @@ Place *insert(Place *list, Place *node) {
 }
 
 /// See the documentation defined in the header file
-Instant *sortedInsert(Instant *list, Instant* node) {
-    if (list == nullptr) return node;
+Climate *sortedInsert(Climate *list, Climate *node) {
+    if (list == nullptr) return nullptr;
     if (node == nullptr) return list;
 
-    if (list->date > node->date) {
+    if (node->date < list->date) {
         node->next = list;
-        list->prev = node;
         return node;
     }
 
-    Instant *tmp = list;
+    Climate *curr = list;
+    Climate *prev;
 
-    while (node->date <= tmp->date) {
-        if (tmp->next == nullptr) break;
-        tmp = tmp->next;
+    while (curr != nullptr) {
+        if (node->date <= curr->date) {
+            if (prev->next == nullptr) {
+                prev->next = node;
+            } else {
+                node->next = prev->next;
+                prev->next = node;
+            }
+            return list;
+        }
+
+        prev = curr;
+        curr = curr->next;
     }
 
-    // case for when the new node ends up between 2 nodes
-    if (tmp->next != nullptr) {
-        node->next = tmp->next;
-        tmp->next->prev = node;
-        node->prev = tmp;
-        tmp->next = node;
-    } else { // this one executes if the new node ends up at the end
-        tmp->next = node;
-        node->prev = tmp;
-    }
+    prev->next = node;
 
     return list;
 }
 
 /// See the documentation defined in the header file
-Climate *sortedInsert(Climate *list, Climate *node) {
-  if (list == nullptr)
-    return node;
+Instant *sortedInsert(Instant *list, Instant* node) {
+    if (list == nullptr) return nullptr;
+    if (node == nullptr) return list;
 
-  if (list->date < node->date) {
-    node->next = list;
-    return node;
-  }
+    if (node->date < list->date) {
+        node->next = list;
+        list->prev = node;
+        return node;
+    }
 
-  Climate *tmp = list;
+    Instant *curr = list;
+    Instant *prev;
 
-  while (node->date > tmp->date) {
-    if (tmp->next == nullptr)
-      break;
-    tmp = tmp->next;
-  }
+    while (curr != nullptr) {
+        if (node->date <= curr->date) {
+            if (prev->next == nullptr) {
+                prev->next = node;
+                node->prev = curr;
+            } else {
+                node->next = prev->next;
+                node->prev = prev;
+                curr->prev = node;
+                prev->next = node;
+            }
+            return list;
+        }
 
-  if (tmp->next !=
-      nullptr) { // this executes when the new node ends up at the end
-    node->next = tmp->next;
-    tmp->next = node;
-  } else {
+        prev = curr;
+        curr = curr->next;
+    }
 
-    tmp->next = node;
-  }
+    prev->next = node;
+    node->prev = prev;
 
-  return list;
+    return list;
 }
 
 /// See the documentation defined in the header file
