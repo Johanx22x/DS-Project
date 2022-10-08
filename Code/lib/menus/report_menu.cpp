@@ -214,51 +214,83 @@ MenuItem *reportItems[] = {
           return CommandCodes::CONTINUE;
         }),
     new MenuItem(
-        7, "Not yet implemented!",
+        7, "Show the porcentage of rains of a given region and year",
         [](Menu *, Program *ctx) -> CommandCodes {
-          // TODO: implement function body
-          printf("Enter the year: ");
-          int year;
-          std::cin >> year;
-          flush();
+          // t represents today in milliseconds
+          time_t t = time(nullptr);
+          // today
+          tm *today = gmtime(&t);
+
+          int year = getInt("Type in the year");
+          while (year > (*today).tm_year + 1900) {
+            eprint("Invalid year!");
+            year = getInt("Type in the year");
+          }
 
           ctx->places->showByName();
-          printf("Enter the place name: ");
+          printf("Enter place name: ");
           std::string placeName;
+          std::cin.clear();
+          std::cin.ignore(INT32_MAX, '\n');
           getline(std::cin, placeName);
+
           Place *place = ctx->places->find(placeName);
 
-          std::unordered_map<int, std::unordered_map<std::string, int>> months =
-              std::unordered_map<int, std::unordered_map<std::string, int>>();
-
-          for (Proxy<Climate> *tmp = place->climate; tmp != nullptr;
-               tmp = tmp->next) {
-            std::unordered_map<std::string, int> tt =
-                std::unordered_map<std::string, int>();
+          if (place == nullptr) {
+            fprintf(stderr, "Couldn't find a place with that name!\n");
+            return CommandCodes::CONTINUE;
           }
+
+          Proxy<Climate> *tmp = place->climate;
+
+          while (tmp != nullptr) {
+            tm *date = (gmtime(&tmp->link->date));
+
+            if ((date->tm_year + 1900) == year) {
+                std::cout << tmp->link->rain->name;
+                // TODO: continue here implementing this report
+
+                // NOTE: For Aaron: obtenga e imprima los porcentajes de la clasificación de la lluvia de cada mes
+            }
+
+            tmp = tmp->next;
+          }
+
+          /* std::unordered_map<int, std::unordered_map<std::string, int>> months = */
+          /*     std::unordered_map<int, std::unordered_map<std::string, int>>(); */
+
+          // NOTE: The for commented below is bad, I don't know why but it's accessing to global elements, instead use a while like the above
+          /* for (Proxy<Climate> *tmp = place->climate; tmp != nullptr; */
+          /*      tmp = tmp->next) { */
+          /*   std::unordered_map<std::string, int> tt = */
+          /*       std::unordered_map<std::string, int>(); */
+          /* } */
 
           ctx->reports->display();
           return CommandCodes::CONTINUE;
         }),
-    new MenuItem(6, "Print non equal climate periods",
+    new MenuItem(6, "Print climate periods of a given year",
                  [](Menu *, Program *ctx) -> CommandCodes {
-                   // TODO: implement function body
+                  // t represents today in milliseconds
+                  time_t t = time(nullptr);
+                  // today
+                  tm *today = gmtime(&t);
 
-                   printf("Enter the year: ");
-                   int year;
-                   std::cin >> year;
-                   flush();
+                  int year = getInt("Type in the year");
+                  while (year > (*today).tm_year + 1900) {
+                    eprint("Invalid year!");
+                    year = getInt("Type in the year");
+                  }
 
-                   printf("0");
-                   std::vector<Period> periods = std::vector<Period>();
+                   /* std::vector<Period> periods = std::vector<Period>(); */
 
-                   std::stack<std::string> avgs = std::stack<std::string>();
+                   /* std::stack<std::string> avgs = std::stack<std::string>(); */
 
-                   for (Climate *tmp = ctx->climates; tmp != nullptr;
-                        tmp = tmp->next) {
+                   for (Climate *tmp = ctx->climates; tmp != nullptr; tmp = tmp->next) {
                      tm *__tm = gmtime(&tmp->date);
-                     if (__tm->tm_year + 1900 == year) {
-                       // TODO: 💀💀💀💀💀
+                     if ((__tm->tm_year + 1900) == year) {
+
+                        std::cout << tmp->rain->name << " " << tmp->rain->rainfall << "\n";
 
                        /* // WARNING: possible segfault due to uninitialized
                         * memory */
