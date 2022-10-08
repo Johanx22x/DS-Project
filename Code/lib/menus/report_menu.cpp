@@ -8,6 +8,7 @@
  * last modification: 08/10/2022
  */
 
+#include <array>
 #include <climate.hh>
 #include <command_codes.hh>
 #include <cstdint>
@@ -296,43 +297,46 @@ MenuItem *reportItems[] = {
             year = getInt("Type in the year");
           }
 
-          std::queue periods = std::queue<Period *>();
+          int sevenDays = 543600;
+
+          std::string months[] = {"January", "February", "March",
+                                  "April",   "May",      "June",
+                                  "July",    "August",   "September",
+                                  "October", "November", "December"};
 
           time_t first = 0;
           std::string firstType;
 
-          bool periodRegistration = false;
-
           for (Climate *tmp = ctx->climates; tmp != nullptr; tmp = tmp->next) {
             tm *__tm = gmtime(&tmp->date);
             if ((__tm->tm_year + 1900) == year) {
-              // TODO: find a way to implement this crap
-
               if (first == 0) {
                 first = tmp->date;
                 firstType = tmp->rain->fmtRainfall();
-                periodRegistration = true;
               }
 
-              if (first != tmp->date)
-                periodRegistration = true;
+              if ((tmp->date - first >= sevenDays || tmp->date - first < sevenDays) && (tmp->rain->fmtRainfall() == firstType)) {
+                  continue;
+              }
 
-              if (periodRegistration && first != tmp->date &&
-                  firstType.compare(tmp->rain->fmtRainfall()) != 0) {
-                periods.push(new Period(first, tmp->date, firstType));
-                periodRegistration = false;
+              if ((tmp->date - first >= sevenDays) && (tmp->rain->fmtRainfall() != firstType)) {
+                std::cout << "\nPeriod: " << firstType << "\n";
+
+                tm *start = gmtime(&first);
+                std::cout << "From " << months[start->tm_mon] << " " << start->tm_mday << " to "; 
+
+                tm *end = gmtime(&tmp->date);
+                std::cout << months[end->tm_mon] << " " << end->tm_mday << "\n";
+
+                first = tmp->date;
+                firstType = tmp->rain->fmtRainfall();
+              }
+
+              if ((tmp->date - first < sevenDays) && (tmp->rain->fmtRainfall() != firstType)) {
+                  first = tmp->date;
+                  firstType = tmp->rain->fmtRainfall();
               }
             }
-          }
-
-          while (!periods.empty()) {
-            Period *curr = periods.front();
-            std::cout << curr << "\n";
-            printf("nombre: %s\n inicio: %s\n final: %s\n",
-                   curr->climate.c_str(), asctime(gmtime(&curr->start)),
-                   asctime(gmtime(&curr->start)));
-
-            periods.pop();
           }
 
           ctx->reports->display();

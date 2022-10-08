@@ -54,6 +54,7 @@ public:
    */
   Rain *search(std::string id);
 
+    // TODO: Aaron must comment this
   std::string fmtRainfall();
   
 // TODO: Aaron must comment this
