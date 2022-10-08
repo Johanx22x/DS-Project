@@ -76,7 +76,6 @@ MenuItem *consultationMenu[] = {
           // validate the year, since this function asks the user for a year and
           // a place
           Climate *maxRr = nullptr;
-          Climate *maxDry = nullptr;
 
           Proxy<Climate> *tmp = found->climate;
 
@@ -102,7 +101,6 @@ MenuItem *consultationMenu[] = {
             if ((__t->tm_year + 1900) == year) {
               if (maxRr == nullptr) {
                 maxRr = tmpClt;
-                maxDry = tmpClt;
               }
 
               std::cout << tmpClt->str() << "\n";
