@@ -1,3 +1,13 @@
+/**
+ * Script to charge the data management MenuItems in the dinamic library
+ * Here is defined all the data management and functionality
+ *
+ * @author Johan Rodriguez
+ * @version 1.0
+ *
+ * last modification: 06/10/2022
+ */
+
 #include "command_codes.hh"
 #include <climits>
 #include <cstdint>
@@ -321,7 +331,7 @@ MenuItem *dataItems[] = {
                                     printf("\u001b[31mThe ID is the same as the "
                                             "current!\u001b[0m\n");
                                     continue;
-                                } else if (ctx->rains->search(newId) != nullptr) {
+                                } else if (ctx->climates->search(newId) != nullptr) {
                                     printf("\u001b[31mThe ID already exist! Choose another "
                                             "ID...\u001b[0m\n");
                                     continue;
@@ -362,7 +372,6 @@ MenuItem *dataItems[] = {
                             break;
                         }
                 case 7: {
-                            // FIXME: improve this
                             char windDirection = 0x00;
                             bool windFlag = false;
                             while (!windFlag) {
@@ -441,80 +450,67 @@ MenuItem *dataItems[] = {
                 case 12: {
                              Rain *rainToModify = toModify->rain;
 
-                             bool modifyFlag = true;
-                             while (modifyFlag) {
-                                 printf("\n(0) - Cancel\n");
-                                 printf("(1) - Modify id\n");
-                                 printf("(2) - Modify name\n");
-                                 printf("(3) - Modify rainfall value\n");
+                             printf("\n(0) - Cancel\n");
+                             printf("(1) - Modify id\n");
+                             printf("(2) - Modify name\n");
+                             printf("(3) - Modify rainfall value\n");
 
-                                 int modifyOption = getInt("Select an option");
-                                 while (modifyOption < 0 || modifyOption > 3) {
-                                     eprint("Invalid input");
-                                     modifyOption = getInt("Select an option");
-                                 }
-
-                                 switch (modifyOption) {
-                                     case 0: {
-                                                 modifyFlag = false;
-                                                 break;
-                                             }
-                                     case 1: {
-                                                 std::string newId;
-                                                 // Flush buffer
-                                                 std::cin.clear();
-                                                 std::cin.ignore(INT32_MAX, '\n');
-                                                 while (true) {
-                                                     printf("Enter the new id for the rain register: ");
-                                                     getline(std::cin, newId);
-                                                     if (id == newId) {
-                                                         printf("\u001b[31mThe ID is the same as the "
-                                                                 "current!\u001b[0m\n");
-                                                         continue;
-                                                     } else if (ctx->rains->search(newId) != nullptr) {
-                                                         printf("\u001b[31mThe ID already exist! Choose another "
-                                                                 "ID...\u001b[0m\n");
-                                                         continue;
-                                                     }
-                                                     rainToModify->id = newId;
-                                                     break;
-                                                 }
-                                                 break;
-                                             }
-                                     case 2: {
-                                                 printf("Enter the new name for the rain register: ");
-                                                 std::string newName;
-                                                 // Flush buffer
-                                                 std::cin.clear();
-                                                 std::cin.ignore(INT32_MAX, '\n');
-                                                 getline(std::cin, newName);
-                                                 rainToModify->name = newName;
-                                                 break;
-                                             }
-                                     case 3: {
-                                                 double newRainfall = getDouble("Enter the new rainfall value for the rain register");
-                                                 rainToModify->rainfall = newRainfall;
-                                                 break;
-                                             }
-                                 }
-                                 std::string attributeModify;
-                                 printf("Do you want to modify another information of this rain "
-                                         "register? [y/n]: ");
-                                 // Flush buffer
-                                 std::cin.clear();
-                                 std::cin.ignore(INT32_MAX, '\n');
-                                 getline(std::cin, attributeModify);
-                                 if (!(attributeModify == "y" || attributeModify == "Y")) {
-                                     break;
-                                 }
+                             int modifyOption = getInt("Select an option");
+                             while (modifyOption < 0 || modifyOption > 3) {
+                                 eprint("Invalid input");
+                                 modifyOption = getInt("Select an option");
                              }
-                             break;
+
+                             switch (modifyOption) {
+                                 case 0: {
+                                             break;
+                                         }
+                                 case 1: {
+                                             std::string newId;
+                                             // Flush buffer
+                                             std::cin.clear();
+                                             std::cin.ignore(INT32_MAX, '\n');
+                                             while (true) {
+                                                 printf("Enter the new id for the rain register: ");
+                                                 getline(std::cin, newId);
+                                                 if (id == newId) {
+                                                     printf("\u001b[31mThe ID is the same as the "
+                                                             "current!\u001b[0m\n");
+                                                     continue;
+                                                 } else if (ctx->rains->search(newId) != nullptr) {
+                                                     printf("\u001b[31mThe ID already exist! Choose another "
+                                                             "ID...\u001b[0m\n");
+                                                     continue;
+                                                 }
+                                                 rainToModify->id = newId;
+                                                 break;
+                                             }
+                                             break;
+                                         }
+                                 case 2: {
+                                             printf("Enter the new name for the rain register: ");
+                                             std::string newName;
+                                             // Flush buffer
+                                             std::cin.clear();
+                                             std::cin.ignore(INT32_MAX, '\n');
+                                             getline(std::cin, newName);
+                                             rainToModify->name = newName;
+                                             break;
+                                         }
+                                 case 3: {
+                                             double rainfall = getDouble("Enter the new average mm rainfall value of the rain");
+                                             while (rainfall < 0 || rainfall > 10) {
+                                                 eprint("The rainfall value must be between 0 and 10");
+                                                 rainfall = getDouble("Enter the average mm rainfall value of the rain");
+                                             }
+                                         }
+                                default:
+                                     break;
                          }
+                         break;
+            }
             }
             std::string attributeModify;
-            // Flush buffer
-            std::cin.clear();
-            std::cin.ignore(INT32_MAX, '\n');
             printf("Do you want to modify another information of this climate "
                     "register? [y/n]: ");
             getline(std::cin, attributeModify);
@@ -596,7 +592,6 @@ MenuItem *dataItems[] = {
 
         double humidity = getDouble("Enter the humidity");
 
-        // FIXME: improve this
         char windDirection = 0x00;
         bool windFlag = false;
         while (!windFlag) {
@@ -672,6 +667,10 @@ MenuItem *dataItems[] = {
         }
 
         double rainfall = getDouble("Enter the average mm rainfall value of the rain");
+        while (rainfall < 0 || rainfall > 10) {
+            eprint("The rainfall value must be between 0 and 10");
+            rainfall = getDouble("Enter the average mm rainfall value of the rain");
+        }
 
         Rain *newRain = new Rain(rainName, id, rainfall);
         if (ctx->rains == nullptr) {
@@ -686,7 +685,7 @@ MenuItem *dataItems[] = {
         if (ctx->climates == nullptr) {
           ctx->climates = newClimate;
         } else {
-          ctx->climates->append(newClimate);
+          ctx->climates = sortedInsert(ctx->climates, newClimate);
         }
 
         if (foundPerson->climates == nullptr) {
@@ -966,7 +965,6 @@ MenuItem *dataItems[] = {
           return CommandCodes::CONTINUE;
         }
 
-        // TODO: Validate user input (1 or 2)
         printf( "\n\u001b[34m%s - %s\u001b[0m\n", toModify->name.c_str(), toModify->id.c_str());
         printf("(0) - Cancel\n");
         printf("(1) - Modify this region register\n");
@@ -1334,7 +1332,7 @@ MenuItem *dataItems[] = {
         std::cin.ignore(INT32_MAX, '\n');
         getline(std::cin, location);
 
-        printf("Enter the date");
+        printf("Enter the date\n");
         time_t joinDate = getDate();
 
         if (ctx->people == nullptr) {
@@ -1344,7 +1342,7 @@ MenuItem *dataItems[] = {
                                 new Person(name, id, age, location, joinDate));
         }
         printf("\n\u001b[34m%s joined at %s\u001b[0m", name.c_str(),
-               asctime(gmtime(&joinDate)));
+               asctime(localtime(&joinDate)));
 
         ctx->dataManagement->display();
         return CommandCodes::CONTINUE;

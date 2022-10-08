@@ -1,4 +1,4 @@
-author: Johan Rodriguez, Gabriel Alfaro, Aaron Gonzalez
+author: Johan Rodriguez, Gabriel Alfaro y Aaron Gonzalez
 title: Proyecto Estructuras Dinámicas Lineales
 lang: es
 
@@ -10,7 +10,7 @@ classoption:
 
 header-includes: |
   \affiliation{Instituto Tecnologico de Costa Rica}
-  \course{Estructura de Datos}
+  \course{Estructuras de Datos}
   \professor{Lorena Valerio Solis}
   \duedate{2022}
   \venue{San Carlos}

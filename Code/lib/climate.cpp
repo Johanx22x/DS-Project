@@ -1,9 +1,19 @@
-//#include <bits/types/time_t.h>
+/**
+ * Here is defined all the climate methods from the climate header file
+ * See the header file to see the documentation of these methods
+ *
+ * @author Johan Rodriguez, Aaron Gonzalez
+ * @version 1.0
+ *
+ * last modification: 04/10/2022
+ */
+
 #include <person.hh>
 #include <climate.hh>
 #include <cstdio>
 #include <sstream>
 
+/// See the Climate header file for the documentation
 Climate::Climate(std::string id, double precipitation, double maxTemp, double minTemp, double windSpeed, double humidity, char windDirection, bool itRained, time_t date, time_t startTime, time_t endTime, Rain *rain, Place *place, Person *person) {
     this->id = id;
     this->precipitation = precipitation;
@@ -21,24 +31,18 @@ Climate::Climate(std::string id, double precipitation, double maxTemp, double mi
     this->person = person;
 }
 
-void Climate::append(Climate *node) {
-    Climate *curr = this;
-
-    while (curr->next != nullptr) curr = curr->next;
-
-    curr->next = node;
-}
-
+/// See the Climate header file for the documentation
 void Climate::show() {
     Climate *curr = this;
 
     while (curr != nullptr) {
         printf("\n%s\n", curr->str().c_str());
-        printf("Associate rain: \n\tID: %s\n\tName: %s\n", curr->rain->id.c_str(), curr->rain->name.c_str());
+        printf("Associate rain: \n\tID: %s\n\tName: %s\n\tRainfall: %s\n\tRainfall value: %f\n", curr->rain->id.c_str(), curr->rain->name.c_str(), curr->rain->fmtRainfall().c_str(), curr->rain->rainfall);
         curr = curr->next;
     }
 }
 
+/// See the Climate header file for the documentation
 void Climate::showById() {
     Climate *curr = this;
 
@@ -48,6 +52,7 @@ void Climate::showById() {
     }
 }
 
+/// See the Climate header file for the documentation
 Climate *Climate::search(std::string id) {
     Climate *curr = this;
 
@@ -59,19 +64,20 @@ Climate *Climate::search(std::string id) {
     return nullptr;
 }
 
+/// See the Climate header file for the documentation
 std::string Climate::str() {
     std::ostringstream out;
     char endBuf[13];
     char startBuf[13];
     char dateBuf[200];
 
-    tm *datetmp = gmtime(&this->date);
+    tm *datetmp = localtime(&this->date);
     strftime(dateBuf, sizeof(dateBuf), "%a %b %d %Y", datetmp);
 
-    tm *endtmp = gmtime(&this->endTime);
+    tm *endtmp = localtime(&this->endTime);
     strftime(endBuf, sizeof(endBuf), "%H:%M:%S", endtmp);
 
-    tm *starttmp = gmtime(&this->startTime);
+    tm *starttmp = localtime(&this->startTime);
     strftime(startBuf, sizeof(startBuf), "%H:%M:%S", starttmp);
 
     std::string rainState = (itRained) ? "Yes" : "No";
@@ -81,23 +87,24 @@ std::string Climate::str() {
         << this->maxTemp << "\nMinimum temperature: " << this->minTemp 
         << "\nWind speed: " << this->windSpeed << "\nHumidity: " << this->humidity 
         << "\nWind direction: " << this->windDirection << "\nRain: " << rainState 
-        << "\nDate: " << dateBuf << "\nEnd Time: " << endBuf << "\nStart Time: " << startBuf;
+        << "\nDate: " << dateBuf << "\nStart Time: " << startBuf << "\nEnd Time: " << endBuf;
     return out.str();
 }
 
+/// See the Climate header file for the documentation
 std::string Climate::tstr() {
     std::ostringstream out;
     char endBuf[13];
     char startBuf[13];
     char dateBuf[200];
 
-    tm *datetmp = gmtime(&this->date);
+    tm *datetmp = localtime(&this->date);
     strftime(dateBuf, sizeof(dateBuf), "%a %b %d %Y", datetmp);
 
-    tm *endtmp = gmtime(&this->endTime);
+    tm *endtmp = localtime(&this->endTime);
     strftime(endBuf, sizeof(endBuf), "%H:%M:%S", endtmp);
 
-    tm *starttmp = gmtime(&this->startTime);
+    tm *starttmp = localtime(&this->startTime);
     strftime(startBuf, sizeof(startBuf), "%H:%M:%S", starttmp);
 
     std::string rainState = (itRained) ? "Yes" : "No";

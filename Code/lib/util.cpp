@@ -1,3 +1,13 @@
+/**
+ * Here is implemented all the methods from the util header file
+ *
+ * @author Johan Rodriguez, Aaron Gonzalez
+ * @version 1.0
+ *
+ * last modification: 07/10/2022
+ */
+
+#include <cctype>
 #include <climate.hh>
 #include <climits>
 #include <clocale>
@@ -13,47 +23,54 @@
 #include <util.hh>
 #include <map>
 
+/// Flush the std::cin buffer
 void flush() {
-  char __c;
-  while ((__c = getchar() != '\n' && __c != EOF))
-    ;
+  char __c; 
+  while ((__c = getchar() != '\n' && __c != EOF)) ;
 }
 
-// FIXME: This function produces an error with lower and upper
-// TODO: Implement toLower() function to fix this error
+/// See the documentation defined in the header file
 Person *sortedInsert(Person *list, Person *node) {
-    if (list == nullptr) return node;
+    if (list == nullptr) return nullptr;
+    if (node == nullptr) return list;
 
-    if (list->name >= node->name) {
+    if (node->name < list->name) {
         node->next = list;
         list->prev = node;
         return node;
     }
 
-    Person *tmp = list;
+    Person *curr = list;
+    Person *prev;
 
-    while (node->name < tmp->name) {
-        if (tmp->next == nullptr) break;
-        tmp = tmp->next;
+    while (curr != nullptr) {
+        if (node->name <= curr->name) {
+            if (prev->next == nullptr) {
+                prev->next = node;
+                node->prev = curr;
+            } else {
+                node->next = prev->next;
+                node->prev = prev;
+                curr->prev = node;
+                prev->next = node;
+            }
+            return list;
+        }
+
+        prev = curr;
+        curr = curr->next;
     }
 
-    // case for when the new node ends up between 2 nodes
-    if (tmp->next != nullptr) {
-        node->next = tmp->next;
-        tmp->next->prev = node;
-        node->prev = tmp;
-        tmp->next = node;
-    } else { // this one executes if the new node ends up at the end
-        tmp->next = node;
-        node->prev = tmp;
-    }
+    prev->next = node;
+    node->prev = prev;
 
     return list;
 }
 
+/// See the documentation defined in the header file
 Place *insert(Place *list, Place *node) {
-  if (list == nullptr)
-    return node;
+  if (list == nullptr) return node;
+  if (node == nullptr) return list;
 
   node->next = list;
 
@@ -61,73 +78,85 @@ Place *insert(Place *list, Place *node) {
 
   do {
     curr = curr->next;
-  } while (curr != list);
+  } while (curr->next != list);
 
   curr->next = node;
 
-  return list;
+  return node;
 }
 
-Instant *sortedInsert(Instant *list, Instant* node) {
-    if (list == nullptr) return node;
+/// See the documentation defined in the header file
+Climate *sortedInsert(Climate *list, Climate *node) {
+    if (list == nullptr) return nullptr;
     if (node == nullptr) return list;
 
-    if (list->date < node->date) {
+    if (node->date < list->date) {
+        node->next = list;
+        return node;
+    }
+
+    Climate *curr = list;
+    Climate *prev;
+
+    while (curr != nullptr) {
+        if (node->date <= curr->date) {
+            if (prev->next == nullptr) {
+                prev->next = node;
+            } else {
+                node->next = prev->next;
+                prev->next = node;
+            }
+            return list;
+        }
+
+        prev = curr;
+        curr = curr->next;
+    }
+
+    prev->next = node;
+
+    return list;
+}
+
+/// See the documentation defined in the header file
+Instant *sortedInsert(Instant *list, Instant* node) {
+    if (list == nullptr) return nullptr;
+    if (node == nullptr) return list;
+
+    if (node->date < list->date) {
         node->next = list;
         list->prev = node;
         return node;
     }
 
-    Instant *tmp = list;
+    Instant *curr = list;
+    Instant *prev;
 
-    while (node->date > tmp->date) {
-        if (tmp->next == nullptr) break;
-        tmp = tmp->next;
+    while (curr != nullptr) {
+        if (node->date <= curr->date) {
+            if (prev->next == nullptr) {
+                prev->next = node;
+                node->prev = curr;
+            } else {
+                node->next = prev->next;
+                node->prev = prev;
+                curr->prev = node;
+                prev->next = node;
+            }
+            return list;
+        }
+
+        prev = curr;
+        curr = curr->next;
     }
 
-    // case for when the new node ends up between 2 nodes
-    if (tmp->next != nullptr) {
-        node->next = tmp->next;
-        tmp->next->prev = node;
-        node->prev = tmp;
-        tmp->next = node;
-    } else { // this one executes if the new node ends up at the end
-        tmp->next = node;
-        node->prev = tmp;
-    }
+    prev->next = node;
+    node->prev = prev;
 
     return list;
 }
 
-Climate *sortedInsert(Climate *list, Climate *node) {
-  if (list == nullptr)
-    return node;
-
-  if (list->date < node->date) {
-    node->next = list;
-    return node;
-  }
-
-  Climate *tmp = list;
-
-  while (node->date > tmp->date) {
-    if (tmp->next == nullptr)
-      break;
-    tmp = tmp->next;
-  }
-
-  if (tmp->next !=
-      nullptr) { // this executes when the new node ends up at the end
-    node->next = tmp->next;
-    tmp->next = node;
-  } else {
-
-    tmp->next = node;
-  }
-
-  return list;
-}
-
+/// See the documentation defined in the header file
 Person *deleteNode(Person *list, Person *node) {
     if (list == nullptr) return nullptr;
     else if (node == nullptr) return list;
@@ -155,6 +184,7 @@ Person *deleteNode(Person *list, Person *node) {
     return list;
 }
 
+/// See the documentation defined in the header file
 Rain *deleteNode(Rain *list, Rain *node) {
   if (list == nullptr)
     return nullptr;
@@ -179,6 +209,7 @@ Rain *deleteNode(Rain *list, Rain *node) {
   return list;
 }
 
+/// See the documentation defined in the header file
 Region *deleteNode(Region *list, Region *node) {
   if (list == nullptr)
     return nullptr;
@@ -203,6 +234,7 @@ Region *deleteNode(Region *list, Region *node) {
   return list;
 }
 
+/// See the documentation defined in the header file
 Place *deleteNode(Place *list, Place *node) {
   if (list == nullptr)
     return nullptr;
@@ -231,6 +263,7 @@ Place *deleteNode(Place *list, Place *node) {
   return list;
 }
 
+/// See the documentation defined in the header file
 Instant *deleteNode(Instant *list, Instant *node) {
     if (list == nullptr) return nullptr;
     else if (node == nullptr) return list;
@@ -258,6 +291,7 @@ Instant *deleteNode(Instant *list, Instant *node) {
     return list;
 }
 
+/// See the documentation defined in the header file
 Climate *deleteNode(Climate *list, Climate *node) {
   if (list == nullptr)
     return nullptr;
@@ -282,6 +316,7 @@ Climate *deleteNode(Climate *list, Climate *node) {
   return list;
 }
 
+/// See the documentation defined in the header file
 double getDouble(std::string message) {
     double input;
     bool valid = false;
@@ -303,6 +338,7 @@ double getDouble(std::string message) {
     return input;
 }
 
+/// See the documentation defined in the header file
 int getInt(std::string message) {
     int input;
     bool valid = false;
@@ -324,14 +360,17 @@ int getInt(std::string message) {
     return input;
 }
 
+/// See the documentation defined in the header file
 void eprint(std::string message) {
     printf("\u001b[31m%s\u001b[0m\n", message.c_str());
 }
 
+/// See the documentation defined in the header file
 void printValid(std::string message) {
     printf("\u001b[34m%s\u001b[0m\n", message.c_str());
 }
 
+/// See the documentation defined in the header file
 time_t getDate() {
     time_t now = time(0);
     tm *newTime = localtime(&now);
@@ -383,6 +422,7 @@ time_t getDate() {
     return time;
 }
 
+/// See the documentation defined in the header file
 time_t getTime() {
     time_t now = time(0);
     tm *newTime = localtime(&now);
@@ -396,7 +436,7 @@ time_t getTime() {
     newTime->tm_hour = hours - 6;
 
     int minutes = getInt("Enter the minutes");
-    while (minutes < 1 || minutes > 59) {
+    while (minutes < 0 || minutes > 59) {
         eprint("Invalid input, must be a number between 1 and 59!");
         minutes = getInt("Enter the minutes");
     }

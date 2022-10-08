@@ -1,12 +1,24 @@
+/**
+ * In this header file is defined all the Menu and MenuItem class behavior and parameters
+ *
+ * @author Johan Rodriguez, Aaron Gonzalez
+ * @version 1.0
+ *
+ * last modification: 04/09/2022
+ */
+
 #pragma once
 #include "command_codes.hh"
 #include <cstdint>
 #include <map>
-/* #include <program.hh> */
 #include <string>
 
+// typedef to manage the lambda types and return values
 typedef CommandCodes(action)(class Menu *, class Program *);
 
+/**
+ * Class that represents a Menu Item
+ */
 class MenuItem {
 public:
   int8_t id;
@@ -33,6 +45,9 @@ public:
   MenuItem *withContext(class Program *ctx);
 };
 
+/**
+ * Class that represents the a Menu in the system
+ */
 class Menu {
   std::string name;
   std::map<int8_t, MenuItem *> options = std::map<int8_t, MenuItem *>();

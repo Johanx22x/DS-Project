@@ -1,126 +1,336 @@
+/**
+ * Script to charge the reports MenuItems in the dinamic library
+ * Here is defined all the report management and functionality
+ *
+ * @author Aaron Gonzalez, Johan Rodriguez
+ * @version 1.0
+ *
+ * last modification: 08/10/2022
+ */
+
+#include <array>
 #include <climate.hh>
 #include <command_codes.hh>
 #include <cstdint>
 #include <cstdio>
+#include <ctime>
+#include <iterator>
 #include <map>
 #include <menu.hh>
 #include <place.hh>
 #include <program.hh>
+#include <queue>
 #include <rain.hh>
-#include <stack>
 #include <string>
 #include <unordered_map>
 #include <util.hh>
 #include <vector>
 
-struct Period {
-  time_t start = 0;
-  time_t end = 0;
-  std::string average;
-};
-static double paverage(Proxy<Rain> *);
-static std::string fmtAverage(Proxy<Rain> *);
-
+std::string monthName[] = {"January",   "February", "March",    "April",
+                           "May",       "June",     "July",     "August",
+                           "September", "October",  "November", "December"};
 extern "C" {
 
-// TODO: Implement all the 9 items of reports
 MenuItem *reportItems[] = {
-    new MenuItem(9, "Not yet implemented!",
-                 [](Menu *, Program *ctx) -> CommandCodes {
-                   // TODO: implement function body
-                   ctx->reports->display();
-                   return CommandCodes::CONTINUE;
-                 }),
-    new MenuItem(8, "Not yet implemented!",
-                 [](Menu *, Program *ctx) -> CommandCodes {
-                   // TODO: implement function body
-                   ctx->reports->display();
-                   return CommandCodes::CONTINUE;
-                 }),
     new MenuItem(
-        7, "Not yet implemented!",
+        9,
+        "Max and min temperature register of a given year and place per month",
         [](Menu *, Program *ctx) -> CommandCodes {
-          // TODO: implement function body
-          printf("Enter the year: ");
-          int year;
-          std::cin >> year;
-          flush();
+          // t represents today in milliseconds
+          time_t t = time(nullptr);
+          // today
+          tm *today = localtime(&t);
 
-          printf("Enter the place name: ");
+          int year = getInt("Type in the year");
+          while (year > (*today).tm_year + 1900) {
+            eprint("Invalid year!");
+            year = getInt("Type in the year");
+          }
+
+          ctx->places->showByName();
+          printf("Enter place name: ");
           std::string placeName;
+          std::cin.clear();
+          std::cin.ignore(INT32_MAX, '\n');
           getline(std::cin, placeName);
+
           Place *place = ctx->places->find(placeName);
 
-          std::unordered_map<int, std::unordered_map<std::string, int>> months =
-              std::unordered_map<int, std::unordered_map<std::string, int>>();
+          if (place == nullptr) {
+            fprintf(stderr, "Couldn't find a place with that name!\n");
+            return CommandCodes::CONTINUE;
+          }
 
-          for (Proxy<Climate> *tmp = place->climate; tmp != nullptr;
-               tmp = tmp->next) {
-            std::unordered_map<std::string, int> tt =
-                std::unordered_map<std::string, int>();
+          // empty months map container
+          std::map<int, double> monthsMinTemp;
+          // insert elements in random order
+          monthsMinTemp.insert(std::pair<int, double>(1, 1000.0));
+          monthsMinTemp.insert(std::pair<int, double>(2, 1000.0));
+          monthsMinTemp.insert(std::pair<int, double>(3, 1000.0));
+          monthsMinTemp.insert(std::pair<int, double>(4, 1000.0));
+          monthsMinTemp.insert(std::pair<int, double>(5, 1000.0));
+          monthsMinTemp.insert(std::pair<int, double>(6, 1000.0));
+          monthsMinTemp.insert(std::pair<int, double>(7, 1000.0));
+          monthsMinTemp.insert(std::pair<int, double>(8, 1000.0));
+          monthsMinTemp.insert(std::pair<int, double>(9, 1000.0));
+          monthsMinTemp.insert(std::pair<int, double>(10, 1000.0));
+          monthsMinTemp.insert(std::pair<int, double>(11, 1000.0));
+          monthsMinTemp.insert(std::pair<int, double>(12, 1000.0));
+
+          // empty months map container
+          std::map<int, double> monthsMaxTemp;
+          // insert elements in random order
+          monthsMaxTemp.insert(std::pair<int, double>(1, 0.0));
+          monthsMaxTemp.insert(std::pair<int, double>(2, 0.0));
+          monthsMaxTemp.insert(std::pair<int, double>(3, 0.0));
+          monthsMaxTemp.insert(std::pair<int, double>(4, 0.0));
+          monthsMaxTemp.insert(std::pair<int, double>(5, 0.0));
+          monthsMaxTemp.insert(std::pair<int, double>(6, 0.0));
+          monthsMaxTemp.insert(std::pair<int, double>(7, 0.0));
+          monthsMaxTemp.insert(std::pair<int, double>(8, 0.0));
+          monthsMaxTemp.insert(std::pair<int, double>(9, 0.0));
+          monthsMaxTemp.insert(std::pair<int, double>(10, 0.0));
+          monthsMaxTemp.insert(std::pair<int, double>(11, 0.0));
+          monthsMaxTemp.insert(std::pair<int, double>(12, 0.0));
+
+          // calculate max endTime
+          for (Climate *tmp = ctx->climates; tmp != nullptr; tmp = tmp->next) {
+            tm *date = (localtime(&tmp->date));
+            if ((date->tm_year + 1900) == year) {
+              if (tmp->place->name == place->name) {
+                int month = date->tm_mon;
+                double maxTemp = monthsMaxTemp.upper_bound(month)->second;
+                double minTemp = monthsMinTemp.upper_bound(month)->second;
+
+                if (tmp->maxTemp > maxTemp) {
+                  monthsMaxTemp.upper_bound(month)->second = tmp->maxTemp;
+                }
+                if (tmp->minTemp < minTemp) {
+                  monthsMinTemp.upper_bound(month)->second = tmp->minTemp;
+                }
+              }
+            }
+          }
+
+          printf("\nPlace: %s\n", place->name.c_str());
+          for (size_t i = 0; i < monthsMaxTemp.size(); i++) {
+            double maxTemp = monthsMaxTemp.upper_bound(i)->second;
+            double minTemp = monthsMinTemp.upper_bound(i)->second;
+
+            std::string monthstr = monthName[i];
+
+            printf("\u001b[34mMonth: %s\u001b[0m\n", monthstr.c_str());
+            printf("Maximum temperature -> %f\n", maxTemp);
+            if (minTemp == 1000) {
+              printf("Minimum temperature -> %f\n\n", 0.0);
+            } else {
+              printf("Minimum temperature -> %f\n\n", minTemp);
+            }
           }
 
           ctx->reports->display();
           return CommandCodes::CONTINUE;
         }),
-    new MenuItem(6, "Print non equal climate periods",
+    new MenuItem(
+        8,
+        "Display the amount of rainy days of a given year and place per month",
+        [](Menu *, Program *ctx) -> CommandCodes {
+          // t represents today in milliseconds
+          time_t t = time(nullptr);
+          // today
+          tm *today = localtime(&t);
+
+          int year = getInt("Type in the year");
+          while (year > (*today).tm_year + 1900) {
+            eprint("Invalid year!");
+            year = getInt("Type in the year");
+          }
+
+          ctx->places->showByName();
+          printf("Enter place name: ");
+          std::string placeName;
+          std::cin.clear();
+          std::cin.ignore(INT32_MAX, '\n');
+          getline(std::cin, placeName);
+
+          Place *place = ctx->places->find(placeName);
+
+          if (place == nullptr) {
+            fprintf(stderr, "Couldn't find a place with that name!\n");
+            return CommandCodes::CONTINUE;
+          }
+
+          // empty months map container
+          std::map<int, int> rainyDays;
+          // insert elements in random order
+          rainyDays.insert(std::pair<int, int>(2, 0));
+          rainyDays.insert(std::pair<int, int>(3, 0));
+          rainyDays.insert(std::pair<int, int>(4, 0));
+          rainyDays.insert(std::pair<int, int>(5, 0));
+          rainyDays.insert(std::pair<int, int>(6, 0));
+          rainyDays.insert(std::pair<int, int>(7, 0));
+          rainyDays.insert(std::pair<int, int>(8, 0));
+          rainyDays.insert(std::pair<int, int>(9, 0));
+          rainyDays.insert(std::pair<int, int>(10, 0));
+          rainyDays.insert(std::pair<int, int>(11, 0));
+          rainyDays.insert(std::pair<int, int>(12, 0));
+          rainyDays.insert(std::pair<int, int>(13, 0));
+
+          for (Climate *tmp = ctx->climates; tmp != nullptr; tmp = tmp->next) {
+            tm *date = (localtime(&tmp->date));
+            if ((date->tm_year + 1900) == year) {
+              if (tmp->place->name == place->name) {
+                int month = date->tm_mon + 1;
+
+                if (tmp->itRained) {
+                  rainyDays.upper_bound(month)->second++;
+                }
+              }
+            }
+          }
+
+          std::string monthName[] = {"January", "February", "March",
+                                     "April",   "May",      "June",
+                                     "July",    "August",   "September",
+                                     "October", "November", "December"};
+          printf("\nPlace: %s\n", place->name.c_str());
+          for (size_t i = 0; i < rainyDays.size(); i++) {
+            int rainMonth = rainyDays.upper_bound(i)->second;
+
+            std::string monthstr = monthName[i];
+            printf("\u001b[34mMonth: %s\u001b[0m\n", monthstr.c_str());
+            printf("Rain days: %d\n\n", rainMonth);
+          }
+          ctx->reports->display();
+          return CommandCodes::CONTINUE;
+        }),
+    new MenuItem(7, "Show the porcentage of rains of a given region and year",
                  [](Menu *, Program *ctx) -> CommandCodes {
-                   // TODO: implement function body
+                   // t represents today in milliseconds
+                   time_t t = time(nullptr);
+                   // today
+                   tm *today = localtime(&t);
 
-                   printf("Enter the year: ");
-                   int year;
-                   std::cin >> year;
-                   flush();
+                   int year = getInt("Type in the year");
+                   while (year > (*today).tm_year + 1900) {
+                     eprint("Invalid year!");
+                     year = getInt("Type in the year");
+                   }
 
-                   printf("0");
-                   std::vector<Period> periods = std::vector<Period>();
+                   ctx->places->showByName();
+                   printf("Enter place name: ");
+                   std::string placeName;
+                   std::cin.clear();
+                   std::cin.ignore(INT32_MAX, '\n');
+                   getline(std::cin, placeName);
 
-                   std::stack<std::string> avgs = std::stack<std::string>();
+                   Place *place = ctx->places->find(placeName);
 
-                   for (Climate *tmp = ctx->climates; tmp != nullptr;
-                        tmp = tmp->next) {
-                     tm *__tm = gmtime(&tmp->date);
-                     if (__tm->tm_year + 1900 == year) {
-                       // TODO: 💀💀💀💀💀
+                   if (place == nullptr) {
+                     eprint("Couldn't find a place with that name!");
+                     return CommandCodes::CONTINUE;
+                   }
 
-                       /* // WARNING: possible segfault due to uninitialized
-                        * memory */
-                       /* Period *currP = periods.at(currentPeriod); */
-                       /* if (currP == nullptr) { */
-                       /*   fprintf(stderr, "No periods registered"); */
-                       /*   continue; */
-                       /* } */
+                   Proxy<Climate> *tmp = place->climate;
 
-                       /* if (periods.at(currentPeriod) */
-                       /*         ->average.compare(tmp->rain->fmtAverage()) !=
-                        * 0) { */
-                       /*   currentPeriod++; */
-                       /* } */
-                       /* if (currP->start > tmp->date) { */
-                       /*   currP->start = tmp->date; */
-                       /* } else if (currP->end < tmp->date) { */
-                       /*   currP->end = tmp->date; */
-                       /* } */
+                   std::map<int, std::map<std::string, int>> rains =
+                       std::map<int, std::map<std::string, int>>();
 
-                       /* periods[currentPeriod] = currP; */
+                   int totalRains[12] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+                   while (tmp != nullptr) {
+                     tm *date = (localtime(&tmp->link->date));
+
+                     if ((date->tm_year + 1900) == year) {
+                       rains[date->tm_mon][tmp->link->rain->fmtRainfall()] += 1;
+                       totalRains[date->tm_mon] += 1;
+                     }
+
+                     tmp = tmp->next;
+                   }
+
+                   for (const auto &[month, val] : rains) {
+                     std::cout << "\n\u001b[4;34m" << monthName[month] << "\u001b[0m\n";
+                     for (const auto &[type, amt] : val) {
+                       std::cout << type << ": "
+                                 << (amt * 100) / totalRains[month] << "%\n";
                      }
                    }
-                   /* for (const Period *period : periods) { */
-                   /*   printf("%s from %s to %s\n", period->average.c_str(), */
-                   /*          asctime(gmtime(&period->start)), */
-                   /*          asctime(gmtime(&period->end))); */
-                   /* } */
 
                    ctx->reports->display();
                    return CommandCodes::CONTINUE;
                  }),
     new MenuItem(
+        6, "Print climate periods of a given year",
+        [](Menu *, Program *ctx) -> CommandCodes {
+          // t represents today in milliseconds
+          time_t t = time(nullptr);
+          // today
+          tm *today = localtime(&t);
+
+          int year = getInt("Type in the year");
+          while (year > (*today).tm_year + 1900) {
+            eprint("Invalid year!");
+            year = getInt("Type in the year");
+          }
+
+          // 0x84b70 represents seven days from the Unix TimeStamp origin
+          const int SEVEN_DAYS = 0x84b70;
+
+          std::string months[] = {"January", "February", "March",
+                                  "April",   "May",      "June",
+                                  "July",    "August",   "September",
+                                  "October", "November", "December"};
+
+          time_t first = 0;
+          std::string firstType;
+
+          bool userFeedback = false;
+
+          for (Climate *tmp = ctx->climates; tmp != nullptr; tmp = tmp->next) {
+            tm *__tm = localtime(&tmp->date);
+            if ((__tm->tm_year + 1900) == year) {
+              if (first == 0) {
+                first = tmp->date;
+                firstType = tmp->rain->fmtRainfall();
+              }
+
+              if ((tmp->date - first < SEVEN_DAYS) && (tmp->rain->fmtRainfall() != firstType)) {
+                  first = tmp->date;
+                  firstType = tmp->rain->fmtRainfall();
+              }
+
+              if ((tmp->date - first >= SEVEN_DAYS || tmp->date - first < SEVEN_DAYS) && (tmp->rain->fmtRainfall() == firstType)) {
+                  continue;
+              }
+
+              if ((tmp->date - first >= SEVEN_DAYS) && (tmp->rain->fmtRainfall() != firstType)) {
+                std::cout << "\n\u001b[34mPeriod: " << firstType << "\u001b[0m\n";
+
+                std::cout << "From " << months[localtime(&first)->tm_mon] << " " << localtime(&first)->tm_mday << " to "; 
+
+                std::cout << months[localtime(&tmp->date)->tm_mon] << " " << localtime(&tmp->date)->tm_mday << "\n";
+
+                firstType = tmp->rain->fmtRainfall();
+                first = tmp->date;
+
+                userFeedback = true;
+              }
+            }
+          }
+
+          if (!userFeedback) {
+            eprint("No time period was found for the given year");
+          }
+
+          ctx->reports->display();
+          return CommandCodes::CONTINUE;
+        }),
+    new MenuItem(
         5, "Show climate values for a given region within a given time period",
         [](Menu *, Program *ctx) -> CommandCodes {
-          // TODO: implement function body
           int range[2] = {};
 
-          printf("Enter perdiod start year: ");
+          printf("Enter period start year: ");
           std::cin >> range[0];
           flush();
 
@@ -133,62 +343,64 @@ MenuItem *reportItems[] = {
           printf("Enter region id: ");
           std::string regionId;
           getline(std::cin, regionId);
-          /* flush(); */
-
-          printf("DEBUG: Region ID: %s\n", regionId.c_str());
 
           Region *region = ctx->regions->search(regionId);
 
           if (region == nullptr) {
-            fprintf(stderr, "Couldn't find a region with that name!\n");
+            eprint("Couldn't find a region with that name!");
+            ctx->reports->display();
             return CommandCodes::CONTINUE;
           }
 
-          for (Proxy<Place> *tmp = region->places; tmp != nullptr;
-               tmp = tmp->next) {
+          Proxy<Place> *tmp = region->places;
+
+          while (tmp != nullptr) {
+            /* if (tmp->link == nullptr) continue; */
             int rainyDays = 0;
             double rainfall = 0;
             double maxTmp = 0;
-            double minTmp = 0;
-
+            double minTmp = 10000;
             bool shouldPrint = false;
-            for (Climate *cTmp = tmp->link->climate->link; cTmp != nullptr;
-                 cTmp = cTmp->next) {
 
-              tm *__tm = gmtime(&cTmp->date);
+            std::cout << tmp->link->name << "\n";
+
+            Proxy<Climate> *cTmp = tmp->link->climate;
+            /* if (cTmp->link == nullptr) continue; */
+
+            while (cTmp != nullptr) {
+              tm *__tm = localtime(&cTmp->link->date);
               int year = __tm->tm_year + 1900;
 
               if (year >= range[0] && year <= range[1]) {
                 shouldPrint = true;
 
-                if (cTmp->itRained) {
+                if (cTmp->link->itRained) {
 
                   rainyDays++;
 
-                  for (Rain *rTmp = cTmp->rain; rTmp != nullptr;
-                       rTmp = rTmp->next) {
-
-                    printf("DEBUG: sumando rainfall\n");
-                    rainfall += rTmp->rainfall;
-                  }
+                  rainfall += cTmp->link->rain->rainfall;
                 }
 
-                if (cTmp->maxTemp > maxTmp)
-                  maxTmp = cTmp->maxTemp;
+                if (cTmp->link->maxTemp > maxTmp)
+                  maxTmp = cTmp->link->maxTemp;
 
-                if (cTmp->minTemp < minTmp)
-                  minTmp = cTmp->minTemp;
+                if (cTmp->link->minTemp < minTmp)
+                  minTmp = cTmp->link->minTemp;
               }
+              cTmp = cTmp->next;
             }
 
             if (shouldPrint) {
-              printf("Place: %s\n\tTotal Rainfall: %f\n\tMax Temperature: "
+              printf("\nPlace: %s\n\tRainy days: %d\n\tTotal Rainfall: %f\n\tMax "
+                     "Temperature: "
                      "%f\n\tMin Temperature: %f\n",
-                     tmp->link->name.c_str(), rainfall, maxTmp, minTmp);
+                     tmp->link->name.c_str(), rainyDays, rainfall, maxTmp,
+                     minTmp);
             } else {
-              fprintf(stderr, "No data found for that date range!\n");
-              return CommandCodes::CONTINUE;
+              printf("\u001b[31mNo data found for %s\u001b[0m!\n",
+                     tmp->link->name.c_str());
             }
+            tmp = tmp->next;
           }
 
           ctx->reports->display();
@@ -197,75 +409,153 @@ MenuItem *reportItems[] = {
     new MenuItem(
         4, "Show monthly average rainfall for each region",
         [](Menu *, Program *ctx) -> CommandCodes {
-          // TODO: implement function body
           printf("Enter year: ");
           int year;
           std::cin >> year;
-
           flush();
-          int monthlyAvg[12] = {};
-          // \/ shame
-          for (Region *tmp = ctx->regions; tmp != nullptr; tmp = tmp->next) {
-            for (int month = 0; month < 12; month++) {
-              for (Proxy<Climate> *cTmp = tmp->places->link->climate;
 
-                   cTmp != nullptr; cTmp = cTmp->next) {
-                tm *__t = gmtime(&cTmp->link->date);
-                if (__t->tm_year + 1900 == year && __t->tm_mon == month) {
-                  // NOTE: dear future self, do not fret, this does work as
-                  // NOTE: expected what you thought would happen doesn't happen
-                  // at NOTE: all, although you'll need those p* static
-                  // functions defined NOTE: at the bottom of this file for
-                  // other stuff
-                  monthlyAvg[month] = cTmp->link->rain->average();
-                }
-              }
-            }
-          }
-
-          for (const auto &d : monthlyAvg)
-            printf("%d ", d);
           printf("\n");
+          for (Region *tmp = ctx->regions; tmp != nullptr; tmp = tmp->next) {
+            double monthlyAvg[12] = {};
+            int month = 0;
+            while (month < 12) {
+                double avg = 0;
+                int avgCont = 0;
+                Proxy<Place> *places = tmp->places;
+                while (places != nullptr) {
+                    if (places->link->climate == nullptr) {
+                        places = places->next;
+                        continue;
+                    }
+                    Proxy<Climate> *climates = places->link->climate;
+                    while (climates != nullptr) {
+                        tm *__t = localtime(&climates->link->date);
+                        if (__t->tm_year + 1900 == year && __t->tm_mon == month) {
+                            avg += climates->link->rain->rainfall;
+                            avgCont++;
+                          }
+                        climates = climates->next;
+                    }
+
+                      if (avgCont != 0) {
+                          monthlyAvg[month] = avg/avgCont;
+                      } else {
+                        monthlyAvg[month] = 0;
+                      }
+                    places = places->next;
+                }
+                month++;
+            }
+              printf("\n\u001b[34mRegion: %s\u001b[0m\n", tmp->name.c_str());
+                for (int i = 0; i < 12; i++) {
+                  if (monthlyAvg[i] != 0)
+                  printf("\u001b[33mMonth: %d -> %f\u001b[0m\n", i + 1, monthlyAvg[i]);
+                  else 
+                  printf("Month: %d -> %f\n", i + 1, monthlyAvg[i]);
+                }
+        }
 
           ctx->reports->display();
           return CommandCodes::CONTINUE;
         }),
     new MenuItem(
-        3, "Display average monthly rainfall within a given year",
+        3, "Display average monthly rainfall for all the places within a given year",
         [](Menu *, Program *ctx) -> CommandCodes {
-          // TODO: implement function body
-          printf("Enter year: ");
-          int year;
-          std::cin >> year;
+          // t represents today in milliseconds
+          time_t t = time(nullptr);
+          // today
+          tm *today = localtime(&t);
 
-          flush();
+          int year = getInt("Type in the year");
+          while (year > (*today).tm_year + 1900) {
+            eprint("Invalid year!");
+            year = getInt("Type in the year");
+          }
 
-          Place *place = ctx->places;
-
-          Place *tmp = place;
+          Place *tmp = ctx->places;
           do {
-            if (gmtime(&tmp->climate->link->date)->tm_year + 1900 == year) {
-              tmp->show();
-              std::cout << tmp->climate->link->rain->fmtAverage() << "\n";
-            }
-            tmp = tmp->next;
-          } while (tmp != place);
-          /* for (Place *tmp = place; tmp != nullptr;) { */
-          /* } */
+              double monthlyAvg[12] = {};
+                int month = 0;
+                while (month < 12) {
+                  double avg = 0;
+                  int avgCont = 0;
+                  Proxy<Climate> *cTmp = tmp->climate;
+                  while (cTmp != nullptr) {
+                    tm *__t = localtime(&cTmp->link->date);
+                    if (__t->tm_year + 1900 == year && __t->tm_mon == month) {
+                        avg += cTmp->link->rain->rainfall;
+                        avgCont++;
+                      }
+                      cTmp = cTmp->next;
+                  }
+
+                  if (avgCont != 0) {
+                      monthlyAvg[month] = avg/avgCont;
+                  } else {
+                    monthlyAvg[month] = 0;
+                  }
+
+                  month++;
+                  }
+
+              printf("\n\u001b[34mPlace: %s\u001b[0m\n", tmp->name.c_str());
+                for (int i = 0; i < 12; i++) {
+                  if (monthlyAvg[i] != 0)
+                  printf("\u001b[33mMonth: %d -> %f\u001b[0m\n", i + 1, monthlyAvg[i]);
+                  else 
+                  printf("Month: %d -> %f\n", i + 1, monthlyAvg[i]);
+                }
+              tmp = tmp->next;
+          } while (tmp != ctx->places);
 
           ctx->reports->display();
           return CommandCodes::CONTINUE;
         }),
-    new MenuItem(2, "Not yet implemented!",
-                 [](Menu *, Program *ctx) -> CommandCodes {
-                   // TODO: implement function body
-                   for (Instant *tmp = ctx->instants; tmp != nullptr;
-                        tmp = tmp->next) {
-                     // TODO: bribe johan into writing this function 💀💀💀💀
-                   }
-                   ctx->reports->display();
-                   return CommandCodes::CONTINUE;
-                 }),
+    new MenuItem(
+        2, "Print the sunset and sunrise for all the months of a given year",
+        [](Menu *, Program *ctx) -> CommandCodes {
+          // t represents today in milliseconds
+          time_t t = time(nullptr);
+          // today
+          tm *today = localtime(&t);
+
+          int year = getInt("Type in the year");
+          while (year > (*today).tm_year + 1900) {
+            eprint("Invalid year!");
+            year = getInt("Type in the year");
+          }
+
+          std::string months[] = {"January", "February", "March",
+                                  "April",   "May",      "June",
+                                  "July",    "August",   "September",
+                                  "October", "November", "December"};
+
+          for (int i = 1; i <= 12; i++) {
+            Instant *tmp = ctx->instants;
+            printf("\n\u001b[34mMonth: %s\u001b[0m\n", months[i - 1].c_str());
+            while (tmp->next != nullptr) {
+              tm *__t = localtime(&tmp->date);
+              if (__t->tm_year + 1900 == year) {
+                if (__t->tm_mon == i) {
+                  tm *date = localtime(&tmp->date);
+                  printf("\nDay: %d\n", date->tm_mday);
+
+                  tm *start = localtime(&tmp->startTime);
+                  printf("Sunrise: %d:%d:%d\n", start->tm_hour, start->tm_min,
+                         start->tm_sec);
+
+                  tm *end = localtime(&tmp->endTime);
+                  printf("Sunset: %d:%d:%d\n", end->tm_hour, end->tm_min,
+                         end->tm_sec);
+                }
+              }
+              tmp = tmp->next;
+            }
+          }
+
+          ctx->reports->display();
+          return CommandCodes::CONTINUE;
+        }),
     new MenuItem(1, "Display the information of all the lists",
                  [](Menu *, Program *ctx) -> CommandCodes {
                    printf("\n\u001b[4;34mPerson list:\u001b[0m");
@@ -298,71 +588,4 @@ void DllExport setup(Program *program) {
     program->reports->addItem(item->withContext(program));
   }
 }
-}
-
-static double pmin(Proxy<Rain> *list) {
-  Proxy<Rain> *tmp = list;
-  double mini = 0;
-  while (tmp != nullptr) {
-    if (tmp->link->rainfall < mini)
-      mini = tmp->link->rainfall;
-    tmp = tmp->next;
-  }
-
-  return mini;
-}
-
-static double pmax(Proxy<Rain> *list) {
-  Proxy<Rain> *tmp = list;
-  double maxi = 0;
-  while (tmp != nullptr) {
-    if (tmp->link->rainfall > maxi)
-      maxi = tmp->link->rainfall;
-    tmp = tmp->next;
-  }
-
-  return maxi;
-}
-
-static double paverage(Proxy<Rain> *list) {
-  double average = 0;
-  int nodes = 0;
-
-  double mini = pmin(list);
-
-  double maxi = pmax(list);
-
-  // 1
-  for (Proxy<Rain> *tmp = list; tmp != nullptr; tmp = tmp->next) {
-    // normalization formula z1 = (x1 - min(x)) / (max(x) - min(x))
-
-    // WARNING: possibly unsafe calculation, although I'm not sure, this a math
-    // formula after all
-    average += (tmp->link->rainfall - mini) / (maxi - mini);
-    nodes++;
-  }
-
-  average = average / nodes;
-
-  return average;
-}
-
-static std::string fmtAverage(Proxy<Rain> *list) {
-  double avg = paverage(list);
-
-  std::string out;
-
-  if (avg == 0) {
-    out = "extremo seco";
-  } else if (avg < 0.2) {
-    out = "seco";
-  } else if (avg < 0.4) {
-    out = "normal";
-  } else if (avg < 0.8) {
-    out = "lluvioso";
-  } else {
-    out = "extremo lluvioso";
-  }
-
-  return out;
 }

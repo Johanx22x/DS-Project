@@ -1,13 +1,11 @@
-# Resultados
-
-(Resultados finales, indique que partes están completas, cuales defectuosos, y cuales no se realizaron y el porqué)
+## Resultados
 
 Los resultados presentados por el programa demuestran una interfaz de usuario 
-}agradable para el cliente que utilice la plataforma, con textos grandes y claros, 
+agradable para el cliente que utilice la plataforma, con textos grandes y claros, 
 y todas las opciones de lo que puede realizar el programa se presentan al usuario 
 en la página principal. La creación, modificación y muestra de datos a partir de las
 estructuras implementadas en el sistema fueron probadas y completadas. A partir de
-est se generaron los reportes y las consultas, que recolectan los datos pertinentes
+esto se generaron los reportes y las consultas, que recolectan los datos pertinentes
 a clima y lo previamente registrado en el sistema y los muestran de manera correcta 
 en la interfaz, y se presentan las tablas con los datos ordenados en el formato 
 establecido.

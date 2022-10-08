@@ -1,5 +1,13 @@
+/**
+ * In this header file is defined all the Person class behavior and parameters
+ *
+ * @author Johan Rodriguez, Aaron Gonzalez, Gabriel Alfaro
+ * @version 1.0
+ *
+ * last modification: 24/09/2022
+ */
+
 #pragma once
-//#include <bits/types/time_t.h>
 #include <climate.hh>
 #include <proxy.hh>
 #include <string>
@@ -50,5 +58,10 @@ public:
    */
   Person *search(std::string id);
 
+  /**
+   * Return a formated string with the current instance data
+   *
+   * @return string The data formated
+   */
   std::string str();
 };

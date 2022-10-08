@@ -1,3 +1,13 @@
+/**
+ * Script to charge the main menu MenuItems in the dinamic library
+ * Here is defined all the main menu management and functionality
+ *
+ * @author Johan Rodriguez, Aaron Gonzalez
+ * @version 1.0
+ *
+ * last modification: 05/10/2022
+ */
+
 #include <cstdint>
 #include <menu.hh>
 #include <program.hh>
