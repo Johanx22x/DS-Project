@@ -427,7 +427,7 @@ time_t getTime() {
     newTime->tm_hour = hours - 6;
 
     int minutes = getInt("Enter the minutes");
-    while (minutes < 1 || minutes > 59) {
+    while (minutes < 0 || minutes > 59) {
         eprint("Invalid input, must be a number between 1 and 59!");
         minutes = getInt("Enter the minutes");
     }
