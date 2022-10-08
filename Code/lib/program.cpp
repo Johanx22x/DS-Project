@@ -118,7 +118,7 @@ Program::Program() {
   this->instants = sortedInsert(this->instants, new Instant("Early cloudy sun", 1518924332, 1518924332, 1518944332));
   this->instants = sortedInsert(this->instants, new Instant("Early rainy sun", 1511224332, 1511224332, 1518123332));
   this->instants = sortedInsert(this->instants, new Instant("Shiny sun", 1518314332, 1518924332, 1518123332));
-  this->instants = sortedInsert(this->instants, new Instant("Rainy day without sun", 1518321332, 1518321332, 1518900332));
+  this->instants = sortedInsert(this->instants, new Instant("Rainy day without sun", 1518291332, 1518321332, 1518900332));
   this->instants = sortedInsert(this->instants, new Instant("Late sunrise", 1321924332, 1321924332, 1321954332));
 }
 

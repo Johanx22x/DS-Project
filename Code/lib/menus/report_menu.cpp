@@ -12,6 +12,7 @@
 #include <command_codes.hh>
 #include <cstdint>
 #include <cstdio>
+#include <ctime>
 #include <map>
 #include <menu.hh>
 #include <place.hh>
@@ -374,7 +375,6 @@ MenuItem *reportItems[] = {
     new MenuItem(
         4, "Show monthly average rainfall for each region",
         [](Menu *, Program *ctx) -> CommandCodes {
-          // FIXME: Check for more than one region
           printf("Enter year: ");
           int year;
           std::cin >> year;
@@ -434,15 +434,46 @@ MenuItem *reportItems[] = {
           ctx->reports->display();
           return CommandCodes::CONTINUE;
         }),
-    new MenuItem(2, "Not yet implemented!",
+    new MenuItem(2, "Print the sunset and sunrise for all the months of a given year",
                  [](Menu *, Program *ctx) -> CommandCodes {
-                   // TODO: implement function body
-                   for (Instant *tmp = ctx->instants; tmp != nullptr;
-                        tmp = tmp->next) {
-                     // TODO: bribe johan into writing this function 💀💀💀💀
-                   }
-                   ctx->reports->display();
-                   return CommandCodes::CONTINUE;
+                 // t represents today in milliseconds
+                 time_t t = time(nullptr);
+                 // today
+                 tm *today = gmtime(&t);
+
+                 int year = getInt("Type in the year");
+                 while (year > (*today).tm_year + 1900) {
+                     eprint("Invalid year!");
+                     year = getInt("Type in the year");
+                 }
+
+                 std::string months[] = {"January", "February", "March", "April",
+                                         "May", "June", "July", "August",
+                                         "September", "October", "November", "December"};
+
+                for (int i = 1; i <= 12; i++) {
+                    Instant *tmp = ctx->instants;
+                    printf("\n\u001b[34mMonth: %s\u001b[0m\n", months[i-1].c_str());
+                    while (tmp->next != nullptr) {
+                        tm *__t = gmtime(&tmp->date);
+                        if (__t->tm_year+1900 == year) {
+                            if (__t->tm_mon == i) {
+                                tm *date = gmtime(&tmp->date);
+                                printf("\nDay: %d\n", date->tm_mday);
+
+                                tm *start = gmtime(&tmp->startTime);
+                                printf("Sunrise: %d:%d:%d\n", start->tm_hour, start->tm_min, start->tm_sec);
+
+                                tm *end = gmtime(&tmp->endTime);
+                                printf("Sunset: %d:%d:%d\n", end->tm_hour, end->tm_min, end->tm_sec);
+                            }
+                        }
+                        tmp = tmp->next;
+                    }
+                }
+
+                ctx->reports->display();
+                return CommandCodes::CONTINUE;
                  }),
     new MenuItem(1, "Display the information of all the lists",
                  [](Menu *, Program *ctx) -> CommandCodes {
