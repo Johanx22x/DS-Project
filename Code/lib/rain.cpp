@@ -75,6 +75,24 @@ std::string Rain::fmtAverage() {
   return out;
 }
 
+std::string Rain::fmtRainfall() {
+  // TODO: define a better function for this
+  std::string out;
+  if (this->rainfall == 0) {
+    out = "extremo seco";
+  } else if (this->rainfall < 2) {
+    out = "seco";
+  } else if (this->rainfall < 4) {
+    out = "normal";
+  } else if (this->rainfall < 6) {
+    out = "lluvioso";
+  } else {
+    out = "extremo lluvioso";
+  }
+
+  return out;
+}
+
 void Rain::show() {
   Rain *curr = this;
 

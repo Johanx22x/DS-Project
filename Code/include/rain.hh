@@ -35,6 +35,8 @@ public:
 
   Rain *search(std::string id);
 
+  std::string fmtRainfall();
+
 private:
   double min();
   double max();
