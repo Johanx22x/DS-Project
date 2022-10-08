@@ -297,7 +297,8 @@ MenuItem *reportItems[] = {
             year = getInt("Type in the year");
           }
 
-          int sevenDays = 543600;
+          // 0x84b70 represents seven days from the Unix TimeStamp origin
+          int sevenDays = 0x84b70;
 
           std::string months[] = {"January", "February", "March",
                                   "April",   "May",      "June",
@@ -306,6 +307,8 @@ MenuItem *reportItems[] = {
 
           time_t first = 0;
           std::string firstType;
+
+          bool userFeedback = false;
 
           for (Climate *tmp = ctx->climates; tmp != nullptr; tmp = tmp->next) {
             tm *__tm = gmtime(&tmp->date);
@@ -330,6 +333,8 @@ MenuItem *reportItems[] = {
 
                 first = tmp->date;
                 firstType = tmp->rain->fmtRainfall();
+
+                userFeedback = true;
               }
 
               if ((tmp->date - first < sevenDays) && (tmp->rain->fmtRainfall() != firstType)) {
@@ -337,6 +342,10 @@ MenuItem *reportItems[] = {
                   firstType = tmp->rain->fmtRainfall();
               }
             }
+          }
+
+          if (!userFeedback) {
+            eprint("No time period was found for the given year");
           }
 
           ctx->reports->display();
