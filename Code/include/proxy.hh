@@ -1,5 +1,6 @@
 /**
- * In this header file is defined all the Proxy template class behavior and parameters
+ * In this header file is defined all the Proxy template class behavior and
+ * parameters
  *
  * @author Johan Rodriguez, Aaron Gonzalez
  * @version 1.0
@@ -30,7 +31,8 @@ public:
   void append(Proxy<T> *node) {
     Proxy<T> *curr = this;
 
-    while (curr->next != nullptr) curr = curr->next;
+    while (curr->next != nullptr)
+      curr = curr->next;
 
     curr->next = node;
   }
@@ -54,7 +56,7 @@ public:
    *
    * @param list* The current Proxy list instance
    * @param node* The element to delete
-   * Return Proxy<T> * The new list without @node* 
+   * Return Proxy<T> * The new list without @node*
    */
   Proxy<T> *deleteNode(Proxy<T> *list, Proxy<T> *node) {
     if (list == nullptr)
@@ -79,6 +81,8 @@ public:
 
   // TODO: make a better size calculation method that doesn't have to traverse
   // The entire list each time we want to get its size
+  // NOTE: about the comment above, there's really no way of doing this without
+  // storing the size of the entire list somewhere
   std::size_t size() {
     size_t _siz = 0;
     for (Proxy<T> *tmp = this; tmp != nullptr; tmp = tmp->next)
