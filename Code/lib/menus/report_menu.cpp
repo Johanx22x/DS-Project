@@ -314,6 +314,7 @@ MenuItem *reportItems[] = {
 
           if (region == nullptr) {
             fprintf(stderr, "Couldn't find a region with that name!\n");
+              ctx->reports->display();
             return CommandCodes::CONTINUE;
           }
 
@@ -327,15 +328,13 @@ MenuItem *reportItems[] = {
 
             bool shouldPrint = false;
             if (tmp->link == nullptr || tmp->link->climate == nullptr) {
-              /* eprint("Nothing found for that period"); */
+              ctx->reports->display();
               return CommandCodes::CONTINUE;
             }
 
-            printf("before nig\n");
             for (Climate *cTmp = tmp->link->climate->link; cTmp != nullptr;
                  cTmp = cTmp->next) {
 
-              printf("inside nig\n");
               tm *__tm = gmtime(&cTmp->date);
               int year = __tm->tm_year + 1900;
 
@@ -365,6 +364,7 @@ MenuItem *reportItems[] = {
                      minTmp);
             } else {
               fprintf(stderr, "No data found for that date range!\n");
+              ctx->reports->display();
               return CommandCodes::CONTINUE;
             }
           }
