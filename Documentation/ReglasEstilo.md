@@ -144,13 +144,3 @@ int add(int n1, int n2) {
 }
 // Las funciones deben de ejecutar solo logica, y no producir efectos secundarios como salida a la pantalla
 ```
-
-- No hacer saltos de linea al inicio de un string.
-**__Bueno__**:
-```cpp
-std::cout << "Hola mundo!\n";
-```
-**__Malo__**:
-```cpp
-std::cout << "\nHola mundo!\n";
-```

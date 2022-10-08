@@ -1,4 +1,4 @@
-# Solucion del problema 
+## Solucion del problema 
 
 Para la solución del problema planteado en el primer proyecto programado del 
 curso de Estructuras de Datos del segundo semestre de 2022, se utilizaron las 
