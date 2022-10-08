@@ -353,7 +353,6 @@ MenuItem *reportItems[] = {
     new MenuItem(
         4, "Show monthly average rainfall for each region",
         [](Menu *, Program *ctx) -> CommandCodes {
-            // FIXME: Check for more than one region
           printf("Enter year: ");
           int year;
           std::cin >> year;
