@@ -128,15 +128,14 @@ void Rain::showByNameId() {
   }
 }
 
-/// See the documentation declared in the rain header file
+/// See the Climate header file for the documentation
 Rain *Rain::search(std::string id) {
-  Rain *curr = this;
+    Rain *curr = this;
 
-  while (curr != nullptr) {
-    if (curr->id == id)
-      return curr;
-    curr = curr->next;
-  }
+    while (curr != nullptr) {
+        if (curr->id == id) return curr;
+        curr = curr->next;
+    }
 
-  return nullptr;
+    return nullptr;
 }

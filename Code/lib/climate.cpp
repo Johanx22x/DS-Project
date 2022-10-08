@@ -46,7 +46,7 @@ void Climate::show() {
 
     while (curr != nullptr) {
         printf("\n%s\n", curr->str().c_str());
-        printf("Associate rain: \n\tID: %s\n\tName: %s\n\tRainfall: %f\n", curr->rain->id.c_str(), curr->rain->name.c_str(), curr->rain->rainfall);
+        printf("Associate rain: \n\tID: %s\n\tName: %s\n\tRainfall: %s\n\tRainfall value: %f\n", curr->rain->id.c_str(), curr->rain->name.c_str(), curr->rain->fmtRainfall().c_str(), curr->rain->rainfall);
         curr = curr->next;
     }
 }

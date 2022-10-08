@@ -86,8 +86,7 @@ Instant *deleteNode(Instant *list, Instant *node);
  * @param node The element to be inserted
  */
 template <typename T> T *insert(T *list, T *node) {
-  if (list == nullptr)
-    return nullptr;
+  if (list == nullptr) return nullptr;
   node->next = list;
   return node;
 }

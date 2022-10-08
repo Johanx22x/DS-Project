@@ -92,43 +92,43 @@ Program::Program() {
   this->places = insert(this->places, fortuna);
   sanCarlos->places->append(new Proxy(fortuna));
 
-  Rain *rainOne = new Rain("Thunder", "R-2", 76.3);
+  Rain *rainOne = new Rain("Thunder", "R-2", 8.3);
   this->rains = insert(this->rains, rainOne);
 
-  Rain *rainTwo = new Rain("Cloudy", "R-3", 54.12);
+  Rain *rainTwo = new Rain("Cloudy", "R-3", 5.12);
   this->rains = insert(this->rains, rainTwo);
 
-  Rain *rainThree= new Rain("Sunny", "R-4", 11.43);
+  Rain *rainThree= new Rain("Sunny", "R-4", 3.70);
   this->rains = insert(this->rains, rainThree);
 
-  Rain *rainFour = new Rain("Dry", "R-5", 5.12);
+  Rain *rainFour = new Rain("Dry", "R-5", 0.12);
   this->rains = insert(this->rains, rainFour);
 
-  Rain *rainFive = new Rain("Strong rain", "R-6", 72.31);
+  Rain *rainFive = new Rain("Strong rain", "R-6", 9.31);
   this->rains = insert(this->rains, rainFive);
 
-  Rain *rainSix = new Rain("Only sun day", "R-7", 12.31);
+  Rain *rainSix = new Rain("Only sun day", "R-7", 3.31);
   this->rains = insert(this->rains, rainSix);
 
-  Rain *rainSeven = new Rain("Extremely rainy", "R-8", 92.99);
-  this->rains = insert(this->rains, rainSix);
+  Rain *rainSeven = new Rain("Extremely rainy", "R-8", 9.99);
+  this->rains = insert(this->rains, rainSeven);
 
-  Rain *rainEight = new Rain("Cloudy and sunny", "R-9", 45.54);
+  Rain *rainEight = new Rain("Cloudy and sunny", "R-9", 3.54);
   this->rains = insert(this->rains, rainEight);
 
-  Rain *rainNine = new Rain("Ultra sunny", "R-10", 23.54);
+  Rain *rainNine = new Rain("Ultra sunny", "R-10", 0.54);
   this->rains = insert(this->rains, rainNine);
 
-  Rain *rainTen = new Rain("Ultra dry", "R-11", 2.54);
+  Rain *rainTen = new Rain("Ultra dry", "R-11", 0);
   this->rains = insert(this->rains, rainTen);
 
-  Rain *rainEleven = new Rain("Rainy and cloudy", "R-12", 80.4);
+  Rain *rainEleven = new Rain("Rainy and cloudy", "R-12", 5.4);
   this->rains = insert(this->rains, rainEleven);
 
-  Rain *rainTwelve = new Rain("Cloudy and shiny", "R-13", 52.5);
+  Rain *rainTwelve = new Rain("Cloudy and shiny", "R-13", 3.5);
   this->rains = insert(this->rains, rainTwelve);
 
-  Rain *rainThirteen = new Rain("Ultra cloudy", "R-14", 74.83);
+  Rain *rainThirteen = new Rain("Ultra cloudy", "R-14", 4.83);
   this->rains = insert(this->rains, rainThirteen);
 
   Climate *climateOne = new Climate("2", 4.1, 28.1, 22.1, 0.1, 83.12, 'S', true, 1661247440, 1661247440, 1661249940, rainOne, santaElena, johan);
