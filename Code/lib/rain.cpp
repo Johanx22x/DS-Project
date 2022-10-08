@@ -1,7 +1,17 @@
+/**
+ * Here is implemented all the methods from the rain header file
+ *
+ * @author Johan Rodriguez, Aaron Gonzalez
+ * @version 1.0
+ *
+ * last modification: 01/10/2022
+ */
+
 #include <cstdio>
 #include <rain.hh>
 #include <string>
 
+/// See the documentation declared in the rain header file
 Rain::Rain(std::string name, std::string id, double rainfall) {
   this->name = name;
   this->id = id;
@@ -20,6 +30,7 @@ double Rain::min() {
   return mini;
 }
 
+/// See the documentation declared in the rain header file
 double Rain::max() {
   Rain *tmp = this;
   double maxi = 0;
@@ -32,6 +43,7 @@ double Rain::max() {
   return maxi;
 }
 
+/// See the documentation declared in the rain header file
 double Rain::average() {
   double average = 0;
   int nodes = 0;
@@ -55,6 +67,7 @@ double Rain::average() {
   return average;
 }
 
+/// See the documentation declared in the rain header file
 std::string Rain::fmtAverage() {
   double avg = average();
 
@@ -93,17 +106,18 @@ std::string Rain::fmtRainfall() {
   return out;
 }
 
+/// See the documentation declared in the rain header file
 void Rain::show() {
   Rain *curr = this;
 
   while (curr != nullptr) {
-    // TODO: Pass the rainfall value trought the averageRainfall method
     printf("\nRain ID: %s\nRain name: %s\nRain average rainfall: %f\n",
            curr->id.c_str(), curr->name.c_str(), curr->rainfall);
     curr = curr->next;
   }
 }
 
+/// See the documentation declared in the rain header file
 void Rain::showByNameId() {
   Rain *curr = this;
 
@@ -114,6 +128,7 @@ void Rain::showByNameId() {
   }
 }
 
+/// See the documentation declared in the rain header file
 Rain *Rain::search(std::string id) {
   Rain *curr = this;
 

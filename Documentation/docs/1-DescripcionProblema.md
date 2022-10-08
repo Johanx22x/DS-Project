@@ -1,4 +1,4 @@
-# Descripcion del problema
+## Descripcion del problema
 
 El problema planteado para el primer proyecto programado del curso de Estructuras 
 de Datos del segundo semestre de 2022 consiste en la realización de un programa que 

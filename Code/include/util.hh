@@ -1,3 +1,12 @@
+/**
+ * In this header file is defined all the util methods
+ *
+ * @author Johan Rodriguez, Aaron Gonzalez
+ * @version 1.0
+ *
+ * last modification: 06/10/2022
+ */
+
 #pragma once
 
 #include <person.hh>
@@ -5,11 +14,6 @@
 #include <climate.hh>
 #include <instant.hh>
 #include <ctime>
-
-/**
- * Returns the first character of stdin as an int
- */
-[[deprecated("Use std::cin instead")]] int getInt();
 
 /**
  * Sorts and insert a Person node into a Person list

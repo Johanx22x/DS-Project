@@ -1,3 +1,12 @@
+/**
+ * In this header file is defined all the Rain class behavior and parameters
+ *
+ * @author Johan Rodriguez, Aaron Gonzalez, Gabriel Alfaro
+ * @version 1.0
+ *
+ * last modification: 23/09/2022
+ */
+
 #pragma once
 #include <string>
 
@@ -11,6 +20,9 @@ public:
   double rainfall;
   Rain *next = nullptr;
 
+  /**
+   * Rain constructor
+   */
   Rain(std::string name, std::string id, double rainfall);
 
   /**
@@ -31,12 +43,20 @@ public:
    */
   std::string fmtAverage();
 
+  // TODO: Aaron must comment this
   double average();
 
+  /**
+   * Search an element in the current Rain class instance
+   *
+   * @param id The id of the node to search
+   * @return Rain * The found node, nullptr in case of not found
+   */
   Rain *search(std::string id);
 
   std::string fmtRainfall();
-
+  
+// TODO: Aaron must comment this
 private:
   double min();
   double max();

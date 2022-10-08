@@ -1,3 +1,12 @@
+/**
+ * Here is implemented the Instant class parameters and method
+ *
+ * @author Johan Rodriguez, Aaron Gonzalez, Gabriel Alfaro
+ * @version 1.2
+ *
+ * last modification: 07/10/2022
+ */
+
 #include <algorithm>
 #include <cstdio>
 #include <ctime>
@@ -5,6 +14,9 @@
 #include <sstream>
 #include <string>
 
+/**
+ * Instant constructor
+ */
 Instant::Instant(std::string name, time_t date, time_t startTime,
                  time_t endTime) {
   this->name = name;
@@ -13,6 +25,7 @@ Instant::Instant(std::string name, time_t date, time_t startTime,
   this->endTime = endTime;
 }
 
+/// See the documentation declared in the header file
 std::string Instant::str() {
   std::ostringstream out;
   char endBuf[13];
@@ -33,6 +46,7 @@ std::string Instant::str() {
   return out.str();
 }
 
+/// See the documentation declared in the header file
 void Instant::show() {
   Instant *curr = this;
 
@@ -42,6 +56,7 @@ void Instant::show() {
   }
 }
 
+/// See the documentation declared in the header file
 void Instant::showByName() {
   Instant *curr = this;
 
@@ -51,6 +66,7 @@ void Instant::showByName() {
   }
 }
 
+/// See the documentation declared in the header file
 Instant *Instant::search(std::string name) {
   Instant *curr = this;
 

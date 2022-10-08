@@ -1,10 +1,20 @@
-#include "instant.hh"
-#include "proxy.hh"
+/**
+ * Here is implemented all the methods form the Program header file
+ *
+ * @author Johan Rodriguez, Aaron Gonzalez
+ * @version 1.0
+ *
+ * last modification: 07/10/2022
+ */
+
+#include <instant.hh>
+#include <proxy.hh>
 #include <region.hh>
 #include <person.hh>
 #include <program.hh>
 #include <util.hh>
 
+// Charge the data inside the constructor of the program
 Program::Program() {
   this->regions->places = new Proxy(places);
   this->people->climates = new Proxy(climates);
@@ -112,11 +122,13 @@ Program::Program() {
   this->instants = sortedInsert(this->instants, new Instant("Late sunrise", 1321924332, 1321924332, 1321954332));
 }
 
+/**
+ * Run the program using the Menu::prompt method
+ */
 int Program::run() {
   this->menu->display();
 
   while (this->menu->prompt() == CommandCodes::CONTINUE);
 
-  // TODO: return whatever prompt() returns
   return 0;
 }

@@ -1,3 +1,12 @@
+/**
+ * Here is implemented all the methods from the util header file
+ *
+ * @author Johan Rodriguez, Aaron Gonzalez
+ * @version 1.0
+ *
+ * last modification: 07/10/2022
+ */
+
 #include <cctype>
 #include <climate.hh>
 #include <climits>
@@ -14,11 +23,13 @@
 #include <util.hh>
 #include <map>
 
+/// Flush the std::cin buffer
 void flush() {
   char __c; 
   while ((__c = getchar() != '\n' && __c != EOF)) ;
 }
 
+/// See the documentation defined in the header file
 Person *sortedInsert(Person *list, Person *node) {
     if (list == nullptr) return nullptr;
     if (node == nullptr) return list;
@@ -56,6 +67,7 @@ Person *sortedInsert(Person *list, Person *node) {
     return list;
 }
 
+/// See the documentation defined in the header file
 Place *insert(Place *list, Place *node) {
   if (list == nullptr) return node;
   if (node == nullptr) return list;
@@ -73,6 +85,7 @@ Place *insert(Place *list, Place *node) {
   return node;
 }
 
+/// See the documentation defined in the header file
 Instant *sortedInsert(Instant *list, Instant* node) {
     if (list == nullptr) return node;
     if (node == nullptr) return list;
@@ -104,6 +117,7 @@ Instant *sortedInsert(Instant *list, Instant* node) {
     return list;
 }
 
+/// See the documentation defined in the header file
 Climate *sortedInsert(Climate *list, Climate *node) {
   if (list == nullptr)
     return node;
@@ -133,6 +147,7 @@ Climate *sortedInsert(Climate *list, Climate *node) {
   return list;
 }
 
+/// See the documentation defined in the header file
 Person *deleteNode(Person *list, Person *node) {
     if (list == nullptr) return nullptr;
     else if (node == nullptr) return list;
@@ -160,6 +175,7 @@ Person *deleteNode(Person *list, Person *node) {
     return list;
 }
 
+/// See the documentation defined in the header file
 Rain *deleteNode(Rain *list, Rain *node) {
   if (list == nullptr)
     return nullptr;
@@ -184,6 +200,7 @@ Rain *deleteNode(Rain *list, Rain *node) {
   return list;
 }
 
+/// See the documentation defined in the header file
 Region *deleteNode(Region *list, Region *node) {
   if (list == nullptr)
     return nullptr;
@@ -208,6 +225,7 @@ Region *deleteNode(Region *list, Region *node) {
   return list;
 }
 
+/// See the documentation defined in the header file
 Place *deleteNode(Place *list, Place *node) {
   if (list == nullptr)
     return nullptr;
@@ -236,6 +254,7 @@ Place *deleteNode(Place *list, Place *node) {
   return list;
 }
 
+/// See the documentation defined in the header file
 Instant *deleteNode(Instant *list, Instant *node) {
     if (list == nullptr) return nullptr;
     else if (node == nullptr) return list;
@@ -263,6 +282,7 @@ Instant *deleteNode(Instant *list, Instant *node) {
     return list;
 }
 
+/// See the documentation defined in the header file
 Climate *deleteNode(Climate *list, Climate *node) {
   if (list == nullptr)
     return nullptr;
@@ -287,6 +307,7 @@ Climate *deleteNode(Climate *list, Climate *node) {
   return list;
 }
 
+/// See the documentation defined in the header file
 double getDouble(std::string message) {
     double input;
     bool valid = false;
@@ -308,6 +329,7 @@ double getDouble(std::string message) {
     return input;
 }
 
+/// See the documentation defined in the header file
 int getInt(std::string message) {
     int input;
     bool valid = false;
@@ -329,14 +351,17 @@ int getInt(std::string message) {
     return input;
 }
 
+/// See the documentation defined in the header file
 void eprint(std::string message) {
     printf("\u001b[31m%s\u001b[0m\n", message.c_str());
 }
 
+/// See the documentation defined in the header file
 void printValid(std::string message) {
     printf("\u001b[34m%s\u001b[0m\n", message.c_str());
 }
 
+/// See the documentation defined in the header file
 time_t getDate() {
     time_t now = time(0);
     tm *newTime = localtime(&now);
@@ -388,6 +413,7 @@ time_t getDate() {
     return time;
 }
 
+/// See the documentation defined in the header file
 time_t getTime() {
     time_t now = time(0);
     tm *newTime = localtime(&now);
