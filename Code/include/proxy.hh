@@ -30,8 +30,7 @@ public:
   void append(Proxy<T> *node) {
     Proxy<T> *curr = this;
 
-    while (curr->next != nullptr)
-      curr = curr->next;
+    while (curr->next != nullptr) curr = curr->next;
 
     curr->next = node;
   }
