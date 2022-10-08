@@ -43,7 +43,12 @@ public:
    */
   std::string fmtAverage();
 
-  // TODO: Aaron must comment this
+  /**
+   * @brief Calculates the average rainfall for the entire rain list, not a
+   * single node or proxy node
+   *
+   * @returns double The average rainfall between 0 and 1
+   */
   double average();
 
   /**
@@ -54,11 +59,25 @@ public:
    */
   Rain *search(std::string id);
 
-    // TODO: Aaron must comment this
+  /**
+   * @brief Returns a neatly formatted string that represents the total rainfall
+   * as a string
+   *
+   * @returns std::string A neatly formatted string
+   */
   std::string fmtRainfall();
-  
-// TODO: Aaron must comment this
+
 private:
+  /**
+   * @brief This does what you think it does
+   *
+   * @returns double The minimum value amongst the entire rains list
+   */
   double min();
+  /**
+   * @brief This does what you think it does
+   *
+   * @returns double The maximum value amongst the entire rains list
+   */
   double max();
 };
