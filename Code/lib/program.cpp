@@ -67,24 +67,41 @@ Program::Program() {
   this->places = insert(this->places, santaElena);
   monteverde->places = new Proxy(santaElena);
 
-  Region *sanCarlos = this->regions->search("5");
+  Place *monteverdePlace = new Place("Monteverde", 2314, 89214.532, monteverde);
+  this->places = insert(this->places, monteverdePlace);
+  monteverde->places = new Proxy(monteverdePlace);
+
+  Region *sanCarlos = this->regions->search("A-1");
   if (sanCarlos == nullptr) {
     printf("FATAL ERROR!!\n");
   }
+
   Place *ciudadQuesada = new Place("Ciudad Quesada", 32183, 3124.2, sanCarlos);
   this->places = insert(this->places, ciudadQuesada);
   sanCarlos->places->append(new Proxy(ciudadQuesada));
 
-  Rain *rainOne = new Rain("Thunder", "R-2", 21.3);
+  Place *laTigra = new Place("La Tigra", 9804, 54323.523, sanCarlos);
+  this->places = insert(this->places, laTigra);
+  sanCarlos->places->append(new Proxy(laTigra));
+
+  Place *platanar = new Place("Platanar", 3214, 4123.53, sanCarlos);
+  this->places = insert(this->places, platanar);
+  sanCarlos->places->append(new Proxy(platanar));
+
+  Place *fortuna = new Place("La Fortuna", 54321, 8912.31, sanCarlos);
+  this->places = insert(this->places, fortuna);
+  sanCarlos->places->append(new Proxy(fortuna));
+
+  Rain *rainOne = new Rain("Thunder", "R-2", 76.3);
   this->rains = insert(this->rains, rainOne);
 
   Rain *rainTwo = new Rain("Cloudy", "R-3", 54.12);
   this->rains = insert(this->rains, rainTwo);
 
-  Rain *rainThree= new Rain("Sunny", "R-4", 31.43);
+  Rain *rainThree= new Rain("Sunny", "R-4", 11.43);
   this->rains = insert(this->rains, rainThree);
 
-  Rain *rainFour = new Rain("Dry", "R-5", 90.12);
+  Rain *rainFour = new Rain("Dry", "R-5", 5.12);
   this->rains = insert(this->rains, rainFour);
 
   Rain *rainFive = new Rain("Strong rain", "R-6", 72.31);
@@ -115,10 +132,10 @@ Program::Program() {
   sanRamonPlace->climate->append(new Proxy(climateFive));
   alonso->climates = new Proxy(climateFive);
 
-  this->instants = sortedInsert(this->instants, new Instant("Early cloudy sun", 1518924332, 1518924332, 1518944332));
-  this->instants = sortedInsert(this->instants, new Instant("Early rainy sun", 1511224332, 1511224332, 1518123332));
-  this->instants = sortedInsert(this->instants, new Instant("Shiny sun", 1518314332, 1518924332, 1518123332));
-  this->instants = sortedInsert(this->instants, new Instant("Rainy day without sun", 1518291332, 1518321332, 1518900332));
+  this->instants = sortedInsert(this->instants, new Instant("Early cloudy sun", 1518924331, 1518924331, 1518944582));
+  this->instants = sortedInsert(this->instants, new Instant("Early rainy sun", 1511224332, 1511224332, 1518129992));
+  this->instants = sortedInsert(this->instants, new Instant("Shiny sun", 1518319932, 1518929932, 1518124332));
+  this->instants = sortedInsert(this->instants, new Instant("Rainy day without sun", 1518325532, 1518325532, 1518906532));
   this->instants = sortedInsert(this->instants, new Instant("Late sunrise", 1321924332, 1321924332, 1321954332));
 }
 

@@ -5,7 +5,7 @@
  * @author Aaron Gonzalez, Johan Rodriguez
  * @version 1.0
  *
- * last modification: 07/10/2022
+ * last modification: 08/10/2022
  */
 
 #include <climate.hh>
@@ -24,6 +24,7 @@
 #include <util.hh>
 #include <vector>
 
+/// Struct to manage a Period of time in a better way
 struct Period {
   time_t start = 0;
   time_t end = 0;
@@ -35,7 +36,6 @@ static std::string fmtAverage(Proxy<Rain> *);
 
 extern "C" {
 
-// TODO: Implement all the 9 items of reports
 MenuItem *reportItems[] = {
     new MenuItem(
         9,
@@ -313,60 +313,59 @@ MenuItem *reportItems[] = {
           Region *region = ctx->regions->search(regionId);
 
           if (region == nullptr) {
-            fprintf(stderr, "Couldn't find a region with that name!\n");
+             eprint("Couldn't find a region with that name!");
               ctx->reports->display();
             return CommandCodes::CONTINUE;
           }
 
-          for (Proxy<Place> *tmp = region->places; tmp != nullptr;
-               tmp = tmp->next) {
-            int rainyDays = 0;
-            double rainfall = 0;
-            double maxTmp = 0;
-            // NOTE: temporal fix
-            double minTmp = 10000;
+          Proxy<Place> *tmp = region->places;
 
-            bool shouldPrint = false;
-            if (tmp->link == nullptr || tmp->link->climate == nullptr) {
-              ctx->reports->display();
-              return CommandCodes::CONTINUE;
-            }
+          while (tmp != nullptr) {
+              /* if (tmp->link == nullptr) continue; */
+              int rainyDays = 0;
+              double rainfall = 0;
+              double maxTmp = 0;
+              double minTmp = 10000;
+              bool shouldPrint = false;
 
-            for (Climate *cTmp = tmp->link->climate->link; cTmp != nullptr;
-                 cTmp = cTmp->next) {
+              std::cout << tmp->link->name << "\n";
 
-              tm *__tm = gmtime(&cTmp->date);
-              int year = __tm->tm_year + 1900;
+              Proxy<Climate> *cTmp = tmp->link->climate;
+              /* if (cTmp->link == nullptr) continue; */
 
-              if (year >= range[0] && year <= range[1]) {
-                shouldPrint = true;
+              while (cTmp != nullptr) {
+                  tm *__tm = gmtime(&cTmp->link->date);
+                  int year = __tm->tm_year + 1900;
 
-                if (cTmp->itRained) {
+                  if (year >= range[0] && year <= range[1]) {
+                      shouldPrint = true;
 
-                  rainyDays++;
+                      if (cTmp->link->itRained) {
 
-                  rainfall += cTmp->rain->rainfall;
-                }
+                          rainyDays++;
 
-                if (cTmp->maxTemp > maxTmp)
-                  maxTmp = cTmp->maxTemp;
+                          rainfall += cTmp->link->rain->rainfall;
+                      }
 
-                if (cTmp->minTemp < minTmp)
-                  minTmp = cTmp->minTemp;
+                      if (cTmp->link->maxTemp > maxTmp)
+                          maxTmp = cTmp->link->maxTemp;
+
+                      if (cTmp->link->minTemp < minTmp)
+                          minTmp = cTmp->link->minTemp;
+                  }
+                  cTmp = cTmp->next;
               }
-            }
 
-            if (shouldPrint) {
-              printf("Place: %s\n\tRainy days: %d\n\tTotal Rainfall: %f\n\tMax "
-                     "Temperature: "
-                     "%f\n\tMin Temperature: %f\n",
-                     tmp->link->name.c_str(), rainyDays, rainfall, maxTmp,
-                     minTmp);
-            } else {
-              fprintf(stderr, "No data found for that date range!\n");
-              ctx->reports->display();
-              return CommandCodes::CONTINUE;
-            }
+              if (shouldPrint) {
+                  printf("Place: %s\n\tRainy days: %d\n\tTotal Rainfall: %f\n\tMax "
+                          "Temperature: "
+                          "%f\n\tMin Temperature: %f\n",
+                          tmp->link->name.c_str(), rainyDays, rainfall, maxTmp,
+                          minTmp);
+              } else {
+                  printf("\u001b[31mNo data found for %s\u001b[0m!\n", tmp->link->name.c_str());
+              }
+              tmp = tmp->next;
           }
 
           ctx->reports->display();
