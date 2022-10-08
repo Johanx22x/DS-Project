@@ -47,7 +47,7 @@ MenuItem *consultationMenu[] = {
           // t represents today in milliseconds
           time_t t = time(nullptr);
           // today
-          tm *today = gmtime(&t);
+          tm *today = localtime(&t);
 
           int year = getInt("Type in the year");
           while (year > (*today).tm_year + 1900) {
@@ -97,13 +97,11 @@ MenuItem *consultationMenu[] = {
 
           while (tmp->next != nullptr) {
             Climate *tmpClt = tmp->link;
-            tm *__t = gmtime(&tmpClt->date);
+            tm *__t = localtime(&tmpClt->date);
             if ((__t->tm_year + 1900) == year) {
               if (maxRr == nullptr) {
                 maxRr = tmpClt;
               }
-
-              std::cout << tmpClt->str() << "\n";
 
               if (tmpClt->itRained &&
                   tmpClt->rain->fmtRainfall().compare("extremo lluvioso")) {
@@ -136,17 +134,18 @@ MenuItem *consultationMenu[] = {
                                   "Octubre", "Noviembre", "Diciembre"};
 
           if (maxRr == nullptr) {
-            fprintf(stderr, "No rains stored for the given year\n");
+            eprint("No rains stored for the given year");
 
             ctx->consultations->display();
             return CommandCodes::CONTINUE;
           }
 
+          printf("\n");
           if (maxRainyMonth > -1)
-            printf("%s estuvo en extremo lluvioso\n",
+            printf("\u001b[34m%s estuvo en extremo lluvioso\u001b[0m\n",
                    monthNames[maxRainyMonth]);
           if (maxDryMonth > -1)
-            printf("%s estuvo en extremo seco\n", monthNames[maxDryMonth]);
+            printf("\u001b[34m%s estuvo en extremo seco\u001b[0m\n", monthNames[maxDryMonth]);
 
           ctx->consultations->display();
           return CommandCodes::CONTINUE;
@@ -167,7 +166,7 @@ MenuItem *consultationMenu[] = {
           // resources
           //
           // today
-          tm *today = gmtime(&t);
+          tm *today = localtime(&t);
 
           int year = getInt("Type in the year");
           while (year > (*today).tm_year + 1900) {
@@ -175,26 +174,34 @@ MenuItem *consultationMenu[] = {
             year = getInt("Type in the year");
           }
 
-          // calculate max sunset
+          // calculate max sunrise
           for (Instant *tmp = ctx->instants; tmp != nullptr; tmp = tmp->next) {
-            if ((gmtime(&tmp->date)->tm_year + 1900) == year) {
-              if (min == nullptr) {
-                min = tmp;
+            if ((localtime(&tmp->date)->tm_year + 1900) == year) {
+              if (max == nullptr) {
+                max = tmp;
               }
-              if (tmp->startTime >= min->startTime) {
-                min = tmp;
+              if ( localtime(&tmp->startTime)->tm_hour < localtime(&max->startTime)->tm_hour) {
+                max = tmp;
+              } else if ( localtime(&tmp->startTime)->tm_hour == localtime(&max->startTime)->tm_hour) {
+                  if ( localtime(&tmp->startTime)->tm_min <= localtime(&max->startTime)->tm_min) {
+                    max = tmp;
+                }
               }
             }
           }
 
-          // calculate min sunset
+          // calculate min sunrise
           for (Instant *tmp = ctx->instants; tmp != nullptr; tmp = tmp->next) {
-            if ((gmtime(&tmp->date)->tm_year + 1900) == year) {
-              if (max == nullptr) {
-                max = tmp;
+            if ((localtime(&tmp->date)->tm_year + 1900) == year) {
+              if (min == nullptr) {
+                min = tmp;
               }
-              if (tmp->startTime <= max->startTime) {
-                max = tmp;
+              if ( localtime(&tmp->startTime)->tm_hour > localtime(&min->startTime)->tm_hour) {
+                min = tmp;
+              } else if ( localtime(&tmp->startTime)->tm_hour == localtime(&min->startTime)->tm_hour) {
+                  if ( localtime(&tmp->startTime)->tm_min >= localtime(&min->startTime)->tm_min) {
+                    min = tmp;
+                }
               }
             }
           }
@@ -225,7 +232,7 @@ MenuItem *consultationMenu[] = {
           // t represents today in milliseconds
           time_t t = time(nullptr);
           // today
-          tm *today = gmtime(&t);
+          tm *today = localtime(&t);
 
           int year = getInt("Type in the year");
           while (year > (*today).tm_year + 1900) {
@@ -233,26 +240,34 @@ MenuItem *consultationMenu[] = {
             year = getInt("Type in the year");
           }
 
-          // calculate min sunrise
+          // calculate max sunset
           for (Instant *tmp = ctx->instants; tmp != nullptr; tmp = tmp->next) {
-            if ((gmtime(&tmp->date)->tm_year + 1900) == year) {
-              if (min == nullptr) {
-                min = tmp;
+            if ((localtime(&tmp->date)->tm_year + 1900) == year) {
+              if (max == nullptr) {
+                max = tmp;
               }
-              if (tmp->endTime > min->endTime) {
-                min = tmp;
+              if ( localtime(&tmp->endTime)->tm_hour > localtime(&max->endTime)->tm_hour) {
+                max = tmp;
+              } else if ( localtime(&tmp->endTime)->tm_hour == localtime(&max->endTime)->tm_hour) {
+                  if ( localtime(&tmp->endTime)->tm_min >= localtime(&max->endTime)->tm_min) {
+                    max = tmp;
+                }
               }
             }
           }
 
-          // calculate max sunset
+          // calculate min sunrise
           for (Instant *tmp = ctx->instants; tmp != nullptr; tmp = tmp->next) {
-            if ((gmtime(&tmp->date)->tm_year + 1900) == year) {
-              if (max == nullptr) {
-                max = tmp;
+            if ((localtime(&tmp->date)->tm_year + 1900) == year) {
+              if (min == nullptr) {
+                min = tmp;
               }
-              if (tmp->startTime < max->startTime) {
-                max = tmp;
+              if ( localtime(&tmp->startTime)->tm_hour < localtime(&min->startTime)->tm_hour) {
+                min = tmp;
+              } else if ( localtime(&tmp->startTime)->tm_hour == localtime(&min->startTime)->tm_hour) {
+                  if ( localtime(&tmp->startTime)->tm_min <= localtime(&min->startTime)->tm_min) {
+                    min = tmp;
+                }
               }
             }
           }

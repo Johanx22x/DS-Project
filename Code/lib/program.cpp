@@ -171,7 +171,7 @@ Program::Program() {
   ciudadQuesada->climate->append(new Proxy(climateEight));
   maria->climates->append(new Proxy(climateEight));
 
-  Climate *climateNine = new Climate("10", 1.2, 35.2, 28.5, 4.2, 9.1, 'W', false, 1648824234, 1648824234, 1648856214, rainNine, ciudadQuesada, gabriel);
+  Climate *climateNine = new Climate("10", 1.2, 35.2, 28.5, 4.2, 9.1, 'W', false, 1648824234, 1648824234, 1648857318, rainNine, ciudadQuesada, gabriel);
   this->climates->append(climateNine);
   ciudadQuesada->climate->append(new Proxy(climateNine));
   gabriel->climates->append(new Proxy(climateNine));
@@ -186,7 +186,7 @@ Program::Program() {
   ciudadQuesada->climate->append(new Proxy(climateEleven));
   johan->climates->append(new Proxy(climateEleven));
 
-  Climate *climateTwelve= new Climate("13", 4.9, 30.6, 22.2, 10.3, 21.1, 'E', true, 1652321274, 1652321274, 1652321274, rainTwelve, ciudadQuesada, alonso);
+  Climate *climateTwelve= new Climate("13", 4.9, 30.6, 22.2, 10.3, 21.1, 'E', true, 1652321274, 1652321274, 1652481274, rainTwelve, ciudadQuesada, alonso);
   this->climates->append(climateTwelve);
   ciudadQuesada->climate->append(new Proxy(climateTwelve));
   alonso->climates->append(new Proxy(climateTwelve));
@@ -201,6 +201,12 @@ Program::Program() {
   this->instants = sortedInsert(this->instants, new Instant("Shiny sun", 1518319932, 1518929932, 1518124332));
   this->instants = sortedInsert(this->instants, new Instant("Rainy day without sun", 1518325532, 1518325532, 1518906532));
   this->instants = sortedInsert(this->instants, new Instant("Late sunrise", 1321924332, 1321924332, 1321954332));
+
+  this->instants = sortedInsert(this->instants, new Instant("August 14, relax sunday", 1660479558, 1660479558, 1660525698));
+  this->instants = sortedInsert(this->instants, new Instant("New year, 2022", 1641041718, 1641041718, 1641084918));
+  this->instants = sortedInsert(this->instants, new Instant("July 09, Vacations", 1657368618, 1657368618, 1657415418));
+  this->instants = sortedInsert(this->instants, new Instant("April 13", 1649848698, 1649848698, 1649898318));
+  this->instants = sortedInsert(this->instants, new Instant("A beatiful day to send the project :)", 1665232945, 1665232945, 1665274338));
 }
 
 /**

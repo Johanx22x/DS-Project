@@ -32,13 +32,13 @@ std::string Instant::str() {
   char startBuf[13];
   char dateBuf[200];
 
-  tm *datetmp = gmtime(&this->date);
+  tm *datetmp = localtime(&this->date);
   strftime(dateBuf, sizeof(dateBuf), "%a %b %d %Y", datetmp);
 
-  tm *endtmp = gmtime(&this->endTime);
+  tm *endtmp = localtime(&this->endTime);
   strftime(endBuf, sizeof(endBuf), "%H:%M:%S", endtmp);
 
-  tm *starttmp = gmtime(&this->startTime);
+  tm *starttmp = localtime(&this->startTime);
   strftime(startBuf, sizeof(startBuf), "%H:%M:%S", starttmp);
 
   out << "Name: " << this->name << "\nDate: " << dateBuf
