@@ -39,9 +39,9 @@ public:
   }
 };
 
-static double paverage(Proxy<Rain> *);
-static std::string fmtAverage(Proxy<Rain> *);
-
+std::string monthName[] = {"January",   "February", "March",    "April",
+                           "May",       "June",     "July",     "August",
+                           "September", "October",  "November", "December"};
 extern "C" {
 
 MenuItem *reportItems[] = {
@@ -126,10 +126,6 @@ MenuItem *reportItems[] = {
           }
 
           printf("\nPlace: %s\n", place->name.c_str());
-          std::string monthName[] = {"January", "February", "March",
-                                     "April",   "May",      "June",
-                                     "July",    "August",   "September",
-                                     "October", "November", "December"};
           for (size_t i = 0; i < monthsMaxTemp.size(); i++) {
             double maxTemp = monthsMaxTemp.upper_bound(i)->second;
             double minTemp = monthsMinTemp.upper_bound(i)->second;
@@ -250,34 +246,29 @@ MenuItem *reportItems[] = {
 
                    Proxy<Climate> *tmp = place->climate;
 
+                   std::map<int, std::map<std::string, int>> rains =
+                       std::map<int, std::map<std::string, int>>();
+
+                   int totalRains[12] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
                    while (tmp != nullptr) {
                      tm *date = (gmtime(&tmp->link->date));
 
                      if ((date->tm_year + 1900) == year) {
-                       std::cout << tmp->link->rain->name;
                        // TODO: continue here implementing this report
-
-                       // NOTE: For Aaron: obtenga e imprima los porcentajes de
-                       // la clasificación de la lluvia de cada mes
+                       rains[date->tm_mon][tmp->link->rain->fmtRainfall()] += 1;
+                       totalRains[date->tm_mon] += 1;
                      }
 
                      tmp = tmp->next;
                    }
 
-                   /* std::unordered_map<int, std::unordered_map<std::string,
-                    * int>> months = */
-                   /*     std::unordered_map<int,
-                    * std::unordered_map<std::string, int>>(); */
-
-                   // NOTE: The for commented below is bad, I don't know why but
-                   // it's accessing to global elements, instead use a while
-                   // like the above
-                   /* for (Proxy<Climate> *tmp = place->climate; tmp != nullptr;
-                    */
-                   /*      tmp = tmp->next) { */
-                   /*   std::unordered_map<std::string, int> tt = */
-                   /*       std::unordered_map<std::string, int>(); */
-                   /* } */
+                   for (const auto &[month, val] : rains) {
+                     std::cout << monthName[month] << "\n";
+                     for (const auto &[type, amt] : val) {
+                       std::cout << type << ": "
+                                 << (amt * 100) / totalRains[month] << "%\n";
+                     }
+                   }
 
                    ctx->reports->display();
                    return CommandCodes::CONTINUE;
@@ -558,71 +549,4 @@ void DllExport setup(Program *program) {
     program->reports->addItem(item->withContext(program));
   }
 }
-}
-
-static double pmin(Proxy<Rain> *list) {
-  Proxy<Rain> *tmp = list;
-  double mini = 0;
-  while (tmp != nullptr) {
-    if (tmp->link->rainfall < mini)
-      mini = tmp->link->rainfall;
-    tmp = tmp->next;
-  }
-
-  return mini;
-}
-
-static double pmax(Proxy<Rain> *list) {
-  Proxy<Rain> *tmp = list;
-  double maxi = 0;
-  while (tmp != nullptr) {
-    if (tmp->link->rainfall > maxi)
-      maxi = tmp->link->rainfall;
-    tmp = tmp->next;
-  }
-
-  return maxi;
-}
-
-static double paverage(Proxy<Rain> *list) {
-  double average = 0;
-  int nodes = 0;
-
-  double mini = pmin(list);
-
-  double maxi = pmax(list);
-
-  // 1
-  for (Proxy<Rain> *tmp = list; tmp != nullptr; tmp = tmp->next) {
-    // normalization formula z1 = (x1 - min(x)) / (max(x) - min(x))
-
-    // WARNING: possibly unsafe calculation, although I'm not sure, this a math
-    // formula after all
-    average += (tmp->link->rainfall - mini) / (maxi - mini);
-    nodes++;
-  }
-
-  average = average / nodes;
-
-  return average;
-}
-
-static std::string fmtAverage(Proxy<Rain> *list) {
-  double avg = paverage(list);
-
-  std::string out;
-
-  if (avg == 0) {
-    out = "extremo seco";
-  } else if (avg < 0.2) {
-    out = "seco";
-  } else if (avg < 0.4) {
-    out = "normal";
-  } else if (avg < 0.8) {
-    out = "lluvioso";
-  } else {
-    out = "extremo lluvioso";
-  }
-
-  return out;
 }
