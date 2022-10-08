@@ -241,7 +241,7 @@ MenuItem *reportItems[] = {
                    Place *place = ctx->places->find(placeName);
 
                    if (place == nullptr) {
-                     fprintf(stderr, "Couldn't find a place with that name!\n");
+                     eprint("Couldn't find a place with that name!");
                      return CommandCodes::CONTINUE;
                    }
 
@@ -255,7 +255,6 @@ MenuItem *reportItems[] = {
                      tm *date = (gmtime(&tmp->link->date));
 
                      if ((date->tm_year + 1900) == year) {
-                       // TODO: continue here implementing this report
                        rains[date->tm_mon][tmp->link->rain->fmtRainfall()] += 1;
                        totalRains[date->tm_mon] += 1;
                      }
@@ -264,7 +263,7 @@ MenuItem *reportItems[] = {
                    }
 
                    for (const auto &[month, val] : rains) {
-                     std::cout << monthName[month] << "\n";
+                     std::cout << "\n\u001b[4;34m" << monthName[month] << "\u001b[0m\n";
                      for (const auto &[type, amt] : val) {
                        std::cout << type << ": "
                                  << (amt * 100) / totalRains[month] << "%\n";
