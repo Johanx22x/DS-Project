@@ -49,4 +49,9 @@ se ordenan en conjuntos de datos que son procesados para ser validados y confirm
 su relevancia en el reporte, mediante cálculos y parámetros. Finalmente, se muestran 
 al usuario en el formato establecido por los lineamientos del proyecto.
 
+Adicionalmente, se implementaron librerías dinamicas en el programa, esto para facilitar
+la modularización del proyecto, de esta forma el programa es dividido en segmentos y 
+se evitan muchos errores a la hora de tener que trabajar con archivos con cantidades inmensas
+de líneas de código.
+
 ![[Diagrama de clases del sistema]()](images/uml_diagram.png){#fig:diagram}
