@@ -54,6 +54,8 @@ public:
    */
   Rain *search(std::string id);
 
+  std::string fmtRainfall();
+  
 // TODO: Aaron must comment this
 private:
   double min();
