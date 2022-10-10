@@ -43,13 +43,6 @@ public:
           Place *place, Person *person);
 
   /**
-   * This method append a new node in the climate list
-   *
-   * @param *node The node to add to the current list (this)
-   */
-  void append(Climate *node);
-
-  /**
    * This method display all the climate nodes in the current list
    * Show all the information available in the climate class params
    */

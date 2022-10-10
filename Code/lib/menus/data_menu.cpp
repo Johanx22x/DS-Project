@@ -685,7 +685,7 @@ MenuItem *dataItems[] = {
         if (ctx->climates == nullptr) {
           ctx->climates = newClimate;
         } else {
-          ctx->climates->append(newClimate);
+          ctx->climates = sortedInsert(ctx->climates, newClimate);
         }
 
         if (foundPerson->climates == nullptr) {
@@ -1342,7 +1342,7 @@ MenuItem *dataItems[] = {
                                 new Person(name, id, age, location, joinDate));
         }
         printf("\n\u001b[34m%s joined at %s\u001b[0m", name.c_str(),
-               asctime(gmtime(&joinDate)));
+               asctime(localtime(&joinDate)));
 
         ctx->dataManagement->display();
         return CommandCodes::CONTINUE;

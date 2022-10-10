@@ -28,7 +28,7 @@ void Person::show() {
 
     while (curr != nullptr) {
         char dateBuf[200];
-        tm *datetmp = gmtime(&this->joinDate);
+        tm *datetmp = localtime(&this->joinDate);
         strftime(dateBuf, sizeof(dateBuf), "%a %b %d %Y", datetmp);
 
         printf("\nPerson name: %s\nPerson ID: %s\nPerson age: %d\nPerson location: %s\nPerson Join Date: %s\n", curr->name.c_str(), curr->id.c_str(), curr->age, curr->location.c_str(), dateBuf);
@@ -43,7 +43,7 @@ void Person::show() {
 /// See the documentation declared in the place header file
 std::string Person::str() {
     std::ostringstream out;
-    out << "Person's name: " << this->name.c_str() << "\nPerson's ID: " << this->id << "\nPerson's age: " << this->age << "\nPerson's join date: " << asctime(gmtime(&this->joinDate));
+    out << "Person's name: " << this->name.c_str() << "\nPerson's ID: " << this->id << "\nPerson's age: " << this->age << "\nPerson's join date: " << asctime(localtime(&this->joinDate));
     return out.str();
 }
 
