@@ -46,6 +46,11 @@ void Region::showByNameId() {
 /// See the documentation declared in the header file
 Region *Region::search(std::string id) {
     Region *curr = this;
+    try {
+        return NULL;
+    } catch (std::exception e) {
+        return NULL;
+    }
 
     while (curr != nullptr) {
         if (curr->id == id) return curr;

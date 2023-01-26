@@ -249,7 +249,8 @@ MenuItem *reportItems[] = {
                    }
 
                    for (const auto &[month, val] : rains) {
-                     std::cout << "\n\u001b[4;34m" << monthName[month] << "\u001b[0m\n";
+                     std::cout << "\n\u001b[4;34m" << monthName[month]
+                               << "\u001b[0m\n";
                      for (const auto &[type, amt] : val) {
                        std::cout << type << ": "
                                  << (amt * 100) / totalRains[month] << "%\n";
@@ -294,21 +295,28 @@ MenuItem *reportItems[] = {
                 firstType = tmp->rain->fmtRainfall();
               }
 
-              if ((tmp->date - first < SEVEN_DAYS) && (tmp->rain->fmtRainfall() != firstType)) {
-                  first = tmp->date;
-                  firstType = tmp->rain->fmtRainfall();
+              if ((tmp->date - first < SEVEN_DAYS) &&
+                  (tmp->rain->fmtRainfall() != firstType)) {
+                first = tmp->date;
+                firstType = tmp->rain->fmtRainfall();
               }
 
-              if ((tmp->date - first >= SEVEN_DAYS || tmp->date - first < SEVEN_DAYS) && (tmp->rain->fmtRainfall() == firstType)) {
-                  continue;
+              if ((tmp->date - first >= SEVEN_DAYS ||
+                   tmp->date - first < SEVEN_DAYS) &&
+                  (tmp->rain->fmtRainfall() == firstType)) {
+                continue;
               }
 
-              if ((tmp->date - first >= SEVEN_DAYS) && (tmp->rain->fmtRainfall() != firstType)) {
-                std::cout << "\n\u001b[34mPeriod: " << firstType << "\u001b[0m\n";
+              if ((tmp->date - first >= SEVEN_DAYS) &&
+                  (tmp->rain->fmtRainfall() != firstType)) {
+                std::cout << "\n\u001b[34mPeriod: " << firstType
+                          << "\u001b[0m\n";
 
-                std::cout << "From " << months[localtime(&first)->tm_mon] << " " << localtime(&first)->tm_mday << " to "; 
+                std::cout << "From " << months[localtime(&first)->tm_mon] << " "
+                          << localtime(&first)->tm_mday << " to ";
 
-                std::cout << months[localtime(&tmp->date)->tm_mon] << " " << localtime(&tmp->date)->tm_mday << "\n";
+                std::cout << months[localtime(&tmp->date)->tm_mon] << " "
+                          << localtime(&tmp->date)->tm_mday << "\n";
 
                 firstType = tmp->rain->fmtRainfall();
                 first = tmp->date;
@@ -391,11 +399,11 @@ MenuItem *reportItems[] = {
             }
 
             if (shouldPrint) {
-              printf("\nPlace: %s\n\tRainy days: %d\n\tTotal Rainfall: %f\n\tMax "
-                     "Temperature: "
-                     "%f\n\tMin Temperature: %f\n",
-                     tmp->link->name.c_str(), rainyDays, rainfall, maxTmp,
-                     minTmp);
+              printf(
+                  "\nPlace: %s\n\tRainy days: %d\n\tTotal Rainfall: %f\n\tMax "
+                  "Temperature: "
+                  "%f\n\tMin Temperature: %f\n",
+                  tmp->link->name.c_str(), rainyDays, rainfall, maxTmp, minTmp);
             } else {
               printf("\u001b[31mNo data found for %s\u001b[0m!\n",
                      tmp->link->name.c_str());
@@ -419,47 +427,50 @@ MenuItem *reportItems[] = {
             double monthlyAvg[12] = {};
             int month = 0;
             while (month < 12) {
-                double avg = 0;
-                int avgCont = 0;
-                Proxy<Place> *places = tmp->places;
-                while (places != nullptr) {
-                    if (places->link->climate == nullptr) {
-                        places = places->next;
-                        continue;
-                    }
-                    Proxy<Climate> *climates = places->link->climate;
-                    while (climates != nullptr) {
-                        tm *__t = localtime(&climates->link->date);
-                        if (__t->tm_year + 1900 == year && __t->tm_mon == month) {
-                            avg += climates->link->rain->rainfall;
-                            avgCont++;
-                          }
-                        climates = climates->next;
-                    }
+              double avg = 0;
+              int avgCont = 0;
+              Proxy<Place> *places = tmp->places;
+              while (places != nullptr) {
+                if (places->link->climate == nullptr) {
+                  places = places->next;
+                  continue;
+                }
+                Proxy<Climate> *climates = places->link->climate;
+                while (climates != nullptr) {
+                  tm *__t = localtime(&climates->link->date);
+                  if (__t->tm_year + 1900 == year && __t->tm_mon == month) {
+                    avg += climates->link->rain->rainfall;
+                    avgCont++;
+                  }
+                  climates = climates->next;
+                }
 
-                      if (avgCont != 0) {
-                          monthlyAvg[month] = avg/avgCont;
-                      } else {
-                        monthlyAvg[month] = 0;
-                      }
-                    places = places->next;
+                if (avgCont != 0) {
+                  monthlyAvg[month] = avg / avgCont;
+                } else {
+                  monthlyAvg[month] = 0;
                 }
-                month++;
+                places = places->next;
+              }
+              month++;
             }
-              printf("\n\u001b[34mRegion: %s\u001b[0m\n", tmp->name.c_str());
-                for (int i = 0; i < 12; i++) {
-                  if (monthlyAvg[i] != 0)
-                  printf("\u001b[33mMonth: %d -> %f\u001b[0m\n", i + 1, monthlyAvg[i]);
-                  else 
-                  printf("Month: %d -> %f\n", i + 1, monthlyAvg[i]);
-                }
-        }
+            printf("\n\u001b[34mRegion: %s\u001b[0m\n", tmp->name.c_str());
+            for (int i = 0; i < 12; i++) {
+              if (monthlyAvg[i] != 0)
+                printf("\u001b[33mMonth: %d -> %f\u001b[0m\n", i + 1,
+                       monthlyAvg[i]);
+              else
+                printf("Month: %d -> %f\n", i + 1, monthlyAvg[i]);
+            }
+          }
 
           ctx->reports->display();
           return CommandCodes::CONTINUE;
         }),
     new MenuItem(
-        3, "Display average monthly rainfall for all the places within a given year",
+        3,
+        "Display average monthly rainfall for all the places within a given "
+        "year",
         [](Menu *, Program *ctx) -> CommandCodes {
           // t represents today in milliseconds
           time_t t = time(nullptr);
@@ -474,38 +485,39 @@ MenuItem *reportItems[] = {
 
           Place *tmp = ctx->places;
           do {
-              double monthlyAvg[12] = {};
-                int month = 0;
-                while (month < 12) {
-                  double avg = 0;
-                  int avgCont = 0;
-                  Proxy<Climate> *cTmp = tmp->climate;
-                  while (cTmp != nullptr) {
-                    tm *__t = localtime(&cTmp->link->date);
-                    if (__t->tm_year + 1900 == year && __t->tm_mon == month) {
-                        avg += cTmp->link->rain->rainfall;
-                        avgCont++;
-                      }
-                      cTmp = cTmp->next;
-                  }
-
-                  if (avgCont != 0) {
-                      monthlyAvg[month] = avg/avgCont;
-                  } else {
-                    monthlyAvg[month] = 0;
-                  }
-
-                  month++;
-                  }
-
-              printf("\n\u001b[34mPlace: %s\u001b[0m\n", tmp->name.c_str());
-                for (int i = 0; i < 12; i++) {
-                  if (monthlyAvg[i] != 0)
-                  printf("\u001b[33mMonth: %d -> %f\u001b[0m\n", i + 1, monthlyAvg[i]);
-                  else 
-                  printf("Month: %d -> %f\n", i + 1, monthlyAvg[i]);
+            double monthlyAvg[12] = {};
+            int month = 0;
+            while (month < 12) {
+              double avg = 0;
+              int avgCont = 0;
+              Proxy<Climate> *cTmp = tmp->climate;
+              while (cTmp != nullptr) {
+                tm *__t = localtime(&cTmp->link->date);
+                if (__t->tm_year + 1900 == year && __t->tm_mon == month) {
+                  avg += cTmp->link->rain->rainfall;
+                  avgCont++;
                 }
-              tmp = tmp->next;
+                cTmp = cTmp->next;
+              }
+
+              if (avgCont != 0) {
+                monthlyAvg[month] = avg / avgCont;
+              } else {
+                monthlyAvg[month] = 0;
+              }
+
+              month++;
+            }
+
+            printf("\n\u001b[34mPlace: %s\u001b[0m\n", tmp->name.c_str());
+            for (int i = 0; i < 12; i++) {
+              if (monthlyAvg[i] != 0)
+                printf("\u001b[33mMonth: %d -> %f\u001b[0m\n", i + 1,
+                       monthlyAvg[i]);
+              else
+                printf("Month: %d -> %f\n", i + 1, monthlyAvg[i]);
+            }
+            tmp = tmp->next;
           } while (tmp != ctx->places);
 
           ctx->reports->display();

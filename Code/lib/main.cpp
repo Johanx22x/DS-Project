@@ -1,6 +1,7 @@
 /**
  * Here is implemented the main file
- * In this file is defined all the program declarations and dinamic libraries implementation
+ * In this file is defined all the program declarations and dinamic libraries
+ * implementation
  *
  * @author Johan Rodriguez, Aaron Gonzalez, Gabriel Alfaro
  * @version 2.1
