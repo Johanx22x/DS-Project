@@ -62,7 +62,7 @@ int main() {
         fprintf(stderr, "Couldn't load %s\n", fileName.c_str());
         continue;
       }
-      /// Setup the actual program with the dinamic libraries
+      /// Setup the actual program with the dynamic libraries
       setup(program);
     }
   }
